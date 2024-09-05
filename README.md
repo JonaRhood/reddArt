@@ -4,6 +4,11 @@
 
 
 # <img src="https://media.giphy.com/media/ffumjakqlYO2kaRPKL/giphy.gif?cid=790b7611krpdermigmst5mjlw59ha0zhrqh979x7gy7cdo3h&ep=v1_gifs_search&rid=giphy.gif&ct=s" width="30">&nbsp; Reddit Art Client
+
+<div align="center">
+    <h2>Wireframe</h2>
+</div>
+
 <br />
 <div align="center">
     <img src="./public/Component 1.svg" alt="Logo" width="400" >
@@ -11,9 +16,7 @@
 </div>
 <br />
 
-<div align="center">
-    ## Wireframe
-</div>
+
 This project is a React-based web application that I developed as part of **[Codecademy's](https://www.codecademy.com)** Full Stack Engineering course, incorporating Next.js for server-side rendering and routing. The application is designed to display art uploaded to Reddit in a more visually appealing and user-friendly format, tailored specifically for artists. 
 
 Through this project, I honed my skills in React state management, React Redux, and Next.js, along with user interface design. My focus was on creating a seamless, dynamic experience where users can easily browse and engage with art content, making it a vibrant hub for artists to showcase their work in a way that enhances visual appreciation and community interaction.

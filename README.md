@@ -9,7 +9,6 @@
     <h2>Wireframe</h2>
 </div>
 
-<br />
 <div align="center">
     <img src="./public/Component 1.svg" alt="Logo" width="400" >
     <img src="./public/Component 2.svg" alt="Logo" width="390" >

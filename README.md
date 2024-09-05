@@ -7,7 +7,7 @@
 <br />
 <div align="center">
     <img src="./public/Component 1.svg" alt="Logo" width="400" >
-    <img src="./public/Component 2.svg" alt="Logo" width="380" >
+    <img src="./public/Component 2.svg" alt="Logo" width="390" >
 </div>
 <br />
 

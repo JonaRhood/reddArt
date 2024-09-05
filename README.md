@@ -11,7 +11,9 @@
 </div>
 <br />
 
-
+<div align="center">
+    ## Wireframe
+</div>
 This project is a React-based web application that I developed as part of **[Codecademy's](https://www.codecademy.com)** Full Stack Engineering course, incorporating Next.js for server-side rendering and routing. The application is designed to display art uploaded to Reddit in a more visually appealing and user-friendly format, tailored specifically for artists. 
 
 Through this project, I honed my skills in React state management, React Redux, and Next.js, along with user interface design. My focus was on creating a seamless, dynamic experience where users can easily browse and engage with art content, making it a vibrant hub for artists to showcase their work in a way that enhances visual appreciation and community interaction.

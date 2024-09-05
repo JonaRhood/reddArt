@@ -5,17 +5,16 @@
 
 # <img src="https://media.giphy.com/media/ffumjakqlYO2kaRPKL/giphy.gif?cid=790b7611krpdermigmst5mjlw59ha0zhrqh979x7gy7cdo3h&ep=v1_gifs_search&rid=giphy.gif&ct=s" width="30">&nbsp; Reddit Art Client
 
-<br />
-
 <div align="center">
     <h2>Wireframe</h2>
 </div>
 
+<br />
 <div align="center">
     <img src="./public/Component 1.svg" alt="Logo" width="400" >
     <img src="./public/Component 2.svg" alt="Logo" width="390" >
 </div>
-
+<br />
 
 
 This project is a React-based web application that I developed as part of **[Codecademy's](https://www.codecademy.com)** Full Stack Engineering course, incorporating Next.js for server-side rendering and routing. The application is designed to display art uploaded to Reddit in a more visually appealing and user-friendly format, tailored specifically for artists. 

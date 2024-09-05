@@ -6,7 +6,8 @@
 # <img src="https://media.giphy.com/media/ffumjakqlYO2kaRPKL/giphy.gif?cid=790b7611krpdermigmst5mjlw59ha0zhrqh979x7gy7cdo3h&ep=v1_gifs_search&rid=giphy.gif&ct=s" width="30">&nbsp; Reddit Art Client
 <br />
 <div align="center">
-    <img src="./public/Component 1.svg" alt="Logo" width="750" >
+    <img src="./public/Component 1.svg" alt="Logo" width="400" >
+    <img src="./public/Component 2.svg" alt="Logo" width="400" >
 </div>
 <br />
 

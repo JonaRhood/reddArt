@@ -27,7 +27,7 @@ export const Counter = () => {
     <div>
       <div className={styles.row}>
         <button
-          className={styles.button}
+          className="text-purple-800 text-3xl bg-purple-600 bg-opacity-10 px-4 py-2 border-transparent border-2 hover:border-2 hover:border-purple-800 hover:border-opacity-20 transition-all ease-in-out"
           aria-label="Decrement value"
           onClick={() => dispatch(decrement())}
         >

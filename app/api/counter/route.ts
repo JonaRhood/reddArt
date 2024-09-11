@@ -5,6 +5,11 @@ interface Context {
   params: undefined;
 }
 
+export async function GET(request: NextRequest, context: Context) {
+  // Aquí puedes colocar la lógica para manejar las solicitudes GET
+  return NextResponse.json({ message: 'GET request received' });
+}
+
 export async function POST(request: NextRequest, context: Context) {
   const body: { amount: number } = await request.json();
   const { amount = 1 } = body;

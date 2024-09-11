@@ -1,20 +1,21 @@
 .galleryContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px; 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
     padding: 0;
     margin: 0;
+    align-items: start;
 }
 
 .imageContainer {
-    flex: 1 1 calc(25% - 16px);
+    flex: 1 1 calc(33.333% - 16px);
     box-sizing: border-box;
     position: relative;
-    padding: 0; 
+    padding: 0;
 }
 
 .image {
-    object-fit: cover; 
+    object-fit: contain;
     width: 100%;
-    height: 200px; 
+    height: auto;
 }

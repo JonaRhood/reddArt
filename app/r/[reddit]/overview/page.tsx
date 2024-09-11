@@ -34,10 +34,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
     }, [subReddit]);
 
     return (
-        <div className={`
-        ${styles.galleryContainer}
-        flex flex-wrap gap-4 p-4
-        `}>
+        <div className={styles.galleryContainer}>
             {subRedditInfo.map((item, i) => {
                 const preview = item.data.preview;
                 const imgSource = preview?.images?.[0]?.source?.url;
@@ -52,9 +49,9 @@ export default function Page({ params }: { params: { reddit: string } }) {
                         <Image 
                             src={imgSource} 
                             alt={uniqueKey} 
-                            layout="responsive" // Adjusts the image size based on the container
-                            width={800} // Example width
-                            height={600} // Example height
+                            layout="intrinsic" // Mantiene el tamaño original de la imagen
+                            width={800} // Ejemplo, ajusta según el tamaño real
+                            height={600} // Ejemplo, ajusta según el tamaño real
                             className={styles.image}
                         />
                     </div>

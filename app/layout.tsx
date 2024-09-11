@@ -1,9 +1,6 @@
-
 import type { ReactNode } from "react";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
-
-
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
 
@@ -17,10 +14,12 @@ export default function RootLayout({ children }: Props) {
       <html lang="en">
         <body className="bg-light-background text-light-text">
           <section className="flex">
-            <div className="flex">
+            <div className="fixed w-80 bg-light-surface h-screen overflow-hidden z-50">
               <Sidenav />
             </div>
-            <main className="flex">{children}</main>
+            <div className="flex-1 ml-80 bg-light-background h-screen overflow-auto">
+              <main className="p-4">{children}</main>
+            </div>
           </section>
         </body>
       </html>

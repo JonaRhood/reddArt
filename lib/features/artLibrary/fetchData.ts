@@ -38,7 +38,7 @@ export async function fetchToken() {
 
 export async function searchReddit(query: string): Promise<any> {
     try {
-        const response = await fetch(`${BASE_URL}/${query}.json`);
+        const response = await fetch(`${BASE_URL}/${query}.json?raw_json=1`);
 
         if (!response.ok) {
             throw new Error(`¡Error HTTP! Estado: ${response.status}`);

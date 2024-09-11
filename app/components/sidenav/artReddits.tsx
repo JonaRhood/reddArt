@@ -15,18 +15,18 @@ export default function ArtReddits() {
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
 
     useEffect(() => {
-        // const fetchData = async () => {
-        //     try {
-        //         const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.url));
-        //         const dataResults = await Promise.all(dataPromises);
-        //         setRedditData(dataResults);
+        const fetchData = async () => {
+            try {
+                const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.url));
+                const dataResults = await Promise.all(dataPromises);
+                setRedditData(dataResults);
 
-        //         localStorage.setItem('lastFetchTime', Date.now().toString());
-        //     } catch (error) {
-        //         console.error("Error fetching Reddit data:", error);
-        //     }
-        // };
-        // fetchData();
+                localStorage.setItem('lastFetchTime', Date.now().toString());
+            } catch (error) {
+                console.error("Error fetching Reddit data:", error);
+            }
+        };
+        fetchData();
 
         // const lastFetchTime = localStorage.getItem('lastFetchTime');
         // const currentTime = Date.now();

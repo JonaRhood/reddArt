@@ -15,7 +15,7 @@ export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
       <html lang="en">
-        <body>
+        <body className="bg-light-background text-light-text">
           <section className="flex">
             <div className="flex">
               <Sidenav />

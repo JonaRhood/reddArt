@@ -8,16 +8,28 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      gridTemplateColumns: {
-        '13': 'repeat(13, minmax(0, 1fr))',
-      },
       colors: {
-        blue: {
-          400: '#2589FE',
-          500: '#0070F3',
-          600: '#2F6FEB',
+        // Light Mode Colors
+        light: {
+          primary: '#00BFFF', // Deep Sky Blue
+          secondary: '#1E90FF', // Dodger Blue
+          background: '#F5F5F5', // White Smoke
+          surface: '#FFFFFF', // White
+          text: '#333333', // Dark Charcoal
+          secondaryText: '#666666', // Dim Gray
+          border: '#DDDDDD', // Light Gray
         },
-      },
+        // Dark Mode Colors
+        dark: {
+          primary: '#1E90FF', // Dodger Blue
+          secondary: '#00BFFF', // Deep Sky Blue
+          background: '#121212', // Very Dark Gray
+          surface: '#1E1E1E', // Dark Gray
+          text: '#E0E0E0', // Light Gray
+          secondaryText: '#B0B0B0', // Gray
+          border: '#333333', // Charcoal
+        },
+      },  
     },
     keyframes: {
       shimmer: {

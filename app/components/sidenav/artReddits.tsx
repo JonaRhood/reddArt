@@ -1,46 +1,83 @@
 'use client';
 
-import { fetchToNavBar } from "@/lib/features/artLibrary/fetchData"
-import { reddits } from "@/lib/features/artLibrary/data"
-import { useState, useEffect } from "react"
+import { fetchToNavBar } from "@/lib/features/artLibrary/fetchData";
+import { reddits } from "@/lib/features/artLibrary/data";
+import { useState, useEffect } from "react";
+import { searchReddit } from "@/lib/features/artLibrary/fetchData";
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { UserIcon } from '@heroicons/react/24/solid'
+import { nFormatter } from "@/lib/utils/utils";
+import Link from "next/link";
 
 export default function ArtReddits() {
 
+    const [reddit, setReddit] = useState('');
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.url));
-                const dataResults = await Promise.all(dataPromises);
-                setRedditData(dataResults);
-                console.log(redditData);
-            } catch (error) {
-                console.error("Error fetching Reddit data:", error);
-            }
-        };
+        // const fetchData = async () => {
+        //     try {
+        //         const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.url));
+        //         const dataResults = await Promise.all(dataPromises);
+        //         setRedditData(dataResults);
 
-        fetchData();
-    }, [])
-    
-    console.log(redditData);
+        //         localStorage.setItem('lastFetchTime', Date.now().toString());
+        //     } catch (error) {
+        //         console.error("Error fetching Reddit data:", error);
+        //     }
+        // };
+        // fetchData();
+
+        // const lastFetchTime = localStorage.getItem('lastFetchTime');
+        // const currentTime = Date.now();
+
+        // if (!lastFetchTime || (currentTime - parseInt(lastFetchTime, 10)) > 60000) {
+        //     fetchData();
+        // }
+    }, []);
 
     return (
         <div>
-            <div className="flex w-80 bg-gray-200 p-2 h-24 border-gray-300 border relative">
+            <div className="flex w-80 bg-gray-100 p-2 h-24 border-light-border border relative">
             </div>
-            {redditData.map((reddit, i) => {
-                const children = reddit.data?.children || [];
-                const subReddit = children[0]?.data?.subreddit || "No title available";
+            {redditData.map((redditItem, i) => {
+                const children = redditItem.data || [];
+                const subReddit = children.display_name_prefixed || "No title available";
+                const iconImg = children.icon_img ? children.icon_img : children.community_icon;
+                const subscribers = nFormatter(children.subscribers, 1);
+
                 return (
                     <div
-                    key={subReddit}
-                    className="flex-column w-full bg-gray-200 p-2 h-24 border-gray-300 border overflow-hidden"
+                        key={subReddit}
+                        className="flex-column content-around w-full bg-gray-100 p-2 h-24 border-light-border border overflow-hidden transition all hover:bg-light-primary hover:bg-opacity-20 hover:cursor-pointer"
                     >
-                        <h4>{subReddit}</h4><br/>
+                        <Link
+                            href={`/${subReddit}/overview`}
+                            key={i}
+                        >
+                            <div className="flex items-center relative">
+                                <img src={iconImg} alt="Communty Icon" width={50}
+                                    className="rounded-full border border-2 border-light-primary"
+                                />
+                                <div className="flex-inline ml-3">
+                                    <h4 className="">{subReddit}</h4>
+                                </div>
+                                <ChevronRightIcon className="absolute size-3 right-1" />
+                            </div>
+                            <div className="flex items-center">
+                                <div className="flex text-light-secondaryText text-xs items-center my-1">
+                                    <UserIcon className="size-3" />
+                                    <p>{subscribers}</p>
+                                </div>
+                                <div className="text-light-secondaryText text-xs items-center mx-2">
+
+
+                                </div>
+                            </div>
+                        </Link>
                     </div>
-                )
+                );
             })}
-        </div>
-    )
+        </div >
+    );
 }

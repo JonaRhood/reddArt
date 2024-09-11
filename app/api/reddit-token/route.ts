@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    return NextResponse.json(response.data);
+    // Return only the access token, not the full response
+    return NextResponse.json({ token: response.data.access_token });
   } catch (error) {
     console.error('Error fetching Reddit token:', error);
     return NextResponse.json({ error: 'Failed to fetch token' }, { status: 500 });

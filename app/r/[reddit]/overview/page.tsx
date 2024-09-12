@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { searchReddit } from "@/lib/features/artLibrary/fetchData";
+import { searchReddit } from "@/app/lib/features/artLibrary/fetchData";
 import Image from "next/image";
 
 import styles from '@/app/styles/overview.module.css'

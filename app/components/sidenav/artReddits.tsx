@@ -1,12 +1,12 @@
 'use client';
 
-import { fetchToNavBar } from "@/lib/features/artLibrary/fetchData";
-import { reddits } from "@/lib/features/artLibrary/data";
+import { fetchToNavBar } from "@/app/lib/features/artLibrary/fetchData";
+import { reddits } from "@/app/lib/features/artLibrary/data";
 import { useState, useEffect } from "react";
-import { searchReddit } from "@/lib/features/artLibrary/fetchData";
+import { searchReddit } from "@/app/lib/features/artLibrary/fetchData";
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { UserIcon } from '@heroicons/react/24/solid'
-import { nFormatter } from "@/lib/utils/utils";
+import { nFormatter } from "@/app/lib/utils/utils";
 import Link from "next/link";
 
 export default function ArtReddits() {

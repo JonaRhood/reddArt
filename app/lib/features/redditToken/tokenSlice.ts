@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { createAppSlice } from '@/lib/createAppSlice';
+import { createAppSlice } from '@/app/lib/createAppSlice';
 
 interface TokenState {
   value: string | null;

@@ -1,5 +1,5 @@
 "use client";
-import { useGetQuotesQuery } from "@/lib/features/quotes/quotesApiSlice";
+import { useGetQuotesQuery } from "@/app/lib/features/quotes/quotesApiSlice";
 import { useState } from "react";
 import styles from "./Quotes.module.css";
 

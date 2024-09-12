@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
+import { Suspense } from "react";
 import "./styles/globals.css";
-import styles from "./styles/layout.module.css";
+
 
 interface Props {
   readonly children: ReactNode;
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: Props) {
         <body className="bg-light-background text-light-text">
           <section className="flex">
             <div className="fixed w-80 bg-light-surface h-screen overflow-hidden z-50">
-              <Sidenav />
+              <Suspense>
+                <Sidenav />
+              </Suspense>
             </div>
             <div className="flex-1 ml-80 bg-light-background h-screen overflow-auto">
               <main className="p-4">{children}</main>

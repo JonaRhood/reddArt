@@ -10,9 +10,9 @@ import {
   incrementIfOdd,
   selectCount,
   selectStatus,
-} from "@/lib/features/counter/counterSlice";
+} from "@/app/lib/features/counter/counterSlice";
 
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import styles from "./Counter.module.css";
 
 export const Counter = () => {

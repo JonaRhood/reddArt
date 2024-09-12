@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(90deg, #6a1b9a, #1e88e5); /* Ajusta los colores del gradiente aquí */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+
 html,
 body {
   min-height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: IBMPlexSans, Arial, sans serif;
 }
 
 a {

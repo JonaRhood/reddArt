@@ -1,9 +1,14 @@
 import type { ReactNode } from "react";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
-import { Suspense } from "react";
 import "./styles/globals.css";
+import { IBM_Plex_Sans } from '@next/font/google';
 
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+});
 
 interface Props {
   readonly children: ReactNode;
@@ -13,12 +18,13 @@ export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
       <html lang="en">
-        <body className="bg-light-background text-light-text">
+        <body className={`
+            ${ibmPlexSans.className}
+            bg-light-background text-light-text
+        `}>
           <section className="flex">
             <div className="fixed w-80 bg-light-surface h-screen overflow-hidden z-50">
-              <Suspense>
-                <Sidenav />
-              </Suspense>
+              <Sidenav />
             </div>
             <div className="flex-1 ml-80 bg-light-background h-screen overflow-auto">
               <main className="p-4">{children}</main>

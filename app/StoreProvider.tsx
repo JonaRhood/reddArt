@@ -16,6 +16,7 @@ export const StoreProvider = ({ children }: Props) => {
   const storeRef = useRef<AppStore | null>(null);
   const searchParams = useSearchParams();
 
+  // Initialize the store only once
   if (!storeRef.current) {
     storeRef.current = makeStore();
   }

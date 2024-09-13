@@ -12,14 +12,39 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 
-const BATCH_SIZE = 25; // Adjust the batch size as needed
-
 export default function ArtReddits() {
 
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
+    const [tokenAvailable, setTokenAvailable] = useState(false);
 
     useEffect(() => {
+        // Check for the token in localStorage
+        const checkToken = () => {
+            const token = localStorage.getItem("REDDART_ACCESS_TOKEN");
+            if (token) {
+                setTokenAvailable(true);
+            } else {
+                setTokenAvailable(false);
+            }
+        };
+
+        // Check token availability on mount
+        checkToken();
+
+        // Optionally, add an event listener if the token can change dynamically
+        window.addEventListener("storage", checkToken);
+
+        return () => {
+            window.removeEventListener("storage", checkToken);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!tokenAvailable) {
+            return; // Exit early if the token is not available
+        }
+
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -38,7 +63,7 @@ export default function ArtReddits() {
         };
 
         fetchData();
-    }, []);
+    }, [tokenAvailable]);
 
     return (
         <div>

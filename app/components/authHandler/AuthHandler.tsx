@@ -11,7 +11,7 @@ export const AuthHandler = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
-      const redirectUri = `${NEXT_PUBLIC_REDDIT_REDIRECT_URL}`; // Default value if env var is missing
+      const redirectUri = `http://localhost:3000/`;
       const state = uuidv4();
       const scope = 'read';
       const duration = 'permanent';

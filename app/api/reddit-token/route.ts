@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       new URLSearchParams({
         grant_type: 'authorization_code',
         code,
-        redirect_uri: `${REDDIT_REDIRECT_URL}`, // Ensure this matches your redirect URI
+        redirect_uri: 'http://localhost:3000/', // Ensure this matches your redirect URI
       }),
       {
         headers: {

@@ -15,33 +15,17 @@ export default function Page({ params }: { params: { reddit: string } }) {
     const [userAvatars, setUserAvatars] = useState<{ [key: string]: string }>({});
     const [after, setAfter] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
-    const [token, setToken] = useState<string | null>(null); // State to hold token
-
-    // Example function to get token from server or cookies
-    const fetchToken = async () => {
-        // Replace with your method of fetching the token
-        try {
-            const response = await fetch('/api/get-token'); // Adjust the URL accordingly
-            const data = await response.json();
-            if (data.token) {
-                setToken(data.token);
-            }
-        } catch (error) {
-            console.error('Error fetching token:', error);
-        }
-    };
 
     const fetchData = async (afterParam = '') => {
-        if (!token) return; // Ensure token is available
-
         try {
-            const result = await fetchSubReddit(subReddit, token, 100, afterParam);
+            const result = await fetchSubReddit(subReddit, 100, afterParam);
             const data = result.data.children;
 
             if (Array.isArray(data)) {
                 setSubredditInfo(prevData => [...prevData, ...data]); // Append new data to existing data
                 setAfter(result.data.after || null); // Update 'after' for next fetch
                 setHasMore(Boolean(result.data.after)); // Check if there's more data to load
+
             } else {
                 console.error("Data received is not an array:", data);
                 setHasMore(false);
@@ -55,14 +39,8 @@ export default function Page({ params }: { params: { reddit: string } }) {
     };
 
     useEffect(() => {
-        fetchToken(); // Fetch token on component mount
-    }, []);
-
-    useEffect(() => {
-        if (token) {
-            fetchData(); // Initial fetch without 'after' parameter
-        }
-    }, [token, subReddit]);
+        fetchData(); // Initial fetch without 'after' parameter
+    }, [subReddit]);
 
     // Function to load more data
     const loadMore = () => {

@@ -34,15 +34,12 @@ export default function ArtReddits() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
-                if (!token) {
-                    throw new Error('No token found');
-                }
-        
-                const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit, token));
+                await waitForToken();
+
+                const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));
                 const results = await Promise.all(dataPromises);
-                setRedditData(results.filter(result => result && result.data));
-        
+                setRedditData(results.filter(result => result && result.data)); // Filtrar resultados inválidos
+
                 console.log("Fetched Results:", results);
                 
                 localStorage.setItem('lastFetchTime', Date.now().toString());
@@ -52,7 +49,6 @@ export default function ArtReddits() {
                 setLoading(false);
             }
         };
-        
 
         fetchData();
     }, []);

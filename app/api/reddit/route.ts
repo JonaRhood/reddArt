@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
         const response = await fetch(url, {
             headers: {
-                'User-Agent': 'Art_Client/1.0'
+                'User-Agent': 'Art_Client/1.0 by Brief_King_9490'
             }
         });
 

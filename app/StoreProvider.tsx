@@ -5,7 +5,6 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
-import { fetchToken } from "@/app/lib/features/artLibrary/fetchData";
 
 interface Props {
   readonly children: ReactNode;
@@ -26,16 +25,6 @@ export const StoreProvider = ({ children }: Props) => {
       const unsubscribe = setupListeners(storeRef.current.dispatch);
       return unsubscribe;
     }
-  }, []);
-
-  useEffect(() => {
-    const lastTokenTime = localStorage.getItem("lastTokenTime");
-    const currentTime = Date.now();
-
-    if (!lastTokenTime || (currentTime - parseInt(lastTokenTime, 10)) > 86000000) {
-      fetchToken();
-    }
-
   }, []);
 
   return <Provider store={storeRef.current}>{children}</Provider>;

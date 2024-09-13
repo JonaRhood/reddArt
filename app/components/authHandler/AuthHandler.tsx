@@ -9,10 +9,11 @@ export const AuthHandler = () => {
 
   useEffect(() => {
     const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
-    const redirectUri = 'http://localhost:3000/';
+    const redirectUri = `${process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL}`;
     const state = uuidv4();
     const scope = 'read';
     const duration = 'permanent';
+    console.log(redirectUri)
 
     const localState = localStorage.getItem("REDDART_AUTH_STATE");
     const localCode = localStorage.getItem("REDDART_CODE");

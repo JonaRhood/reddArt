@@ -2,7 +2,7 @@
 
 import { AppStore } from '@/app/lib/store';
 import { useEffect, useRef } from 'react';
-import { useSearchParams, useParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Provider } from 'react-redux';
 import { makeStore } from '@/app/lib/store';
 import { setupListeners } from '@reduxjs/toolkit/query';
@@ -41,17 +41,14 @@ export const StoreProvider = ({ children }: Props) => {
     const urlState = searchParams.get("state");
     const urlCode = searchParams.get("code");
     const urlError = searchParams.get("error");
-    const currentUrl = window.location.href === "https://reddit-client-rho.vercel.app/"
+    const currentUrl = window.location.href === redirectUri;
 
-
-    // If there's no authState saved on localStorage or urlState is not like localStorage or urlError
     if (currentUrl && localToken) {
       console.log("Token and permission given.");
     } else if (!localState || urlState !== localState || urlError) {
       localStorage.setItem("REDDART_AUTH_STATE", state);
       const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&duration=${duration}&scope=${scope}`;
       window.location.href = authUrl;
-      // Token request
     } else if (urlCode && !localCode) {
       localStorage.setItem("REDDART_CODE", urlCode);
       fetch(`/api/reddit-token?code=${urlCode}`)
@@ -72,7 +69,7 @@ export const StoreProvider = ({ children }: Props) => {
     } else {
       console.error('No code or state provided');
     }
-  }, []); // Added searchParams to dependency array to avoid stale closures
+  }, [searchParams]);
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 };

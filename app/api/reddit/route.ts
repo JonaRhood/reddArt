@@ -25,10 +25,7 @@ export async function GET(req: NextRequest) {
 
         const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${access_token}`,
                 'User-Agent': 'web:_glPpJan2C9COPXFnqCH5Q:v1.0 (by /u/Brief_King_9490)',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
             }
         });
 

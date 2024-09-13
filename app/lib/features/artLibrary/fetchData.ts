@@ -4,7 +4,25 @@ const API_URL = '/api/reddit';
 
 export async function fetchToNavBar(url: string) {
     try {
-        const response = await fetch(`${API_URL}?url=${encodeURIComponent(url)}`);
+        // Fetch the token from the Reddit token API
+        const tokenResponse = await fetch(`/api/reddit-token`);
+        if (!tokenResponse.ok) {
+            console.error('Failed to fetch token:', tokenResponse.statusText);
+            return {}; // Return an empty object in case of failure
+        }
+
+        // Extract the token from the JSON response
+        const tokenData = await tokenResponse.json();
+        const token = tokenData.token;
+
+        // Fetch the Reddit data using the token
+        const response = await fetch(`/api/reddit?url=${encodeURIComponent(url)}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
         if (response.ok) {
             return response.json();
         } else {
@@ -16,6 +34,7 @@ export async function fetchToNavBar(url: string) {
         return {}; // Return an empty object in case of error
     }
 }
+
 
 export async function fetchToken() {
     try {

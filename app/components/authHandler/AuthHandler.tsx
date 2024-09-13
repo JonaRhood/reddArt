@@ -37,6 +37,8 @@ export const AuthHandler = () => {
           if (data.token) {
             localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
             console.log('%cToken received', 'color: green; font-weight: bold;');
+            
+            window.location.href = redirectUri;
           } else {
             console.error('Failed to get access token:', data.error);
           }

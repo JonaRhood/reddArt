@@ -1,24 +1,13 @@
 // fetchData.ts
-const BASE_URL = 'https://www.reddit.com';
+const BASE_URL = 'https://oauth.reddit.com';
 const API_URL = '/api/reddit';
 
-export async function fetchToNavBar(url: string) {
+export async function fetchToNavBar(subreddit: string) {
     try {
-        // Fetch the token from the Reddit token API
-        const tokenResponse = await fetch(`/api/reddit-token`);
-        if (!tokenResponse.ok) {
-            console.error('Failed to fetch token:', tokenResponse.statusText);
-            return {}; // Return an empty object in case of failure
-        }
-
-        // Extract the token from the JSON response
-        const tokenData = await tokenResponse.json();
-        const token = tokenData.token;
-
         // Fetch the Reddit data using the token
-        const response = await fetch(`/api/reddit?url=${encodeURIComponent(url)}`, {
+        const response = await fetch(`${BASE_URL}/r/${subreddit}/about`, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${localStorage.getItem('REDDART_ACCESS_TOKEN')}`,
                 'Content-Type': 'application/json'
             }
         });

@@ -1,43 +1,43 @@
 const reddits = [
     {
         name: "Comics",
-        url: "https://www.reddit.com/r/comics/about.json?raw_json=1"
+        subreddit: "comics"
     },
     {
         name: "Art",
-        url: "https://www.reddit.com/r/Art/about.json?raw_json=1"
+        subreddit: "Art"
     },
     {
         name: "Wholesome Fantasy Art",
-        url: "https://www.reddit.com/r/WholesomeFantasyArt/about.json?raw_json=1"
+        subreddit: "WholesomeFantasyArt"
     },
     {
         name: "VaporwaveArt",
-        url: "https://www.reddit.com/r/VaporwaveArt/about.json?raw_json=1"
+        subreddit: "VaporwaveArt"
     },
     {
         name: "Digital art",
-        url: "https://www.reddit.com/r/DigitalArt/about.json?raw_json=1"
+        subreddit: "DigitalArt"
     },
     {
         name: "Pixel art",
-        url: "https://www.reddit.com/r/PixelArt/about.json?raw_json=1"
+        subreddit: "PixelArt"
     },
     {
         name: "Abstract art",
-        url: "https://www.reddit.com/r/AbstractArt/about.json?raw_json=1"
+        subreddit: "AbstractArt"
     },
     {
         name: "Art Deco",
-        url: "https://www.reddit.com/r/ArtDeco/about.json?raw_json=1"
+        subreddit: "ArtDeco"
     },
     {
         name: "Art Nouveau",
-        url: "https://www.reddit.com/r/ArtNouveau/about.json?raw_json=1"
+        subreddit: "ArtNouveau"
     },
     {
         name: "Comic Books",
-        url: "https://www.reddit.com/r/comicbooks/about.json?raw_json=1"
+        subreddit: "comicbooks"
     },
 ];
 

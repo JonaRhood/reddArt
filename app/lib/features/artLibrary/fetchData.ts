@@ -1,11 +1,13 @@
 // fetchData.ts
+
 const BASE_URL = 'https://oauth.reddit.com';
-const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
 
+export async function fetchToNavBar(subreddit: string, token: string | null) {
+    if (!token) {
+        throw new Error('No token provided');
+    }
 
-export async function fetchToNavBar(subreddit: string) {
     try {
-        // Fetch the Reddit data using the token
         const response = await fetch(`${BASE_URL}/r/${subreddit}/about`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -17,38 +19,19 @@ export async function fetchToNavBar(subreddit: string) {
             return response.json();
         } else {
             console.error('HTTP Error:', response.statusText);
-            return {}; // Return an empty object in case of failure
+            return {}; 
         }
     } catch (error) {
         console.error('Fetch Error:', error);
-        return {}; // Return an empty object in case of error
+        return {}; 
     }
 }
 
 
-// export async function fetchToken() {
-//     try {
-//         const response = await fetch('./api/reddit-token');
-//         const data = await response.json();
-//         if (data.token) {
-//             localStorage.setItem('REDDIT_ACCESS_TOKEN', data.token);
-//             localStorage.setItem('lastTokenTime', Date.now().toString());
-//             console.log('Token stored in localStorage.');
-//         } else {
-//             console.error('Failed to fetch token:', data.error);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching token:', error);
-//         throw new Error('Error fetching token.');
-//     }
-// }
-
-export async function fetchSubReddit(subreddit: string, limit = 100, after = '', before = '') {
+export async function fetchSubReddit(subreddit: string, token: string, limit = 100, after = '', before = '') {
     try {
-        // Construye la URL con los parámetros after y before
         const url = `${BASE_URL}/r/${subreddit}/hot?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
 
-        // Fetch the Reddit data using the token
         const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -67,6 +50,4 @@ export async function fetchSubReddit(subreddit: string, limit = 100, after = '',
         return {}; // Return an empty object in case of error
     }
 }
-
-
 

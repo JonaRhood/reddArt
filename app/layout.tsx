@@ -23,10 +23,10 @@ export default function RootLayout({ children }: Props) {
             bg-light-background text-light-text
         `}>
           <section className="flex">
-            <div className="fixed w-80 bg-light-surface h-screen overflow-hidden z-50">
+            <div className="fixed w-56 sm:w-80 bg-light-surface h-screen overflow-hidden z-50">
               <Sidenav />
             </div>
-            <div className="flex-1 ml-80 bg-light-background h-screen overflow-auto">
+            <div className="flex-1 ml-56 sm:ml-80 bg-light-background h-screen overflow-auto">
               <main className="p-4">{children}</main>
             </div>
           </section>

@@ -5,9 +5,9 @@ import Link from "next/link";
 
 export default function Sidenav() {
     return (
-        <div className="flex flex-col w-80 z-50 bg-light-surface h-screen overflow-hidden fixed">
+        <div className="flex flex-col w-56 z-50 bg-light-surface h-screen overflow-hidden fixed sm:w-80">
             <Link href={`/`} >
-                <div className="flex w-80 items-center justify-center border-b-2 bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-10">
+                <div className="flex w-56 sm:w-80 items-center justify-center border-b-2 bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-10">
                     <CustomIcon className="w-12 h-12 text-[#ff4500]" />
                     <h1 className="text-center font-bold text-3xl">
                         <span className="text-[#ff4500]">redd</span>

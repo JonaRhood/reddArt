@@ -67,7 +67,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
             ) : (
                 <>
                     <Masonry
-                        breakpointCols={{ default: 4, 1100: 3, 700: 2, 500: 1 }}
+                        breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}
                         className={styles.masonryGrid}
                         columnClassName={styles.masonryGridColumn}
                     >

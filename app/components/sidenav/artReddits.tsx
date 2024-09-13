@@ -19,31 +19,31 @@ export default function ArtReddits() {
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                let results: any[] = [];
-                for (let i = 0; i < reddits.length; i += BATCH_SIZE) {
-                    const batch = reddits.slice(i, i + BATCH_SIZE);
-                    const dataPromises = batch.map((reddit) => fetchToNavBar(reddit.url));
-                    const dataResults = await Promise.all(dataPromises);
-                    results = results.concat(dataResults);
-                }
-                setRedditData(results.filter(result => result && result.data)); // Filter out invalid results
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         setLoading(true);
+    //         try {
+    //             let results: any[] = [];
+    //             for (let i = 0; i < reddits.length; i += BATCH_SIZE) {
+    //                 const batch = reddits.slice(i, i + BATCH_SIZE);
+    //                 const dataPromises = batch.map((reddit) => fetchToNavBar(reddit.url));
+    //                 const dataResults = await Promise.all(dataPromises);
+    //                 results = results.concat(dataResults);
+    //             }
+    //             setRedditData(results.filter(result => result && result.data)); // Filter out invalid results
 
-                console.log("Fetched Results:", results);
+    //             console.log("Fetched Results:", results);
                 
-                localStorage.setItem('lastFetchTime', Date.now().toString());
-            } catch (error) {
-                console.error("Error fetching Reddit data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    //             localStorage.setItem('lastFetchTime', Date.now().toString());
+    //         } catch (error) {
+    //             console.error("Error fetching Reddit data:", error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     return (
         <div>

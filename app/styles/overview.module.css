@@ -1,3 +1,14 @@
+.masonryGrid {
+    display: flex;
+    margin-left: -16px; /* Adjust for grid gap */
+    width: auto;
+}
+
+.masonryGridColumn {
+    padding-left: 16px; /* Adjust for grid gap */
+    background-clip: padding-box;
+}
+
 .galleryContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

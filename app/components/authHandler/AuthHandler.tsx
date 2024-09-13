@@ -9,8 +9,7 @@ export const AuthHandler = () => {
 
   useEffect(() => {
     const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
-    const clientSecret = process.env.NEXT_PUBLIC_REDDIT_CLIENT_SECRET;
-    const redirectUri = 'https://reddit-client-rho.vercel.app/';
+    const redirectUri = 'http://localhost:3000/';
     const state = uuidv4();
     const scope = 'read';
     const duration = 'permanent';
@@ -37,7 +36,7 @@ export const AuthHandler = () => {
           if (data.token) {
             localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
             console.log('%cToken received', 'color: green; font-weight: bold;');
-            
+
             window.location.href = redirectUri;
           } else {
             console.error('Failed to get access token:', data.error);

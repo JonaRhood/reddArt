@@ -1,9 +1,9 @@
 // fetchData.ts
 const BASE_URL = 'https://oauth.reddit.com';
-const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
 
 
 export async function fetchToNavBar(subreddit: string) {
+    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {
         // Fetch the Reddit data using the token
         const response = await fetch(`${BASE_URL}/r/${subreddit}/about`, {
@@ -44,6 +44,7 @@ export async function fetchToNavBar(subreddit: string) {
 // }
 
 export async function fetchSubReddit(subreddit: string, limit = 100, after = '', before = '') {
+    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {
         // Construye la URL con los parámetros after y before
         const url = `${BASE_URL}/r/${subreddit}/hot?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;

@@ -12,21 +12,28 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 
+const BATCH_SIZE = 25; // Adjust the batch size as needed
+
 export default function ArtReddits() {
 
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const redditAmount = reddits.length;
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.url));
-                const dataResults = await Promise.all(dataPromises);
-                setRedditData(dataResults);
+                let results: any[] = [];
+                for (let i = 0; i < reddits.length; i += BATCH_SIZE) {
+                    const batch = reddits.slice(i, i + BATCH_SIZE);
+                    const dataPromises = batch.map((reddit) => fetchToNavBar(reddit.url));
+                    const dataResults = await Promise.all(dataPromises);
+                    results = results.concat(dataResults);
+                }
+                setRedditData(results.filter(result => result && result.data)); // Filter out invalid results
 
+                console.log("Fetched Results:", results);
+                
                 localStorage.setItem('lastFetchTime', Date.now().toString());
             } catch (error) {
                 console.error("Error fetching Reddit data:", error);
@@ -40,8 +47,9 @@ export default function ArtReddits() {
 
     return (
         <div>
-            {loading ? <NavDivSkeleton redditAmount={redditAmount} /> : (
-                // Render reddit items once loaded
+            {loading ? (
+                <NavDivSkeleton redditAmount={reddits.length} />
+            ) : (
                 redditData.map((redditItem, i) => {
                     const children = redditItem.data || {};
                     const subReddit = children.display_name_prefixed || "No title available";
@@ -51,12 +59,9 @@ export default function ArtReddits() {
                     return (
                         <div
                             key={subReddit}
-                            className="flex-column content-around w-full bg-light-surface p-2 h-24  overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-20 hover:cursor-pointer"
+                            className="flex-column content-around w-full bg-light-surface p-2 h-24 overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-20 hover:cursor-pointer"
                         >
-                            <Link
-                                href={`/${subReddit}/overview`}
-                                key={i}
-                            >
+                            <Link href={`/${subReddit}/overview`} key={i}>
                                 <div className="relative flex-column items-center">
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}
@@ -81,4 +86,4 @@ export default function ArtReddits() {
             )}
         </div>
     );
-}
+};

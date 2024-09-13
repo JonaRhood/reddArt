@@ -14,8 +14,41 @@
     padding: 0;
 }
 
+
+.imageContainer:hover .image {
+    filter: brightness(60%);
+    cursor: zoom-in;
+}
+
+.imageContainer:hover .titleOverlay {
+    opacity: 1;
+}
+
 .image {
     object-fit: contain;
     width: 100%;
     height: auto;
+    border-radius: 20px;
+    transition: filter 0.5s ease;
+}
+
+.titleOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6); 
+    color: white;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+    transition: filter 0.3s ease;
+    display: flex;
+    align-items: center;
+    border-radius: 0 0 20px 20px; 
+}
+
+.titleOverlay:hover {
+    cursor: pointer;
+    color: #a0e7ff;
 }

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
 import "./styles/globals.css";
-import { IBM_Plex_Sans } from '@next/font/google';
+import { IBM_Plex_Sans } from 'next/font/google';
 
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -35,3 +35,11 @@ export default function RootLayout({ children }: Props) {
     </StoreProvider>
   );
 }
+
+export const metadata = {
+  title: 'reddArt', 
+  description: 'Your site description here',
+  icons: {
+    icon: '/favicon.svg',
+  },
+};

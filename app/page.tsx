@@ -6,6 +6,10 @@ export default function IndexPage() {
   return <Landing />;
 }
 
-export const metadata: Metadata = {
-  title: "Redux Toolkit",
+export const metadata = {
+  title: 'reddArt', 
+  description: 'Your site description here',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };

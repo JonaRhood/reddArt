@@ -13,44 +13,33 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 
 export default function ArtReddits() {
-
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
-    const [tokenAvailable, setTokenAvailable] = useState(false);
 
     useEffect(() => {
-        // Check for the token in localStorage
-        const checkToken = () => {
-            const token = localStorage.getItem("REDDART_ACCESS_TOKEN");
-            if (token) {
-                setTokenAvailable(true);
-            } else {
-                setTokenAvailable(false);
-            }
+        const waitForToken = () => {
+            return new Promise((resolve) => {
+                const checkToken = () => {
+                    const token = localStorage.getItem('yourTokenKey'); // Cambia 'yourTokenKey' por la clave que uses para almacenar el token
+                    if (token) {
+                        resolve(token);
+                    } else {
+                        setTimeout(checkToken, 100); // Verifica cada 100 ms
+                    }
+                };
+                checkToken();
+            });
         };
-
-        // Check token availability on mount
-        checkToken();
-
-        // Optionally, add an event listener if the token can change dynamically
-        window.addEventListener("storage", checkToken);
-
-        return () => {
-            window.removeEventListener("storage", checkToken);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!tokenAvailable) {
-            return; // Exit early if the token is not available
-        }
 
         const fetchData = async () => {
             setLoading(true);
             try {
+                // Esperar hasta que el token esté disponible
+                await waitForToken();
+
                 const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));
                 const results = await Promise.all(dataPromises);
-                setRedditData(results.filter(result => result && result.data)); // Filter out invalid results
+                setRedditData(results.filter(result => result && result.data)); // Filtrar resultados inválidos
 
                 console.log("Fetched Results:", results);
                 
@@ -63,7 +52,7 @@ export default function ArtReddits() {
         };
 
         fetchData();
-    }, [tokenAvailable]);
+    }, []);
 
     return (
         <div>

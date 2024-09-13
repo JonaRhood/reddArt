@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Landing from "./components/landing/landing";
+import { AuthHandler } from "./components/authHandler/AuthHandler";
 import "./styles/globals.css";
 
 export default function IndexPage() {
-  return <Landing />;
+  return (
+    <>
+      <AuthHandler />
+      <Landing />
+    </>
+  );
 }
 
 export const metadata: Metadata = {

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const REDDIT_API_URL = process.env.REDDIT_API_URL || 'http://localhost:3000'; 
+
+
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const url = searchParams.get('url');
@@ -9,10 +12,13 @@ export async function GET(req: NextRequest) {
     }
 
     try {
+        // Obtener el token de acceso (puedes reemplazar esto con tu lógica para obtener el token)
+        const tokenResponse = await fetch(`${REDDIT_API_URL}/api/reddit-token`);
+        const { access_token } = await tokenResponse.json();
+
         const response = await fetch(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Accept': 'application/json'
+                'User-Agent': 'web:_glPpJan2C9COPXFnqCH5Q:v1.0 (by /u/Brief_King_9490)',
             }
         });
 

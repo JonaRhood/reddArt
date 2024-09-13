@@ -20,11 +20,11 @@ export default function ArtReddits() {
         const waitForToken = () => {
             return new Promise((resolve) => {
                 const checkToken = () => {
-                    const token = localStorage.getItem('yourTokenKey'); // Cambia 'yourTokenKey' por la clave que uses para almacenar el token
+                    const token = localStorage.getItem('REDDART_ACCESS_TOKEN'); 
                     if (token) {
                         resolve(token);
                     } else {
-                        setTimeout(checkToken, 100); // Verifica cada 100 ms
+                        setTimeout(checkToken, 100); 
                     }
                 };
                 checkToken();
@@ -34,7 +34,6 @@ export default function ArtReddits() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Esperar hasta que el token esté disponible
                 await waitForToken();
 
                 const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));

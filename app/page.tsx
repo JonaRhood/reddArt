@@ -6,7 +6,7 @@ export default function IndexPage() {
   return <Landing />;
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'reddArt', 
   description: 'Your site description here',
   icons: {

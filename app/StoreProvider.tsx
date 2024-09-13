@@ -30,7 +30,7 @@ export const StoreProvider = ({ children }: Props) => {
   useEffect(() => {
     const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
     const clientSecret = process.env.NEXT_PUBLIC_REDDIT_CLIENT_SECRET;
-    const redirectUri = 'http://localhost:3000/';
+    const redirectUri = 'https://reddit-client-rho.vercel.app/';
     const state = uuidv4();
     const scope = 'read';
     const duration = 'permanent';
@@ -41,7 +41,7 @@ export const StoreProvider = ({ children }: Props) => {
     const urlState = searchParams.get("state");
     const urlCode = searchParams.get("code");
     const urlError = searchParams.get("error");
-    const currentUrl = window.location.href === "http://localhost:3000/"
+    const currentUrl = window.location.href === "https://reddit-client-rho.vercel.app/"
 
 
     // If there's no authState saved on localStorage or urlState is not like localStorage or urlError

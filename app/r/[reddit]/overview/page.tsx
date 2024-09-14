@@ -6,13 +6,14 @@ import Image from "next/image";
 import Masonry from "react-masonry-css";
 import styles from '@/app/styles/overview.module.css';
 import { v4 as uuidv4 } from 'uuid';
+import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 
 export default function Page({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
     const [subRedditInfo, setSubredditInfo] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [userAvatars, setUserAvatars] = useState<{ [key: string]: string }>({});
+    const [imgOnLoading, setImgOnLoading] = useState(true);
     const [after, setAfter] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
 
@@ -20,6 +21,8 @@ export default function Page({ params }: { params: { reddit: string } }) {
         try {
             const result = await fetchSubReddit(subReddit, 100, afterParam);
             const data = result.data.children;
+
+            console.log("Fetched Img:", data);
 
             if (Array.isArray(data)) {
                 setSubredditInfo(prevData => [...prevData, ...data]); // Append new data to existing data
@@ -90,7 +93,11 @@ export default function Page({ params }: { params: { reddit: string } }) {
                                         height={600}
                                         className={styles.image}
                                         priority
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                     />
+
+                                    <div className={styles.gradientOverlay}></div>
+                                    
                                     <div className={styles.titleOverlay}>
                                         <i><UserIcon className="size-4" /></i>
                                         <span className="ml-3">{"u/" + author}</span>

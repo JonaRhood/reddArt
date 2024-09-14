@@ -1,11 +1,11 @@
 .masonryGrid {
     display: flex;
-    margin-left: -16px; /* Adjust for grid gap */
+    margin-left: -16px; /* Ajusta el espacio entre columnas */
     width: auto;
 }
 
 .masonryGridColumn {
-    padding-left: 16px; /* Adjust for grid gap */
+    padding-left: 16px; /* Ajusta el espacio entre columnas */
     background-clip: padding-box;
 }
 
@@ -23,23 +23,50 @@
     box-sizing: border-box;
     position: relative;
     padding: 0;
+    margin-bottom: 16px;
+    overflow: hidden; 
+    border-radius: 20px; 
+    transition: box-shadow 0.3s ease-in-out; /* Añadido para suavizar el cambio en el hover */
 }
 
+.gradientOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    z-index: 1;
+    pointer-events: none; /* Evita que interfiera con el hover */
+    opacity: 0; 
+    transition: opacity 0.3s ease-in-out;
+}
 
-.imageContainer:hover .image {
-    filter: brightness(60%);
-    cursor: zoom-in;
+.imageContainer:hover {
+    cursor: pointer;
 }
 
 .imageContainer:hover .titleOverlay {
-    opacity: 1;
+    transform: translateY(0); 
+}
+
+.imageContainer:hover .gradientOverlay {
+    opacity: 1; 
+}
+
+.imageContainer:hover .titleOverlay span {
+    transform: translateY(0);
+}
+
+.blur {
+    filter: blur(8px);
 }
 
 .image {
     object-fit: contain;
     width: 100%;
     height: auto;
-    border-radius: 20px;
+    border-radius: 20px; 
     transition: filter 0.5s ease;
 }
 
@@ -49,17 +76,42 @@
     left: 0;
     width: 100%;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.6); 
+    /* background-color: rgba(0, 0, 0, 0.6);  */
+    /* background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)); */
     color: white;
-    opacity: 0; 
-    transition: opacity 0.3s ease;
-    transition: filter 0.3s ease;
+    transform: translateY(100%); 
+    transition: transform 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    border-radius: 0 0 20px 20px; 
+    border-radius: 0 0 20px 20px;
+    overflow: hidden; 
+    z-index: 5;
+}
+
+.titleOverlay span {
+    transform: translateY(100%); 
+    transition: transform 0.5s
 }
 
 .titleOverlay:hover {
     cursor: pointer;
     color: #a0e7ff;
+}
+
+.skeleton {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    background: #ccc;
+    animation: shimmer .5s infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes shimmer {
+    0% {
+        filter: blur(10%);
+    }
+    100% {
+        filter: blur(0%);
+    }
 }

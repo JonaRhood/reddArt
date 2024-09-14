@@ -61,14 +61,14 @@ tests.forEach(test => {
 export const shimmer = (w: number, h: number) => {
   // Function to generate a dark vintage color
   const getDarkVintageColor = () => {
-    const darkColor = (min: number, max: number) => {
+    const pastelColor = (min: number, max: number) => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-
-    const r = darkColor(0, 100); // Darker red component
-    const g = darkColor(0, 100); // Darker green component
-    const b = darkColor(0, 100); // Darker blue component
-
+  
+    const r = pastelColor(80, 160); // Muted red component
+    const g = pastelColor(80, 160); // Muted green component
+    const b = pastelColor(80, 160); // Muted blue component
+  
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 

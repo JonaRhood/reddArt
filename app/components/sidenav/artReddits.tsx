@@ -69,7 +69,7 @@ export default function ArtReddits() {
                             key={subReddit}
                             className="flex-column content-around w-full bg-light-surface p-2 h-24 overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-20 hover:cursor-pointer"
                         >
-                            <Link href={`/${subReddit}/overview`} key={i}>
+                            <Link href={`/${subReddit}`} key={i}>
                                 <div className="relative flex-column items-center">
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}

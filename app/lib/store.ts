@@ -2,31 +2,35 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { counterSlice } from "./features/counter/counterSlice";
 import { quotesApiSlice } from "./features/quotes/quotesApiSlice";
+import { gallerySlice } from "./features/gallery/gallerySlice";
 
-// `combineSlices` automatically combines the reducers using
-// their `reducerPath`s, therefore we no longer need to call `combineReducers`.
-const rootReducer = combineSlices(counterSlice, quotesApiSlice);
-// Infer the `RootState` type from the root reducer
+// `combineSlices` automáticamente combina los reductores usando
+// sus `reducerPath`, por lo que ya no necesitamos llamar a `combineReducers`.
+const rootReducer = combineSlices(counterSlice, quotesApiSlice, gallerySlice);
+
+// Inferimos el tipo `RootState` a partir del `rootReducer`
 export type RootState = ReturnType<typeof rootReducer>;
 
-// `makeStore` encapsulates the store configuration to allow
-// creating unique store instances, which is particularly important for
-// server-side rendering (SSR) scenarios. In SSR, separate store instances
-// are needed for each request to prevent cross-request state pollution.
+// `makeStore` encapsula la configuración de la tienda para permitir
+// crear instancias únicas de la tienda, lo que es particularmente
+// importante para el renderizado del lado del servidor (SSR).
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
-    // Adding the api middleware enables caching, invalidation, polling,
-    // and other useful features of `rtk-query`.
-    middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat(quotesApiSlice.middleware);
-    },
+    // Modificamos los middleware predeterminados
+    // middleware: (getDefaultMiddleware) =>
+    //   getDefaultMiddleware({
+    //     // Deshabilitar el chequeo de serialización para mejorar el rendimiento
+    //     serializableCheck: false,
+    //     // Deshabilitar el chequeo de inmutabilidad para mejorar el rendimiento
+    //     immutableCheck: false,
+    //   }).concat(quotesApiSlice.middleware),
   });
 };
 
-// Infer the return type of `makeStore`
+// Inferimos el tipo de retorno de `makeStore`
 export type AppStore = ReturnType<typeof makeStore>;
-// Infer the `AppDispatch` type from the store itself
+// Inferimos el tipo `AppDispatch` a partir de la tienda
 export type AppDispatch = AppStore["dispatch"];
 export type AppThunk<ThunkReturnType = void> = ThunkAction<
   ThunkReturnType,

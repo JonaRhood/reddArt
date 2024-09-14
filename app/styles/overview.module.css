@@ -30,12 +30,23 @@
 
 }
 
-/* .imgZoom {
-    position: relative;
+.zoomedImageContainer {
+    position: fixed;
     transform: scale(1.5);
     z-index: 100;
     cursor: zoom-out;
-} */
+    top: 0;
+    right: 0;
+}
+
+.zoomImg {
+    position: fixed;
+    transform: scale(1.5);
+    z-index: 100;
+    cursor: zoom-out;
+    top: 0;
+    right: 0;
+}
 
 .gradientOverlay {
     position: absolute;

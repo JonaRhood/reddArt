@@ -11,25 +11,35 @@ import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/lib/store";
+import { setPosts, setAfter, setLoading, setScrollPosition } from "@/app/lib/features/gallery/gallerySlice";
+
 export default function Page({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
     const [subRedditInfo, setSubredditInfo] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [after, setAfter] = useState<string | null>(null);
+    // const [loading, setLoading] = useState(true);
+    // const [after, setAfter] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
     const [imgZoomed, setImgZoomed] = useState<string | null>(null);
 
     const router = useRouter();
 
+    const posts = useSelector((state: RootState) => state.gallery.posts);
+    const after = useSelector((state: RootState) => state.gallery.after);
+    const loading = useSelector((state: RootState) => state.gallery.loading);
+    const dispatch = useDispatch();
+
+
     const fetchData = async (afterParam = '') => {
+        dispatch(setLoading(true)); // Activa el estado de carga
         try {
             const result = await fetchSubReddit(subReddit, 100, afterParam);
             const data = result.data.children;
 
             if (Array.isArray(data)) {
-                setSubredditInfo(prevData => [...prevData, ...data]); // Append new data to existing data
-                setAfter(result.data.after || null); // Update 'after' for next fetch
-                setHasMore(Boolean(result.data.after)); // Check if there's more data to load
+                dispatch(setPosts(afterParam === '' ? data : [...posts, ...data]));
+                dispatch(setAfter(result.data.after || null)); // Update 'after' for next fetch
             } else {
                 console.error("Data received is not an array:", data);
                 setHasMore(false);
@@ -38,18 +48,19 @@ export default function Page({ params }: { params: { reddit: string } }) {
             console.error("Error fetching subreddit data:", error);
             setHasMore(false);
         } finally {
-            setLoading(false);
+            dispatch(setLoading(false)); // Desactiva el estado de carga
         }
     };
 
     useEffect(() => {
-        fetchData(); // Initial fetch without 'after' parameter
+        dispatch(setPosts([])); // Reiniciar posts al cambiar de subreddit
+        dispatch(setAfter(null)); // Reiniciar after al cambiar de subreddit
+        fetchData(); // Realizar la nueva búsqueda
     }, [subReddit]);
 
     // Function to load more data
     const loadMore = () => {
-        if (hasMore && after) {
-            setLoading(true);
+        if (after) {
             fetchData(after); // Fetch more data using the current 'after' value
         }
     };
@@ -64,15 +75,16 @@ export default function Page({ params }: { params: { reddit: string } }) {
         }
     };
 
-    const handleImageZoom = (uniqueKey: string) => {
-        setImgZoomed(prevKey => (prevKey === uniqueKey ? null : uniqueKey));
-        router.replace(`/r/${subReddit}?id=${uniqueKey}`);
+    const handleImageZoomIn = (key: string, imgUrl: string) => {
+        dispatch(setScrollPosition(window.scrollY)); // Guarda el scroll en Redux
+        sessionStorage.setItem('scrollPosition', window.scrollY.toString()); // Almacena en sessionStorage
+        router.push(`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgUrl))}`);
     };
 
     return (
         <div>
-            {loading && subRedditInfo.length === 0 ? (
-                <p>Loading...</p> // You can replace this with a loading spinner or skeleton screen
+            {loading && posts.length === 0 ? (
+                <p>Loading...</p>
             ) : (
                 <>
                     <Masonry
@@ -80,49 +92,41 @@ export default function Page({ params }: { params: { reddit: string } }) {
                         className={styles.masonryGrid}
                         columnClassName={styles.masonryGridColumn}
                     >
-                        {subRedditInfo.map((item) => {
+                        {Array.isArray(posts) && posts.map((item, index) => {
                             const preview = item.data.preview;
                             const imgSource = preview?.images?.[0]?.source?.url;
-                            const uniqueKey = item.data.name; // Utilizar el nombre del post o un identificador persistente
+                            const key = `${item.data.name}-${index}`;
                             const author = item.data.author;
 
                             if (!imgSource) {
-                                return null; // Skip items without image source
+                                return null;
                             }
 
                             return (
-                                // <Link href={`/r/${subReddit}/${uniqueKey}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`}
-
-                                //     key={uniqueKey}
-                                //     passHref
-                                // >
-                                    <div
-                                        key={uniqueKey}
-                                        className={`${styles.imageContainer} ${imgZoomed === uniqueKey ? styles.imgZoom : ""}`} // Solo agregar la clase si el uniqueKey coincide con imgZoomed
-                                        onClick={() => handleImageZoom(uniqueKey)} // Pasar el uniqueKey
-                                    >
-                                        <Image
-                                            src={cleanUrl(imgSource)}
-                                            alt={uniqueKey}
-                                            width={800}
-                                            height={600}
-                                            className={styles.image}
-                                            priority
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        />
-
-                                        <div className={styles.gradientOverlay}></div>
-
-                                        <div className={styles.titleOverlay}>
-                                            <i><UserIcon className="size-4" /></i>
-                                            <span className="ml-3">{"u/" + author}</span>
-                                        </div>
+                                <div
+                                    key={key}
+                                    className={`${styles.imageContainer} ${imgZoomed === imgSource ? styles.imgZoom : ""}`}
+                                    onClick={() => handleImageZoomIn(key, imgSource)}
+                                >
+                                    <Image
+                                        src={cleanUrl(imgSource)}
+                                        alt={key}
+                                        width={800}
+                                        height={600}
+                                        className={styles.image}
+                                        priority
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                    />
+                                    <div className={styles.gradientOverlay}></div>
+                                    <div className={styles.titleOverlay}>
+                                        <i><UserIcon className="size-4" /></i>
+                                        <span className="ml-3">{"u/" + author}</span>
                                     </div>
-                                // </Link>
+                                </div>
                             );
                         })}
                     </Masonry>
-                    {hasMore && (
+                    {after && (
                         <button onClick={loadMore} className={styles.loadMoreButton}>
                             Load More
                         </button>

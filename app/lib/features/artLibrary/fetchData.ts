@@ -25,24 +25,6 @@ export async function fetchToNavBar(subreddit: string) {
     }
 }
 
-
-// export async function fetchToken() {
-//     try {
-//         const response = await fetch('./api/reddit-token');
-//         const data = await response.json();
-//         if (data.token) {
-//             localStorage.setItem('REDDIT_ACCESS_TOKEN', data.token);
-//             localStorage.setItem('lastTokenTime', Date.now().toString());
-//             console.log('Token stored in localStorage.');
-//         } else {
-//             console.error('Failed to fetch token:', data.error);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching token:', error);
-//         throw new Error('Error fetching token.');
-//     }
-// }
-
 export async function fetchSubReddit(subreddit: string, limit = 100, after = '', before = '') {
     const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {

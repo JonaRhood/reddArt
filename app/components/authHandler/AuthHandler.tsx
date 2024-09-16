@@ -6,12 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const AuthHandler = () => {
   const searchParams = useSearchParams();
-  const { NEXT_PUBLIC_REDDIT_REDIRECT_URL } = process.env;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
-      const redirectUri = `http://localhost:3000/`  // http://localhost:3000/    https://reddit-client-rho.vercel.app/;
+      const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID ?? "";
+      const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL ?? "";  // http://localhost:3000/    https://reddit-client-rho.vercel.app/;
       const state = uuidv4();
       const scope = 'read';
       const duration = 'permanent';

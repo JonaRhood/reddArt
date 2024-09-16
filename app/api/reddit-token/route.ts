@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   const { REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT, REDDIT_REDIRECT_URL } = process.env;
 
-  if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET || !REDDIT_USER_AGENT) {
+  if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET || !REDDIT_USER_AGENT || !REDDIT_REDIRECT_URL) {
     return NextResponse.json({ error: 'Missing environment variables' }, { status: 500 });
   }
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       new URLSearchParams({
         grant_type: 'authorization_code',
         code,
-        redirect_uri: 'http://localhost:3000/', // Ensure this matches your redirect URI
+        redirect_uri: REDDIT_REDIRECT_URL, // Ensure this matches your redirect URI
       }),
       {
         headers: {

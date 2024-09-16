@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
 
 
     const fetchData = async (afterParam = '') => {
-        dispatch(setLoading(true)); // Activa el estado de carga
+        // dispatch(setLoading(true)); // Activa el estado de carga
         try {
             const result = await fetchSubReddit(subReddit, 100, afterParam);
             const data = result.data.children;
@@ -78,7 +78,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
 
     return (
         <div>
-            {loading && posts.length === 0 ? (
+            {loading ? (
                 <p>Loading...</p>
             ) : (
                 <>

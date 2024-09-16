@@ -1,5 +1,7 @@
 'use client';
 
+import styles from '@/app/styles/artReddits.module.css'
+
 import { fetchToNavBar } from "@/app/lib/features/artLibrary/fetchData";
 import { reddits } from "@/app/lib/features/artLibrary/data";
 import { useState, useEffect } from "react";
@@ -12,25 +14,30 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
+import { resetGallery, setSelectedSubReddit } from "@/app/lib/features/gallery/gallerySlice";
+import { RootState } from '@/app/lib/store';
 
 
 export default function ArtReddits() {
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedSubreddit, setSelectedSubreddit] = useState<string | null>(null);
+    const [areLinksDisabled, setAreLinksDisabled] = useState(false);
+
+    const storeSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
+
+
 
     const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
     const pathSegments = currentPath.split('/');
-    const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : null;
+    const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : null || "";
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const waitForToken = () => {
             return new Promise((resolve) => {
-                setSelectedSubreddit(currentSubreddit);
+                dispatch(setSelectedSubReddit(currentSubreddit));
                 const checkToken = () => {
                     const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
                     if (token) {
@@ -64,6 +71,19 @@ export default function ArtReddits() {
         fetchData();
     }, []);
 
+    const handleLinkClick = (subReddit: string) => {
+        if (storeSubReddit === subReddit) {
+            return;
+        } else if (!areLinksDisabled) {
+            setAreLinksDisabled(true);
+            dispatch(setSelectedSubReddit(subReddit));
+
+            setTimeout(() => {
+                setAreLinksDisabled(false);
+            }, 2500); // 3 seconds delay
+        }
+    };
+
     return (
         <div>
             {loading ? (
@@ -79,16 +99,20 @@ export default function ArtReddits() {
                         <div
                             key={subReddit}
                             className={`
-                            relative flex-column content-around w-full bg-light-surface p-3 h-24 overflow-hidden border-b-2 
-                            hover:bg-light-primary hover:bg-opacity-10 hover:cursor-pointer
-                            ${selectedSubreddit === subReddit ? 'bg-light-primary bg-opacity-25 hover:bg-opacity-25' : ""}
+                            ${styles.container}
+                            ${storeSubReddit === subReddit ? styles.selectedReddit : ""}
+                            ${storeSubReddit === subReddit ? "pointer-events-none cursor-pointer" : ""}
+                            ${areLinksDisabled && storeSubReddit !== subReddit ? "pointer-events-none transition duration-500 ease-in-out opacity-70" : ""}
+                            
                         `}
                         >
-                            {/* Aquí está el pseudo-elemento para el cuadrado azul */}
-                            {selectedSubreddit === subReddit && (
-                                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                            )}
-                            <Link href={`/${subReddit}`} key={i} onClick={() => setSelectedSubreddit(subReddit)}>
+                            {/* Blue pseudo-element */}
+                            <div className={`
+                                absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-1 -translate-x-2
+                                ${storeSubReddit === subReddit ? "translate-x-0" : ""}
+                                `}></div>
+
+                            <Link href={`/${subReddit}`} key={i} onClick={() => handleLinkClick(subReddit)}>
                                 <div className='relative flex-column items-center'>
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}

@@ -6,6 +6,7 @@ interface GalleryState {
   after: string | null;
   loading: boolean;
   scrollPosition: number;
+  selectedSubReddit: string | null;
 }
 
 const initialState: GalleryState = {
@@ -13,6 +14,7 @@ const initialState: GalleryState = {
   after: null,
   loading: false,
   scrollPosition: 0,
+  selectedSubReddit: null,
 };
 
 export const gallerySlice = createSlice({
@@ -31,6 +33,9 @@ export const gallerySlice = createSlice({
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
+    setSelectedSubReddit(state, action: PayloadAction<string>) {
+      state.selectedSubReddit = action.payload;
+    },
     resetGallery(state) {
       state.posts = [];
       state.after = null;
@@ -40,6 +45,6 @@ export const gallerySlice = createSlice({
   },
 });
 
-export const { setPosts, setLoadMore, setLoading, setScrollPosition, resetGallery } = gallerySlice.actions;
+export const { setPosts, setLoadMore, setLoading, setScrollPosition, setSelectedSubReddit, resetGallery } = gallerySlice.actions;
 export default gallerySlice.reducer;
 

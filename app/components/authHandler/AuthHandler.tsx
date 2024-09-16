@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
 export const AuthHandler = () => {
@@ -9,8 +9,8 @@ export const AuthHandler = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID ?? "";
-      const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL ?? "";  // http://localhost:3000/    https://reddit-client-rho.vercel.app/;
+      const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
+      const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL;  // http://localhost:3000/    https://reddit-client-rho.vercel.app/;
       const state = uuidv4();
       const scope = 'read';
       const duration = 'permanent';
@@ -23,9 +23,11 @@ export const AuthHandler = () => {
       const urlError = searchParams.get("error");
       const currentUrl = window.location.href === redirectUri;
 
-      if (currentUrl && localToken) {
+      if (!clientId || !redirectUri) {
+        console.error("Client Id or Redirect Uri not defined");
+      } else if (currentUrl && localToken) {
         console.log("Token and permission given.");
-      } else if (!localState || urlState !== localState || urlError) {
+      } else if (!localState || urlError) {
         localStorage.setItem("REDDART_AUTH_STATE", state);
         const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&duration=${duration}&scope=${scope}`;
         window.location.href = authUrl;

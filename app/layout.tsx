@@ -4,6 +4,8 @@ import Sidenav from "./components/sidenav/sidenav";
 import "./styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
 
+import { AuthHandler } from "./components/authHandler/AuthHandler";
+import { Suspense } from "react";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -22,6 +24,9 @@ export default function RootLayout({ children }: Props) {
             ${ibmPlexSans.className}
             bg-light-background text-light-text
         `}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <AuthHandler />
+          </Suspense>
           <section className="flex">
             <div className="fixed w-56 sm:w-80 bg-light-surface h-screen overflow-hidden z-50">
               <Sidenav />

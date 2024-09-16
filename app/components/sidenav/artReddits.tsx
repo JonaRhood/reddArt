@@ -21,7 +21,7 @@ export default function ArtReddits() {
     const [loading, setLoading] = useState(true);
     const [selectedSubreddit, setSelectedSubreddit] = useState<string | null>(null);
 
-    const currentPath = typeof window !== "undefined" ? window.location.pathname : ""; 
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
     const pathSegments = currentPath.split('/');
     const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : null;
 
@@ -79,10 +79,15 @@ export default function ArtReddits() {
                         <div
                             key={subReddit}
                             className={`
-                                flex-column content-around w-full bg-light-surface p-2 h-24 overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-10 hover:cursor-pointer
-                                ${selectedSubreddit === subReddit ? 'bg-light-primary bg-opacity-25 hover:bg-opacity-25' : ""}
-                            `}
+                            relative flex-column content-around w-full bg-light-surface p-3 h-24 overflow-hidden border-b-2 
+                            hover:bg-light-primary hover:bg-opacity-10 hover:cursor-pointer
+                            ${selectedSubreddit === subReddit ? 'bg-light-primary bg-opacity-25 hover:bg-opacity-25' : ""}
+                        `}
                         >
+                            {/* Aquí está el pseudo-elemento para el cuadrado azul */}
+                            {selectedSubreddit === subReddit && (
+                                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            )}
                             <Link href={`/${subReddit}`} key={i} onClick={() => setSelectedSubreddit(subReddit)}>
                                 <div className='relative flex-column items-center'>
                                     <div className="flex items-center relative">

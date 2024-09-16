@@ -3,12 +3,11 @@ import { NextResponse } from "next/server";
 import axios, { AxiosError } from 'axios';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const code = searchParams.get('code');
+  const code = request.headers.get("Authorization")?.split(" ")[1];
 
   if (!code) {
-    return NextResponse.json({ error: 'Authorization code is missing' }, { status: 400 });
-  }
+    return NextResponse.json({ error: 'Refresh token is missing' }, { status: 400 });
+}
 
   const { REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT, REDDIT_REDIRECT_URL } = process.env;
 
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    return NextResponse.json({ token: response.data.access_token });
+    return NextResponse.json({ token: response.data.access_token, refresh_token: response.data.refresh_token });
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios-specific errors

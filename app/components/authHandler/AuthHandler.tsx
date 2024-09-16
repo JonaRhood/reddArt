@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { redirect, useSearchParams } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
+
 export const AuthHandler = () => {
   const searchParams = useSearchParams();
 
@@ -18,28 +19,59 @@ export const AuthHandler = () => {
       const localState = localStorage.getItem("REDDART_AUTH_STATE");
       const localCode = localStorage.getItem("REDDART_CODE");
       const localToken = localStorage.getItem("REDDART_ACCESS_TOKEN");
+      const localRefreshToken = localStorage.getItem("REDDART_REFRESH_TOKEN");
+      const localTokenTime = localStorage.getItem("REDDART_TOKEN_TIME");
       const urlState = searchParams.get("state");
       const urlCode = searchParams.get("code");
       const urlError = searchParams.get("error");
       const currentUrl = window.location.href === redirectUri;
 
+      const oneHour = 60 * 60 * 1000;
+      
       if (!clientId || !redirectUri) {
-        console.error("Client Id or Redirect Uri not defined");
-      } else if (currentUrl && localToken) {
-        console.log("Token and permission given.");
+        console.error("Client id or Redirect Uri not defined");
+      } else if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
+        localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
+        fetch(`api/reddit-refresh-token`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localRefreshToken}`,
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.token) {
+              localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
+              localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
+
+              console.log('%cToken Refreshed', 'color: green; font-weight: bold;');
+            } else {
+              console.error('Failed to Refresh the Access Token', data.error);
+            }
+          })
+          .catch(error => {
+            console.error('Error Refreshing the token:', error);
+          });
       } else if (!localState || urlError) {
         localStorage.setItem("REDDART_AUTH_STATE", state);
         const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&duration=${duration}&scope=${scope}`;
         window.location.href = authUrl;
       } else if (urlCode && !localCode) {
         localStorage.setItem("REDDART_CODE", urlCode);
-        fetch(`/api/reddit-token?code=${urlCode}`)
+        fetch(`/api/reddit-token`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${urlCode}`,
+          }
+        })
           .then(response => response.json())
           .then(data => {
-            if (data.token) {
+            if (data.token && data.refresh_token) {
               localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
+              localStorage.setItem("REDDART_REFRESH_TOKEN", data.refresh_token);
+              localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
+              
               console.log('%cToken received', 'color: green; font-weight: bold;');
-              window.location.href = redirectUri;
             } else {
               console.error('Failed to get access token:', data.error);
             }

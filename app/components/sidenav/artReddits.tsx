@@ -47,7 +47,6 @@ export default function ArtReddits() {
 
                 console.log("Fetched Results:", results);
                 
-                localStorage.setItem('lastFetchTime', Date.now().toString());
             } catch (error) {
                 console.error("Error fetching Reddit data:", error);
             } finally {

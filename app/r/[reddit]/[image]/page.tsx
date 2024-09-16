@@ -23,7 +23,7 @@ export default function Page({ params }: ImagePageProps) {
     const decodedImgUrl = imgUrl ? decodeURIComponent(imgUrl) : '';
 
     const handleImageZoomOut = () => {
-        localStorage.removeItem('zoomedImage');
+    
         router.replace(`/r/${reddit}`);
     };
 

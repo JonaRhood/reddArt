@@ -10,25 +10,26 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { useSearchParams } from "next/navigation";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
-import { setPosts, setAfter, setLoading, setScrollPosition } from "@/app/lib/features/gallery/gallerySlice";
+import { setPosts, setLoadMore, setLoading, setScrollPosition, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
 
 export default function Page({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
-    const [subRedditInfo, setSubredditInfo] = useState<any[]>([]);
-    // const [loading, setLoading] = useState(true);
-    // const [after, setAfter] = useState<string | null>(null);
+    const searchParams = useSearchParams();
+
     const [hasMore, setHasMore] = useState(true);
     const [imgZoomed, setImgZoomed] = useState<string | null>(null);
 
     const router = useRouter();
 
-    const posts = useSelector((state: RootState) => state.gallery.posts);
-    const after = useSelector((state: RootState) => state.gallery.after);
-    const loading = useSelector((state: RootState) => state.gallery.loading);
-    const dispatch = useDispatch();
+    const posts = useAppSelector((state: RootState) => state.gallery.posts);
+    const after = useAppSelector((state: RootState) => state.gallery.after);
+    const loading = useAppSelector((state: RootState) => state.gallery.loading);
+    const savedScrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
+    const dispatch = useAppDispatch();
 
 
     const fetchData = async (afterParam = '') => {
@@ -38,30 +39,25 @@ export default function Page({ params }: { params: { reddit: string } }) {
             const data = result.data.children;
 
             if (Array.isArray(data)) {
-                dispatch(setPosts(afterParam === '' ? data : [...posts, ...data]));
-                dispatch(setAfter(result.data.after || null)); // Update 'after' for next fetch
+                dispatch(setPosts(data));
             } else {
                 console.error("Data received is not an array:", data);
-                setHasMore(false);
             }
         } catch (error) {
             console.error("Error fetching subreddit data:", error);
-            setHasMore(false);
         } finally {
-            dispatch(setLoading(false)); // Desactiva el estado de carga
+            dispatch(setLoading(false)); 
         }
     };
 
     useEffect(() => {
-        dispatch(setPosts([])); // Reiniciar posts al cambiar de subreddit
-        dispatch(setAfter(null)); // Reiniciar after al cambiar de subreddit
-        fetchData(); // Realizar la nueva búsqueda
+        fetchData()
     }, [subReddit]);
 
     // Function to load more data
     const loadMore = () => {
         if (after) {
-            fetchData(after); // Fetch more data using the current 'after' value
+            fetchData(after); 
         }
     };
 
@@ -77,7 +73,6 @@ export default function Page({ params }: { params: { reddit: string } }) {
 
     const handleImageZoomIn = (key: string, imgUrl: string) => {
         dispatch(setScrollPosition(window.scrollY)); // Guarda el scroll en Redux
-        sessionStorage.setItem('scrollPosition', window.scrollY.toString()); // Almacena en sessionStorage
         router.push(`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgUrl))}`);
     };
 

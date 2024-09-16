@@ -11,25 +11,32 @@ import { nFormatter } from "@/app/lib/utils/utils";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
-
+import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+
 
 export default function ArtReddits() {
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedSubreddit, setSelectedSubreddit] = useState<string | null>(null);
+
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : ""; 
+    const pathSegments = currentPath.split('/');
+    const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : null;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         const waitForToken = () => {
             return new Promise((resolve) => {
+                setSelectedSubreddit(currentSubreddit);
                 const checkToken = () => {
-                    const token = localStorage.getItem('REDDART_ACCESS_TOKEN'); 
+                    const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
                     if (token) {
                         resolve(token);
                     } else {
-                        setTimeout(checkToken, 100); 
+                        setTimeout(checkToken, 100);
                     }
                 };
                 checkToken();
@@ -43,10 +50,10 @@ export default function ArtReddits() {
 
                 const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));
                 const results = await Promise.all(dataPromises);
-                setRedditData(results.filter(result => result && result.data)); // Filtrar resultados inválidos
+                setRedditData(results.filter(result => result && result.data));
 
                 console.log("Fetched Results:", results);
-                
+
             } catch (error) {
                 console.error("Error fetching Reddit data:", error);
             } finally {
@@ -71,10 +78,13 @@ export default function ArtReddits() {
                     return (
                         <div
                             key={subReddit}
-                            className="flex-column content-around w-full bg-light-surface p-2 h-24 overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-20 hover:cursor-pointer"
+                            className={`
+                                flex-column content-around w-full bg-light-surface p-2 h-24 overflow-hidden border-b-2 transition all hover:bg-light-primary hover:bg-opacity-10 hover:cursor-pointer
+                                ${selectedSubreddit === subReddit ? 'bg-light-primary bg-opacity-25 hover:bg-opacity-25' : ""}
+                            `}
                         >
-                            <Link href={`/${subReddit}`} key={i} onClick={() => dispatch(resetGallery())}>
-                                <div className="relative flex-column items-center">
+                            <Link href={`/${subReddit}`} key={i} onClick={() => setSelectedSubreddit(subReddit)}>
+                                <div className='relative flex-column items-center'>
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}
                                             className="rounded-full border border-2 border-light-primary"

@@ -20,10 +20,10 @@ export const gallerySlice = createSlice({
   initialState,
   reducers: {
     setPosts(state, action: PayloadAction<any[]>) {
-      state.posts = [...state.posts, ...action.payload];
+      state.posts = action.payload;
     },
-    setAfter(state, action: PayloadAction<string | null>) {
-      state.after = action.payload;
+    setLoadMore(state, action: PayloadAction<any[]>) {
+      state.posts = [...state.posts, ...action.payload];
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
@@ -40,6 +40,6 @@ export const gallerySlice = createSlice({
   },
 });
 
-export const { setPosts, setAfter, setLoading, setScrollPosition, resetGallery } = gallerySlice.actions;
+export const { setPosts, setLoadMore, setLoading, setScrollPosition, resetGallery } = gallerySlice.actions;
 export default gallerySlice.reducer;
 

@@ -1,3 +1,5 @@
+// Number Formatter
+////////////////////////////////////////////////////////////////////
 export function nFormatter(num: number, digits: number) {
   const lookup = [
     { value: 1, symbol: "" },
@@ -33,31 +35,9 @@ tests.forEach(test => {
   // console.log("nFormatter(%f, %i) = %s", test.num, test.digits, nFormatter(test.num, test.digits));
 });
 
-//   const vintageColors = [
-//     // Vintage Red
-//     '#D8A3A8', // Dusty Rose
-//     '#9E6F6F', // Muted Cranberry
-//     '#E27D60', // Terra Cotta
-//     '#B03A2E', // Old Brick
 
-//     // Vintage Beige
-//     '#F5F5DC', // Soft Beige
-//     '#FAEBD7', // Antique White
-//     '#FFFDD0', // Cream
-//     '#F7E7CE', // Champagne
-
-//     // Vintage Green
-//     '#9B9A8B', // Muted Sage
-//     '#8A9A5B', // Moss Green
-//     '#6B8E23', // Olive Drab
-//     '#BCCF9F'  // Pale Olive
-// ];
-
-// export function getRandomColor() {
-//     const randomIndex = Math.floor(Math.random() * vintageColors.length);
-//     return vintageColors[randomIndex];
-// };
-
+// Shimmer Loader for the gallery
+///////////////////////////////////////////////////////////////////////////////
 export const shimmer = (w: number, h: number) => {
   // Function to generate a dark vintage color
   const getDarkVintageColor = () => {
@@ -86,7 +66,7 @@ export const shimmer = (w: number, h: number) => {
   };
 
   const color1 = getDarkVintageColor();
-  const color2 = lightenColor(color1, 0.1); // Lighten color1 by 30% for color2
+  const color2 = lightenColor(color1, 0.08); // Lighten color1 by 30% for color2
 
   return `
     <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -106,8 +86,6 @@ export const shimmer = (w: number, h: number) => {
         to="${w}"
         dur="2s"
         repeatCount="indefinite"
-        keyTimes="0;0.5;1"
-        values="-${w};${w};-${w}"
         calcMode="linear"
       />
     </svg>`;

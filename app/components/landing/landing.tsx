@@ -4,7 +4,7 @@ export default function Landing() {
     return (
         <>
             <div>
-                <p>loading...</p>
+                <p>Landing Page</p>
             </div>
         </>
     )

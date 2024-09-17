@@ -142,3 +142,134 @@
     position: relative;
     bottom: 600px;
   }
+
+
+
+/* LOADER */
+div.pageloadAni {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 999;
+}
+
+.pageloadLogo {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	margin-left: -60px;
+	margin-top: -29px;
+}
+
+svg.logoLoader {
+  width: 84px;
+}
+
+.logoLoaderG {
+  stroke-width: 1;
+  stroke-dasharray: 310px;
+  stroke-dashoffset: 310px;
+  fill: #091C2C;
+   -webkit-transition: stroke-dashoffset 0.2s;
+  transition: stroke-dashoffset 0.2s;
+  -webkit-animation: g-line 1.8s ease-out forwards;
+  animation: g-line 1.8s ease-out forwards;
+  -webkit-animation-delay: .6s;
+  animation-delay: .6s;
+}
+
+.logoLoaderS {
+  stroke-width: 1;
+  stroke-dasharray: 260px;
+  stroke-dashoffset: 260px;
+  fill: #091C2C;
+   -webkit-transition: stroke-dashoffset 0.2s;
+  transition: stroke-dashoffset 0.2s;
+  -webkit-animation: s-line 1.8s ease-out forwards;
+  animation: s-line 1.8s ease-out forwards;
+  -webkit-animation-delay: .6s;
+  animation-delay: .6s;
+}
+
+.topI {
+  stroke-width: 1;
+  stroke-dasharray: 60px;
+  stroke-dashoffset: 60px;
+  fill: #091C2C;
+  -webkit-transition: stroke-dashoffset 0.2s;
+  transition: stroke-dashoffset 0.2s;
+  -webkit-animation: topI-line 1.8s ease-out forwards;
+  animation: topI-line 1.8s ease-out forwards;
+  -webkit-animation-delay: .6s;
+  animation-delay: .6s;
+}
+
+.bottomI {
+  stroke-width: 1;
+  stroke-dasharray: 98px;
+  stroke-dashoffset: 98px;
+  fill: #091C2C;
+  -webkit-transition: stroke-dashoffset 0.2s;
+  transition: stroke-dashoffset 0.2s;
+  -webkit-animation: bottomI-line 1.8s ease-out forwards;
+  animation: bottomI-line 1.8s ease-out forwards;
+  -webkit-animation-delay: .6s;
+  animation-delay: .6s;
+}
+
+@-webkit-keyframes g-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 310px; fill: transparent; }
+}
+
+@keyframes g-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 310px; fill: transparent; }
+}
+
+@-webkit-keyframes s-line {
+  0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 260px; fill: transparent; }
+}
+
+@keyframes s-line {
+  0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 260px; fill: transparent; }
+}
+
+@-webkit-keyframes topI-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 60px; fill: transparent; }
+}
+
+@keyframes topI-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 60px; fill: transparent; }
+}
+
+@-webkit-keyframes bottomI-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 98px; fill: transparent; }
+}
+
+@keyframes bottomI-line {
+   0%    { stroke-dashoffset: 0px; fill:#091C2C; }
+  25%  { stroke-dashoffset: 0px; fill: transparent; }
+  75%  { stroke-dashoffset: 0px; fill: transparent; }
+  100%  { stroke-dashoffset: 98px; fill: transparent; }
+}

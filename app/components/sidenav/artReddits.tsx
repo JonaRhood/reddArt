@@ -75,6 +75,7 @@ export default function ArtReddits() {
         if (storeSubReddit === subReddit) {
             return;
         } else if (!areLinksDisabled) {
+            // dispatch(resetGallery());
             setAreLinksDisabled(true);
             dispatch(setSelectedSubReddit(subReddit));
 

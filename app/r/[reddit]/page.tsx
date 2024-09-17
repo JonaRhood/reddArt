@@ -36,7 +36,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
-        // dispatch(setLoading(true)); // Activa el estado de carga
+        // dispatch(setLoading(true));
         try {
             const result = await fetchSubReddit(subReddit, 100);
             const data = result.data.children;
@@ -153,7 +153,9 @@ export default function Page({ params }: { params: { reddit: string } }) {
     return (
         <div>
             {loading ? (
-                <p>Loading...</p>
+               
+              <div></div>
+              
             ) : (
                 <>
                     <Masonry

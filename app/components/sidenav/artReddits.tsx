@@ -108,7 +108,7 @@ export default function ArtReddits() {
                         >
                             {/* Blue pseudo-element */}
                             <div className={`
-                                absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-1 -translate-x-2
+                                absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2
                                 ${storeSubReddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
 

@@ -33,7 +33,7 @@ export const gallerySlice = createSlice({
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
-    setSelectedSubReddit(state, action: PayloadAction<string>) {
+    setSelectedSubReddit(state, action: PayloadAction<string | null>) {
       state.selectedSubReddit = action.payload;
     },
     resetGallery(state) {

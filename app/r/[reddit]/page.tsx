@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import styles from '@/app/styles/overview.module.css';
 
+import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
-import styles from '@/app/styles/overview.module.css';
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
@@ -13,8 +13,10 @@ import { cleanUrl } from "@/app/lib/utils/utils";
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
-import { setPosts, setLoadMorePosts, setBackgroundPosts, 
-setLoading, setScrollPosition, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+import {
+    setPosts, setLoadMorePosts, setBackgroundPosts,
+    setLoading, setScrollPosition, resetGallery
+} from "@/app/lib/features/gallery/gallerySlice";
 
 export default function Page({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
@@ -31,7 +33,8 @@ export default function Page({ params }: { params: { reddit: string } }) {
 
     const sentinelRef = useRef(null);
 
-
+    //Function to Fetch Data
+    ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         // dispatch(setLoading(true)); // Activa el estado de carga
         try {
@@ -42,7 +45,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                 dispatch(setPosts(data));
                 setAfter(result.data.after);
                 fetchDataAfterBackground(result.data.after)
-        
+
             } else {
                 console.error("Data received is not an array:", data);
             }
@@ -53,6 +56,8 @@ export default function Page({ params }: { params: { reddit: string } }) {
         }
     };
 
+    //Function to Fetch After Data on the backround
+    ////////////////////////////////////////////////////////////////////////////
     const fetchDataAfterBackground = async (after: string) => {
         if (!after) {
             return;
@@ -79,9 +84,11 @@ export default function Page({ params }: { params: { reddit: string } }) {
         fetchData()
     }, [subReddit]);
 
+    //Sentinel Effect to Load More pictures automatically when scrolling down
+    ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
 
-        const fetchDataAfterBackgroundComponent = async () => {
+        const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
                 const result = await fetchSubReddit(subReddit, 100, after);
@@ -90,7 +97,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                 if (Array.isArray(data)) {
                     dispatch(setBackgroundPosts(data));
                     setAfter(result.data.after);
-            
+
                 } else {
                     console.error("Data received is not an array:", data);
                 }
@@ -99,7 +106,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
             } finally {
                 dispatch(setLoading(false));
                 setSentinel(true);
-                console.log("fetchDataAfterBackgroundComponent finished");
+                console.log("fetchDataAfterBackgroundEffect finished");
             }
         };
 
@@ -115,7 +122,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                 if (entry.isIntersecting) {
                     console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
-                    fetchDataAfterBackgroundComponent();
+                    fetchDataAfterBackgroundEffect();
                     setSentinel(false);
                 }
             });
@@ -188,7 +195,12 @@ export default function Page({ params }: { params: { reddit: string } }) {
                             );
                         })}
                     </Masonry>
-                    {sentinel && (<div ref={sentinelRef} style={{ height: '1px' }}></div>)}
+                    {sentinel && (
+                        <div
+                            ref={sentinelRef}
+                            className={styles.sentinel}
+                        ></div>
+                    )}
                 </>
             )}
         </div>

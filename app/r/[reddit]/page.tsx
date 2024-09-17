@@ -98,6 +98,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                 console.error("Error fetching subreddit data:", error);
             } finally {
                 dispatch(setLoading(false));
+                setSentinel(true);
                 console.log("fetchDataAfterBackgroundComponent finished");
             }
         };
@@ -115,6 +116,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                     console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
                     fetchDataAfterBackgroundComponent();
+                    setSentinel(false);
                 }
             });
         }, observerOptions);

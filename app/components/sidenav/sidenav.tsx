@@ -14,7 +14,6 @@ export default function Sidenav() {
 
     const handleLinkClick = () => {
         dispatch(resetGallery());
-        dispatch(setSelectedSubReddit(null));
     }
     
     return (

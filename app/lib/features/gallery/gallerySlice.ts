@@ -32,18 +32,19 @@ export const gallerySlice = createSlice({
     setBackgroundPosts(state, action: PayloadAction<any[]>) {
       state.backgroundPosts = action.payload;
     },
+    setSelectedSubReddit(state, action: PayloadAction<string | null>) {
+      state.selectedSubReddit = action.payload;
+    },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
-    setSelectedSubReddit(state, action: PayloadAction<string | null>) {
-      state.selectedSubReddit = action.payload;
-    },
     resetGallery(state) {
       state.posts = [];
-      state.after = null;
+      state.backgroundPosts = [];
+      state.selectedSubReddit = null;
       state.loading = false;
       state.scrollPosition = 0;
     },

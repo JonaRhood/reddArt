@@ -44,11 +44,11 @@ export const shimmer = (w: number, h: number) => {
     const pastelColor = (min: number, max: number) => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-  
+
     const r = pastelColor(80, 160); // Muted red component
     const g = pastelColor(80, 160); // Muted green component
     const b = pastelColor(80, 160); // Muted blue component
-  
+
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
@@ -95,3 +95,14 @@ export const toBase64 = (str: string) =>
   typeof window === "undefined"
     ? Buffer.from(str).toString("base64")
     : window.btoa(str);
+
+
+export const cleanUrl = (url: string) => {
+  try {
+    const decodedUrl = decodeURIComponent(url);
+    return decodedUrl.replace(/&amp;/g, '&');
+  } catch (e) {
+    console.error('Error decoding URL:', e);
+    return url;
+  }
+};

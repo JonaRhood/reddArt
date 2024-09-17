@@ -1,79 +1,144 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import styles from '@/app/styles/overview.module.css';
-import { v4 as uuidv4 } from 'uuid';
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { useSearchParams } from "next/navigation";
+import { cleanUrl } from "@/app/lib/utils/utils";
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
-import { setPosts, setLoadMore, setLoading, setScrollPosition, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+import { setPosts, setLoadMorePosts, setBackgroundPosts, 
+setLoading, setScrollPosition, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
 
 export default function Page({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
-    const searchParams = useSearchParams();
 
-    const [hasMore, setHasMore] = useState(true);
     const [imgZoomed, setImgZoomed] = useState<string | null>(null);
+    const [sentinel, setSentinel] = useState(false);
+    const [after, setAfter] = useState<string | null>(null);
 
     const router = useRouter();
 
     const posts = useAppSelector((state: RootState) => state.gallery.posts);
-    const after = useAppSelector((state: RootState) => state.gallery.after);
     const loading = useAppSelector((state: RootState) => state.gallery.loading);
-    const savedScrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
     const dispatch = useAppDispatch();
+
+    const sentinelRef = useRef(null);
 
 
     const fetchData = async (afterParam = '') => {
         // dispatch(setLoading(true)); // Activa el estado de carga
         try {
-            const result = await fetchSubReddit(subReddit, 100, afterParam);
+            const result = await fetchSubReddit(subReddit, 100);
             const data = result.data.children;
 
             if (Array.isArray(data)) {
                 dispatch(setPosts(data));
+                setAfter(result.data.after);
+                fetchDataAfterBackground(result.data.after)
+        
             } else {
                 console.error("Data received is not an array:", data);
             }
         } catch (error) {
             console.error("Error fetching subreddit data:", error);
         } finally {
-            dispatch(setLoading(false)); 
+            dispatch(setLoading(false));
         }
     };
+
+    const fetchDataAfterBackground = async (after: string) => {
+        if (!after) {
+            return;
+        }
+        try {
+            const result = await fetchSubReddit(subReddit, 100, after);
+            const data = result.data.children;
+
+            if (Array.isArray(data)) {
+                dispatch(setBackgroundPosts(data))
+                setAfter(result.data.after);
+            } else {
+                console.error("Data received is not an array:", data);
+            }
+        } catch (error) {
+            console.error("Error fetching subreddit after", error);
+        } finally {
+            setSentinel(true);
+            console.log("fetchDataAfterBackground finished");
+        }
+    }
 
     useEffect(() => {
         fetchData()
     }, [subReddit]);
 
-    // Function to load more data
-    const loadMore = () => {
-        if (after) {
-            fetchData(after); 
-        }
-    };
+    useEffect(() => {
 
-    const cleanUrl = (url: string) => {
-        try {
-            const decodedUrl = decodeURIComponent(url);
-            return decodedUrl.replace(/&amp;/g, '&');
-        } catch (e) {
-            console.error('Error decoding URL:', e);
-            return url;
+        const fetchDataAfterBackgroundComponent = async () => {
+            if (!after) return;
+            try {
+                const result = await fetchSubReddit(subReddit, 100, after);
+                const data = result.data.children;
+
+                if (Array.isArray(data)) {
+                    dispatch(setBackgroundPosts(data));
+                    setAfter(result.data.after);
+            
+                } else {
+                    console.error("Data received is not an array:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching subreddit data:", error);
+            } finally {
+                dispatch(setLoading(false));
+                console.log("fetchDataAfterBackgroundComponent finished");
+            }
+        };
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                console.log('IntersectionObserver entry:', entry);
+                if (entry.isIntersecting) {
+                    console.log('Sentinel is in view');
+                    dispatch(setLoadMorePosts())
+                    fetchDataAfterBackgroundComponent();
+                }
+            });
+        }, observerOptions);
+
+        if (sentinelRef.current) {
+            console.log('Observing sentinel');
+            observer.observe(sentinelRef.current);
         }
-    };
+
+        // Cleanup on component unmount
+        return () => {
+            if (sentinelRef.current) {
+                console.log('Unobserving sentinel');
+                observer.unobserve(sentinelRef.current);
+            }
+        };
+
+    }, [sentinel, after]);
+
+
 
     const handleImageZoomIn = (key: string, imgUrl: string) => {
-        dispatch(setScrollPosition(window.scrollY)); // Guarda el scroll en Redux
-        router.push(`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgUrl))}`);
+        // dispatch(setScrollPosition(window.scrollY)); // Guarda el scroll en Redux
+        // router.push(`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgUrl))}`);
     };
 
     return (
@@ -121,11 +186,7 @@ export default function Page({ params }: { params: { reddit: string } }) {
                             );
                         })}
                     </Masonry>
-                    {after && (
-                        <button onClick={loadMore} className={styles.loadMoreButton}>
-                            Load More
-                        </button>
-                    )}
+                    {sentinel && (<div ref={sentinelRef} style={{ height: '1px' }}></div>)}
                 </>
             )}
         </div>

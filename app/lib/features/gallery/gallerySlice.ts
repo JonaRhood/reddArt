@@ -2,7 +2,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface GalleryState {
-  posts: any[];  // Cambia el tipo `any[]` a lo que sea apropiado para los datos del post
+  posts: any[];
+  backgroundPosts: any[];
   after: string | null;
   loading: boolean;
   scrollPosition: number;
@@ -11,6 +12,7 @@ interface GalleryState {
 
 const initialState: GalleryState = {
   posts: [],
+  backgroundPosts: [],
   after: null,
   loading: false,
   scrollPosition: 0,
@@ -24,8 +26,11 @@ export const gallerySlice = createSlice({
     setPosts(state, action: PayloadAction<any[]>) {
       state.posts = action.payload;
     },
-    setLoadMore(state, action: PayloadAction<any[]>) {
-      state.posts = [...state.posts, ...action.payload];
+    setLoadMorePosts(state) {
+      state.posts = [...state.posts, ...state.backgroundPosts];
+    },
+    setBackgroundPosts(state, action: PayloadAction<any[]>) {
+      state.backgroundPosts = action.payload;
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
@@ -45,6 +50,6 @@ export const gallerySlice = createSlice({
   },
 });
 
-export const { setPosts, setLoadMore, setLoading, setScrollPosition, setSelectedSubReddit, resetGallery } = gallerySlice.actions;
+export const { setPosts, setLoadMorePosts, setBackgroundPosts, setLoading, setScrollPosition, setSelectedSubReddit, resetGallery } = gallerySlice.actions;
 export default gallerySlice.reducer;
 

@@ -25,7 +25,7 @@ export async function fetchToNavBar(subreddit: string) {
     }
 }
 
-export async function fetchSubReddit(subreddit: string, limit = 100, after = '', before = '') {
+export async function fetchSubReddit(subreddit: string, limit: number, after = '', before = '') {
     const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {
         // Construye la URL con los parámetros after y before

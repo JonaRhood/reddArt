@@ -24,9 +24,9 @@ export default function Sidenav() {
                     flex w-56 sm:w-80 items-center justify-center bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-10
                 `}>
                     <CustomIcon className="w-12 h-12 text-[#ff4500]" />
-                    <h1 className="text-center font-bold text-3xl">
+                    <h1 className={`${styles.hache}text-center font-bold text-3xl`}>
                         <span className="text-[#ff4500]">redd</span>
-                        <span className="text-gradient">Art</span>
+                        <span className={styles.gradientText}>Art</span>
                     </h1>
                 </div>
             </Link>

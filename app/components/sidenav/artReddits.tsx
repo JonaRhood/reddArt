@@ -106,14 +106,14 @@ export default function ArtReddits() {
                             
                         `}
                         >
+                            <Link href={`/${subReddit}`} key={i} onClick={() => handleLinkClick(subReddit)}>
                             {/* Blue pseudo-element */}
                             <div className={`
                                 absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2
                                 ${storeSubReddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
 
-                            <Link href={`/${subReddit}`} key={i} onClick={() => handleLinkClick(subReddit)}>
-                                <div className='relative flex-column items-center'>
+                                <div className='relative flex-column items-center p-3'>
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}
                                             className="rounded-full border border-2 border-light-primary"

@@ -31,7 +31,7 @@
 
 .zoomedImageContainer {
     position: fixed;
-    transform: scale(1.5);
+    transform: scale(1);
     z-index: 100;
     cursor: zoom-out;
     top: 0;
@@ -55,6 +55,10 @@
     cursor: zoom-in;
 }
 
+.imageContainerZoomIn {
+    cursor: default !important;
+}
+
 .imageContainer:hover .titleOverlay {
     transform: translateY(0);
 }
@@ -75,8 +79,9 @@
     object-fit: contain;
     width: auto;
     height: auto;
+    transform: scale(1);
     border-radius: 20px;
-    transition: filter 0.5s ease;
+    transition: transform 0s;
 }
 
 .titleOverlay {
@@ -158,8 +163,6 @@
 }
 
 .zoomBackgroundActive {
-    /* display: flex; */
-    /* transform: scale(1.5); */
     transform:translateY(0%);
     background-color: rgba(0,0,0,0.5);
 }
@@ -168,7 +171,6 @@
 
 .divContainerImgClicked {
     position: fixed;
-    /* transform: scale(0); */
     transform:translateY(100%);
     display: flex;
     z-index: 900;
@@ -193,40 +195,21 @@
     display: block;
     justify-content: center;
     align-items: center;
-   
+}
+
+.divImgClicked:hover {
+    cursor: zoom-out;
 }
 
 .imageClicked {
     z-index: 900;
-    width: 600px;
+    width: 500px;
     height: auto;
     border-radius: 30px;
-    padding: 3%;
+    /* padding: 3%; */
     background-color: white;
+    transition: transform .2s;
+    transform: scale(1.1);
+    padding: 2%;
 }
 
-
-/* Caroussel */
-.imageZoomIn {
-    transform: scale(120%);
-    z-index: 900;
-}
-
-.divCarousselContainer {
-    position: fixed;
-    display: flex;
-    z-index: 900;
-    width: 75%;
-    bottom: 5%;
-    overflow-x: scroll;
-}
-
-.divCaroussel {
-    display: flex;
-    flex-direction: row;
-}
-
-.imagesCaroussel {
-    display: flex;
-    border: 2px solid red;
-}

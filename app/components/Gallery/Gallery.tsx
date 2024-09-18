@@ -187,7 +187,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     };
 
-    const handleImageZoom = (key: string) => {
+    const handleImageZoom = (e: any, key: string) => {
+        const rect = e.target.getBoundingClientRect(); 
         if (zoomImg === false) {
             setZoomImg(true);
             setZoomImgId(key);
@@ -272,8 +273,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                             // <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn(imgSource)}>
                             <div
                                 key={key}
-                                className={`${styles.imageContainer}`}
-                                onClick={() => handleImageZoom(key)}
+                                className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
+                                onClick={(e) => handleImageZoom(e, key)}
                             >
                                 <div className='flex'>
                                     <div

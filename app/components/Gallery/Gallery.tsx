@@ -27,7 +27,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
     const [zoomImg, setZoomImg] = useState(false);
-    const [savedScroll, setSavedScroll] = useState<number | null>(0);
+    const [zoomImgId, setZoomImgId] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -187,11 +187,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     };
 
-    const handleImageZoom = () => {
-        setZoomImg(true);
+    const handleImageZoom = (key: string) => {
+        if (zoomImg === false) {
+            setZoomImg(true);
+            setZoomImgId(key);
+        } else {
+            setZoomImg(false);
+            setZoomImgId("");
+        }
     };
 
-
+    const handleBackgroundClick = () => {
+        setZoomImg(false);
+        setZoomImgId("");
+    }
 
     return (
         <div>
@@ -205,16 +214,43 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 // onLoaderFinished={() => console.log("Loader finished")} 
                 />
             </div>
-            
 
-                <div
-                    onClick={() => setZoomImg(false)}
-                    className={`
-                    ${styles.zoomImg} ${zoomImg ? styles.zoomImgActive : styles.zoomImg}
+
+            {/* <div
+                onClick={() => handleBackgroundClick()}
+                className={`
+                    ${styles.zoomBackground} ${zoomImg ? styles.zoomBackgroundActive : styles.zoombackground}
                     `}
-                >
-                </div>
-            
+            >
+            </div> */}
+            {/* <div className={styles.divCarousselContainer}>
+                {zoomImg && (Array.isArray(posts) && posts.map((item, index) => {
+                    const preview = item.data.preview;
+                    const imgSource = preview?.images?.[0]?.source?.url;
+                    const key = item.data.id
+                    const author = item.data.author;
+
+                    if (!imgSource) {
+                        return null;
+                    }
+
+                    return (
+
+
+                        <div className={styles.divCaroussel}>
+                            <Image
+                                src={cleanUrl(imgSource)}
+                                alt={key}
+                                width={800}
+                                height={600}
+                                className={styles.imageCaroussel}
+                                priority
+                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                            />
+                        </div>
+                    );
+                }))}
+            </div> */}
 
             <>
                 <Masonry
@@ -237,30 +273,48 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                             <div
                                 key={key}
                                 className={`${styles.imageContainer}`}
-                                onClick={() => handleImageZoom()}
+                                onClick={() => handleImageZoom(key)}
                             >
-                                <Image
-                                    src={cleanUrl(imgSource)}
-                                    alt={key}
-                                    width={800}
-                                    height={600}
-                                    className={styles.image}
-                                    priority
-                                    placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                />
+                                <div className='flex'>
+                                    <div
+                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked}`}
+                                        onClick={() => handleBackgroundClick()}
+                                    >
+                                        <div className={styles.divImgClicked}>
+                                            <Image
+                                                src={cleanUrl(imgSource)}
+                                                alt={key}
+                                                width={800}
+                                                height={600}
+                                                className={`${styles.image} ${zoomImgId === key ? styles.imageClicked : styles.image}`}
+                                                priority
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            />
+                                        </div>
+                                    </div>
+                                    <Image
+                                        src={cleanUrl(imgSource)}
+                                        alt={key}
+                                        width={800}
+                                        height={600}
+                                        className={styles.image}
+                                        priority
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                    />
+                                </div>
                                 <div className={styles.gradientOverlay}></div>
                                 <div className={styles.titleOverlay}>
                                     <i><UserIcon className="size-4" /></i>
                                     <span className="ml-3">{"u/" + author}</span>
                                 </div>
-
-
                             </div>
 
                             // </Link>
                         );
                     })}
                 </Masonry>
+
+
                 {sentinel && (
                     <div
                         ref={sentinelRef}

@@ -19,12 +19,14 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
+import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
+    const [zoomImg, setZoomImg] = useState(false);
     const [savedScroll, setSavedScroll] = useState<number | null>(0);
 
     const router = useRouter();
@@ -111,18 +113,18 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
-    
+
             debounceRef.current = setTimeout(() => {
                 console.log("Fetch", subReddit)
                 fetchData();
             }, 3000);
-    
+
             return () => {
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
                 }
             };
-        } 
+        }
     }, []);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down
@@ -180,9 +182,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     }, [sentinel]);
 
-    const handleImageZoomIn = () => {
+    const handleImageZoomIn = (imgSource: string) => {
         sessionStorage.setItem("ZOOMED_IN", "true");
+
     };
+
+    const handleImageZoom = () => {
+        setZoomImg(true);
+    };
+
+
 
     return (
         <div>
@@ -196,6 +205,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 // onLoaderFinished={() => console.log("Loader finished")} 
                 />
             </div>
+            
+
+                <div
+                    onClick={() => setZoomImg(false)}
+                    className={`
+                    ${styles.zoomImg} ${zoomImg ? styles.zoomImgActive : styles.zoomImg}
+                    `}
+                >
+                </div>
+            
 
             <>
                 <Masonry
@@ -214,27 +233,31 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         }
 
                         return (
-                            <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn()}>
-                                <div
-                                    key={key}
-                                    className={`${styles.imageContainer}`}
-                                >
-                                    <Image
-                                        src={cleanUrl(imgSource)}
-                                        alt={key}
-                                        width={800}
-                                        height={600}
-                                        className={styles.image}
-                                        priority
-                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                    />
-                                    <div className={styles.gradientOverlay}></div>
-                                    <div className={styles.titleOverlay}>
-                                        <i><UserIcon className="size-4" /></i>
-                                        <span className="ml-3">{"u/" + author}</span>
-                                    </div>
+                            // <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn(imgSource)}>
+                            <div
+                                key={key}
+                                className={`${styles.imageContainer}`}
+                                onClick={() => handleImageZoom()}
+                            >
+                                <Image
+                                    src={cleanUrl(imgSource)}
+                                    alt={key}
+                                    width={800}
+                                    height={600}
+                                    className={styles.image}
+                                    priority
+                                    placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                />
+                                <div className={styles.gradientOverlay}></div>
+                                <div className={styles.titleOverlay}>
+                                    <i><UserIcon className="size-4" /></i>
+                                    <span className="ml-3">{"u/" + author}</span>
                                 </div>
-                            </Link>
+
+
+                            </div>
+
+                            // </Link>
                         );
                     })}
                 </Masonry>

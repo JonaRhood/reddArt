@@ -34,7 +34,7 @@ export default function ZoomInGallery({ params }: { params: { reddit: string, im
     };
 
     return (
-        <div className='flex justify-center align-center content-center items-center w-full h-screen'>
+        <div className='flex justify-center align-center content-center items-center w-full h-screen border-2 border-red-500'>
             {decodedImgUrl && (
                 <div className={styles.imgZoom} onClick={() => handleImageZoomOut()}>
                     <Image

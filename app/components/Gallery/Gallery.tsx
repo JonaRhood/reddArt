@@ -179,7 +179,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     }, [sentinel, after]);
 
-    const handleImageZoomIn = (key: string, imgUrl: string) => {
+    const handleImageZoomIn = () => {
         sessionStorage.setItem("ZOOMED_IN", "true");
     };
 
@@ -213,7 +213,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         }
 
                         return (
-                            <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn(key, imgSource)}>
+                            <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn()}>
                                 <div
                                     key={key}
                                     className={`${styles.imageContainer}`}

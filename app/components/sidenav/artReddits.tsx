@@ -73,22 +73,11 @@ export default function ArtReddits() {
     }, []);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
-
-    
         dispatch(setSelectedSubReddit(subReddit));
-
-        // if (storeSubReddit === subReddit) {
-        //     e.preventDefault();
-        //     return;
-        // } else if (!areLinksDisabled) {
-        //     // dispatch(resetGallery());
-        //     setAreLinksDisabled(true);
-        //     dispatch(setSelectedSubReddit(subReddit));
-
-        //     setTimeout(() => {
-        //         setAreLinksDisabled(false);
-        //     }, 2500); // 3 seconds delay
-        // }
+        setAreLinksDisabled(true);
+        setTimeout(() => {
+            setAreLinksDisabled(false);
+        }, 2000)
     };
 
     return (

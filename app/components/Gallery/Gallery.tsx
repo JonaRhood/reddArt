@@ -1,6 +1,6 @@
 "use client";
 
-import styles from '@/app/styles/overview.module.css';
+import styles from '@/app/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
@@ -37,7 +37,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const sentinelRef = useRef(null);
     const loadingBarRef = useRef<LoadingBarRef>(null);
 
-    const fetchDataRef = useRef<() => void>(() => {});
+    const fetchDataRef = useRef<() => void>(() => { });
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -102,15 +102,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     }
 
-    // const splitPr = selectedSubReddit?.split('/');
-    // const selectedSubRedditSplit = splitPr && splitPr[1];
-
-    // console.log(selectedSubRedditSplit, subReddit)
-    // if (selectedSubRedditSplit !== subReddit) {
-    //     fetchData()
-    // } else if (selectedSubReddit !== selectedSubReddit) {
-
-    // }
     useEffect(() => {
         handleStartLoading();
         if (debounceRef.current) {
@@ -120,7 +111,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         debounceRef.current = setTimeout(() => {
             console.log("Fecth", subReddit)
             fetchData();
-        }, 1000);
+        }, 300);
 
         return () => {
             if (debounceRef.current) {
@@ -194,7 +185,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     return (
         <div>
             <div>
-                <LoadingBar color="#00BFFF" ref={loadingBarRef} height={3} /></div>
+            <LoadingBar
+                color="#00BFFF"
+                ref={loadingBarRef}
+                height={4} 
+                className={styles.loadingBar}
+                shadow={false} 
+                // onLoaderFinished={() => console.log("Loader finished")} 
+            />
+            </div>
 
             <>
                 <Masonry

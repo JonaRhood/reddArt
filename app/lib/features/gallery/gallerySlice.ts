@@ -33,7 +33,7 @@ export const gallerySlice = createSlice({
       state.backgroundPosts = action.payload;
     },
     setSelectedSubReddit(state, action: PayloadAction<string | null>) {
-      state.selectedSubReddit = action.payload;
+        state.selectedSubReddit = action.payload;
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
@@ -42,11 +42,7 @@ export const gallerySlice = createSlice({
       state.scrollPosition = action.payload;
     },
     resetGallery(state) {
-      state.posts = [];
-      state.backgroundPosts = [];
-      state.selectedSubReddit = null;
-      state.loading = false;
-      state.scrollPosition = 0;
+      return { ...initialState }
     },
   },
 });

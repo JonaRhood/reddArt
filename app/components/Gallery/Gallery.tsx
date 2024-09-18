@@ -11,6 +11,7 @@ import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import Link from 'next/link';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
@@ -22,7 +23,6 @@ import {
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
-    const [imgZoomed, setImgZoomed] = useState<string | null>(null);
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
     const [savedScroll, setSavedScroll] = useState<number | null>(0);
@@ -103,27 +103,30 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     useEffect(() => {
-        handleStartLoading();
-        if (debounceRef.current) {
-            clearTimeout(debounceRef.current);
-        }
-
-        debounceRef.current = setTimeout(() => {
-            console.log("Fecth", subReddit)
-            fetchData();
-        }, 300);
-
-        return () => {
+        const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
+        console.log(posts.length);
+        if (zoomedIn !== "true" || posts.length === 0) {
+            handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
-        };
-    }, [selectedSubReddit]);
+    
+            debounceRef.current = setTimeout(() => {
+                console.log("Fecth", subReddit)
+                fetchData();
+            }, 300);
+    
+            return () => {
+                if (debounceRef.current) {
+                    clearTimeout(debounceRef.current);
+                }
+            };
+        } 
+    }, [selectedSubReddit, posts]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
@@ -140,7 +143,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             } catch (error) {
                 console.error("Error fetching subreddit data:", error);
             } finally {
-                dispatch(setLoading(false));
                 setSentinel(true);
                 console.log("fetchDataAfterBackgroundEffect finished");
             }
@@ -178,21 +180,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }, [sentinel, after]);
 
     const handleImageZoomIn = (key: string, imgUrl: string) => {
-        setSavedScroll(window.scrollY);
-        router.push(`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgUrl))}`, { scroll: false });
+        sessionStorage.setItem("ZOOMED_IN", "true");
     };
 
     return (
         <div>
             <div>
-            <LoadingBar
-                color="#00BFFF"
-                ref={loadingBarRef}
-                height={4} 
-                className={styles.loadingBar}
-                shadow={false} 
+                <LoadingBar
+                    color="#00BFFF"
+                    ref={loadingBarRef}
+                    height={4}
+                    className={styles.loadingBar}
+                    shadow={false}
                 // onLoaderFinished={() => console.log("Loader finished")} 
-            />
+                />
             </div>
 
             <>
@@ -204,7 +205,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
                         const imgSource = preview?.images?.[0]?.source?.url;
-                        const key = `${item.data.name}-${index}`;
+                        const key = item.data.id
                         const author = item.data.author;
 
                         if (!imgSource) {
@@ -212,26 +213,27 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         }
 
                         return (
-                            <div
-                                key={key}
-                                className={`${styles.imageContainer} ${imgZoomed === imgSource ? styles.imgZoom : ""}`}
-                                onClick={() => handleImageZoomIn(key, imgSource)}
-                            >
-                                <Image
-                                    src={cleanUrl(imgSource)}
-                                    alt={key}
-                                    width={800}
-                                    height={600}
-                                    className={styles.image}
-                                    priority
-                                    placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                />
-                                <div className={styles.gradientOverlay}></div>
-                                <div className={styles.titleOverlay}>
-                                    <i><UserIcon className="size-4" /></i>
-                                    <span className="ml-3">{"u/" + author}</span>
+                            <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn(key, imgSource)}>
+                                <div
+                                    key={key}
+                                    className={`${styles.imageContainer}`}
+                                >
+                                    <Image
+                                        src={cleanUrl(imgSource)}
+                                        alt={key}
+                                        width={800}
+                                        height={600}
+                                        className={styles.image}
+                                        priority
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                    />
+                                    <div className={styles.gradientOverlay}></div>
+                                    <div className={styles.titleOverlay}>
+                                        <i><UserIcon className="size-4" /></i>
+                                        <span className="ml-3">{"u/" + author}</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         );
                     })}
                 </Masonry>

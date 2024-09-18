@@ -73,6 +73,7 @@ export default function ArtReddits() {
     }, []);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
+        sessionStorage.removeItem("ZOOMED_IN");
         dispatch(setSelectedSubReddit(subReddit));
         setAreLinksDisabled(true);
         setTimeout(() => {

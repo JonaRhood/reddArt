@@ -37,6 +37,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const sentinelRef = useRef(null);
     const loadingBarRef = useRef<LoadingBarRef>(null);
 
+    const fetchDataRef = useRef<() => void>(() => {});
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+
     const handleStartLoading = () => {
         if (loadingBarRef.current) {
             loadingBarRef.current.continuousStart();
@@ -54,7 +58,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
-        handleStartLoading();
         try {
             const result = await fetchSubReddit(subReddit, 100);
             const data = result.data.children;
@@ -99,17 +102,31 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     }
 
-    useEffect(() => {
-        // const splitPr = selectedSubReddit?.split('/');
-        // const selectedSubRedditSplit = splitPr && splitPr[1];
+    // const splitPr = selectedSubReddit?.split('/');
+    // const selectedSubRedditSplit = splitPr && splitPr[1];
 
-        // console.log(selectedSubRedditSplit, subReddit)
-        // if (selectedSubRedditSplit !== subReddit) {
-        //     fetchData()
-        // } else if (selectedSubReddit !== selectedSubReddit) {
-            
-        // }
-        fetchData();
+    // console.log(selectedSubRedditSplit, subReddit)
+    // if (selectedSubRedditSplit !== subReddit) {
+    //     fetchData()
+    // } else if (selectedSubReddit !== selectedSubReddit) {
+
+    // }
+    useEffect(() => {
+        handleStartLoading();
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        debounceRef.current = setTimeout(() => {
+            console.log("Fecth", subReddit)
+            fetchData();
+        }, 1000);
+
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
     }, [selectedSubReddit]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down
@@ -178,7 +195,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         <div>
             <div>
                 <LoadingBar color="#00BFFF" ref={loadingBarRef} height={3} /></div>
-                
+
             <>
                 <Masonry
                     breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}

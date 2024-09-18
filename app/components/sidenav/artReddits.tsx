@@ -7,6 +7,7 @@ import { reddits } from "@/app/lib/features/artLibrary/data";
 import { useState, useEffect } from "react";
 import { NavDivSkeleton } from "@/app/ui/skeletons";
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { UserIcon } from '@heroicons/react/24/solid';
 import { nFormatter } from "@/app/lib/utils/utils";
@@ -26,7 +27,7 @@ export default function ArtReddits() {
 
     const storeSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
 
-
+    const router = useRouter();
 
     const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
     const pathSegments = currentPath.split('/');
@@ -71,18 +72,23 @@ export default function ArtReddits() {
         fetchData();
     }, []);
 
-    const handleLinkClick = (subReddit: string) => {
-        if (storeSubReddit === subReddit) {
-            return;
-        } else if (!areLinksDisabled) {
-            // dispatch(resetGallery());
-            setAreLinksDisabled(true);
-            dispatch(setSelectedSubReddit(subReddit));
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
 
-            setTimeout(() => {
-                setAreLinksDisabled(false);
-            }, 2500); // 3 seconds delay
-        }
+    
+        dispatch(setSelectedSubReddit(subReddit));
+
+        // if (storeSubReddit === subReddit) {
+        //     e.preventDefault();
+        //     return;
+        // } else if (!areLinksDisabled) {
+        //     // dispatch(resetGallery());
+        //     setAreLinksDisabled(true);
+        //     dispatch(setSelectedSubReddit(subReddit));
+
+        //     setTimeout(() => {
+        //         setAreLinksDisabled(false);
+        //     }, 2500); // 3 seconds delay
+        // }
     };
 
     return (
@@ -107,7 +113,7 @@ export default function ArtReddits() {
                             
                         `}
                         >
-                            <Link href={`/${subReddit}`} key={i} onClick={() => handleLinkClick(subReddit)}>
+                            <Link href={`/${subReddit}`} key={i} onClick={(e) => handleLinkClick(e, subReddit)}>
                             {/* Blue pseudo-element */}
                             <div className={`
                                 absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2

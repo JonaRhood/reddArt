@@ -18,7 +18,7 @@ export default function ZoomInGallery({ params }: { params: { reddit: string } }
     const decodedImgUrl = imgUrl ? decodeURIComponent(imgUrl) : '';
 
     const handleImageZoomOut = () => {
-        router.push(`/r/${reddit}`, { scroll: false });
+        router.replace(`/r/${reddit}`, { scroll: false });
     };
 
     return (

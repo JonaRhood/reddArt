@@ -105,6 +105,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         console.log(posts.length);
+        console.log(zoomedIn)
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();
             if (debounceRef.current) {
@@ -112,9 +113,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }
     
             debounceRef.current = setTimeout(() => {
-                console.log("Fecth", subReddit)
+                console.log("Fetch", subReddit)
                 fetchData();
-            }, 300);
+            }, 3000);
     
             return () => {
                 if (debounceRef.current) {
@@ -122,7 +123,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 }
             };
         } 
-    }, [selectedSubReddit, posts]);
+    }, []);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +178,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }
         };
 
-    }, [sentinel, after]);
+    }, [sentinel]);
 
     const handleImageZoomIn = () => {
         sessionStorage.setItem("ZOOMED_IN", "true");

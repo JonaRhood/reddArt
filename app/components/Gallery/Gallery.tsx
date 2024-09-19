@@ -29,6 +29,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
 
+    const [rect, setRect] = useState<DOMRect | null>(null);
+    const [imageStyles, setImageStyles] = useState({
+        top: 0,
+        left: 0,
+        width: 0,
+        transition: '',
+    });
+
     const router = useRouter();
 
     const posts = useAppSelector((state: RootState) => state.gallery.posts);
@@ -188,7 +196,24 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     };
 
     const handleImageZoom = (e: any, key: string) => {
-        const rect = e.target.getBoundingClientRect(); 
+        const rect = e.target.getBoundingClientRect();
+        console.log("Imagen Actual", rect);
+        setImageStyles({
+            top: rect.top,
+            left: rect.left -325,
+            width: rect.width,
+            transition: '',
+        });
+
+        setTimeout(() => {
+            setImageStyles({
+                top: 125,
+                left: 330,
+                width: 500,
+                transition: 'all .5s ease',
+            });
+        }, 100);
+
         if (zoomImg === false) {
             setZoomImg(true);
             setZoomImgId(key);
@@ -201,6 +226,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const handleBackgroundClick = () => {
         setZoomImg(false);
         setZoomImgId("");
+        setImageStyles({
+            top: 0,
+            left: 0,
+            width: 0,
+            transition: 'all .3s ease',
+        });
     }
 
     return (
@@ -215,43 +246,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 // onLoaderFinished={() => console.log("Loader finished")} 
                 />
             </div>
-
-
-            {/* <div
-                onClick={() => handleBackgroundClick()}
-                className={`
-                    ${styles.zoomBackground} ${zoomImg ? styles.zoomBackgroundActive : styles.zoombackground}
-                    `}
-            >
-            </div> */}
-            {/* <div className={styles.divCarousselContainer}>
-                {zoomImg && (Array.isArray(posts) && posts.map((item, index) => {
-                    const preview = item.data.preview;
-                    const imgSource = preview?.images?.[0]?.source?.url;
-                    const key = item.data.id
-                    const author = item.data.author;
-
-                    if (!imgSource) {
-                        return null;
-                    }
-
-                    return (
-
-
-                        <div className={styles.divCaroussel}>
-                            <Image
-                                src={cleanUrl(imgSource)}
-                                alt={key}
-                                width={800}
-                                height={600}
-                                className={styles.imageCaroussel}
-                                priority
-                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                            />
-                        </div>
-                    );
-                }))}
-            </div> */}
 
             <>
                 <Masonry
@@ -285,11 +279,23 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             <Image
                                                 src={cleanUrl(imgSource)}
                                                 alt={key}
-                                                width={800}
-                                                height={600}
-                                                className={`${styles.image} ${zoomImgId === key ? styles.imageClicked : styles.image}`}
+                                                width={550}
+                                                height={300}
+                                                // className={`${styles.image} ${zoomImgId === key ? styles.imageClicked : styles.image}`}
                                                 priority
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                style={{
+                                                    top: `${imageStyles.top}px`,
+                                                    left: `${imageStyles.left}px`,
+                                                    width: `${imageStyles.width}px`,
+                                                    transform: 'scale(1)',
+                                                    position: 'absolute',
+                                                    zIndex: 1000,
+                                                    transition: `${imageStyles.transition}`,
+                                                    // padding: '15px',
+                                                    backgroundColor: 'white',
+                                                    borderRadius: '40px',
+                                                }}
                                             />
                                         </div>
                                     </div>

@@ -152,42 +152,42 @@
 .zoomBackground {
     position: fixed;
     /* transform: scale(0); */
-    transform:translateY(100%);
+    transform: translateY(100%);
     z-index: 500;
     top: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.0);
+    background-color: rgba(0, 0, 0, 0.0);
     margin-left: -1%;
     transition: background-color .3s ease-in-out;
 }
 
 .zoomBackgroundActive {
-    transform:translateY(0%);
-    background-color: rgba(0,0,0,0.5);
+    transform: translateY(0%);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Zoom Image */
 
 .divContainerImgClicked {
     position: fixed;
-    transform:translateY(100%);
+    transform: translateY(100%);
     display: flex;
     z-index: 900;
     top: 0;
     left: 22.5%;
     width: 78.5%;
     height: 100vh;
-    background-color: rgba(0,0,0,0.0);
+    background-color: rgba(0, 0, 0, 0.0);
     margin-left: -1%;
     transition: background-color .3s ease-in-out;
     justify-content: center;
 }
 
 .divContainerImgClickedActive {
-    transform:translateY(0%);
-    background-color: rgba(0,0,0,0.5);
-     justify-content: center;
+    transform: translateY(0%);
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
     align-items: center;
 }
 
@@ -210,6 +210,5 @@
     background-color: white;
     transition: transform .2s;
     transform: scale(1.1);
-    padding: 2%;
+    /* padding: 2%; */
 }
-

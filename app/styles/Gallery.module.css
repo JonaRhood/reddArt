@@ -197,21 +197,25 @@
     background-color: rgba(0, 0, 0, 0.0);
 }
 
-.divImgZoom {
- 
-}
+.divImgZoom {}
 
 .divImgClicked:hover {
     cursor: zoom-out;
 }
 
 .imageClicked {
-    padding-bottom: 8% !important;
-    transition-property: padding;
-    transition-duration: .5s;
-    transition-delay: .3s;
+    /* padding-bottom: 8% !important; */
+    transition-property: padding, outline;
+    transition-duration: .3s;
+    transition-delay: .2s;
+    outline: 15px solid #F5F5F5;
+    outline-offset: 0px;
+    margin-bottom: 8%; 
 }
 
-.imageUnclicked {
-
+.imageClicked::after, .imageClicked::before {
+    border: 20px solid green;
+    content: "";
 }
+
+.imageUnclicked {}

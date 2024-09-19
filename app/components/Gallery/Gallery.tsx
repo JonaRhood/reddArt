@@ -28,9 +28,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [after, setAfter] = useState<string | null>(null);
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
-
+    const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [rect, setRect] = useState<DOMRect | null>(null);
     const [imageStyles, setImageStyles] = useState({
+        top: 0,
+        left: 0,
+        width: 0,
+        transition: '',
+    });
+    const [imageStylesMemory, setImageStylesMemory] = useState({
         top: 0,
         left: 0,
         width: 0,
@@ -125,7 +131,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             debounceRef.current = setTimeout(() => {
                 console.log("Fetch", subReddit)
                 fetchData();
-            }, 3000);
+            }, 1000);
 
             return () => {
                 if (debounceRef.current) {
@@ -196,42 +202,57 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     };
 
     const handleImageZoom = (e: any, key: string) => {
-        const rect = e.target.getBoundingClientRect();
-        console.log("Imagen Actual", rect);
-        setImageStyles({
-            top: rect.top,
-            left: rect.left -325,
-            width: rect.width,
-            transition: '',
-        });
-
-        setTimeout(() => {
-            setImageStyles({
-                top: 125,
-                left: 330,
-                width: 500,
-                transition: 'all .5s ease',
-            });
-        }, 100);
-
         if (zoomImg === false) {
+            setBackgroundOpacity(false);
             setZoomImg(true);
             setZoomImgId(key);
+            const rect = e.target.getBoundingClientRect();
+            console.log("Imagen Actual", rect);
+            setImageStyles({
+                top: rect.top,
+                left: rect.left - 325,
+                width: rect.width,
+                transition: '',
+            });
+            setImageStylesMemory({
+                top: rect.top,
+                left: rect.left - 325,
+                width: rect.width,
+                transition: '',
+            });
+
+            setTimeout(() => {
+                setImageStyles({
+                    top: 125,
+                    left: 330,
+                    width: 500,
+                    transition: 'all .3s ease',
+                });
+            }, 100);
         } else {
-            setZoomImg(false);
-            setZoomImgId("");
+            setImageStyles({
+                top: imageStylesMemory.top,
+                left: imageStylesMemory.left,
+                width: imageStylesMemory.width,
+                transition: 'all .3s ease',
+            });
+            setBackgroundOpacity(true);
+            setTimeout(() => {
+                setZoomImg(false);
+                setZoomImgId("");
+            }, 500);
         }
     };
 
     const handleBackgroundClick = () => {
-        setZoomImg(false);
-        setZoomImgId("");
-        setImageStyles({
-            top: 0,
-            left: 0,
-            width: 0,
-            transition: 'all .3s ease',
-        });
+        // setZoomImg(false);
+        // setZoomImgId("");
+        // setImageStyles({
+        //     top: 0,
+        //     left: 0,
+        //     width: 0,
+        //     transition: 'all .3s ease',
+        // });
     }
 
     return (
@@ -272,7 +293,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                             >
                                 <div className='flex'>
                                     <div
-                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked}`}
+                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                         onClick={() => handleBackgroundClick()}
                                     >
                                         <div className={styles.divImgClicked}>
@@ -281,7 +302,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 alt={key}
                                                 width={550}
                                                 height={300}
-                                                // className={`${styles.image} ${zoomImgId === key ? styles.imageClicked : styles.image}`}
+                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                 priority
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
@@ -292,9 +313,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     position: 'absolute',
                                                     zIndex: 1000,
                                                     transition: `${imageStyles.transition}`,
-                                                    // padding: '15px',
-                                                    backgroundColor: 'white',
-                                                    borderRadius: '40px',
+                                                    padding: '0px',
+                                                    borderRadius: '20px',
                                                 }}
                                             />
                                         </div>

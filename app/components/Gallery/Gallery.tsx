@@ -12,7 +12,9 @@ import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import UserGallery from '../UserGallery/UserGallery';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
@@ -21,9 +23,14 @@ import {
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
+import { Root } from 'postcss';
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
+
+    const pathname = usePathname();
+
+    const scrollRef = useRef<number>(0);
 
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
@@ -31,6 +38,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [rect, setRect] = useState<DOMRect | null>(null);
+    const [modalOpen, setIsmodalOpen] = useState(false);
+    const [redditUser, setRedditUser] = useState<string | null>(null);
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
@@ -51,6 +60,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const posts = useAppSelector((state: RootState) => state.gallery.posts);
     const loading = useAppSelector((state: RootState) => state.gallery.loading);
     const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
+    const scrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -125,6 +135,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         console.log(posts.length);
         console.log(zoomedIn)
+        
+        console.log("Effect Scroll Y", scrollPosition)
+
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();
             if (debounceRef.current) {
@@ -249,8 +262,37 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 setZoomImg(false);
                 setZoomImgId("");
             }, 500);
+            setIsmodalOpen(false);
+            setRedditUser(null);
         }
     };
+
+        useEffect(() => {
+            const handleScroll = () => {
+                scrollRef.current = window.scrollY; // Actualiza la posición del scroll
+                dispatch(setScrollPosition(window.scrollY));
+
+                console.log("SCROLL", window.scrollY);
+            };
+    
+            // Agregar el listener
+            window.addEventListener('scroll', handleScroll);
+    
+            // Limpiar el listener en el desmontaje del componente
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        });
+
+    const handleUserClick = (e: any, user: string) => {
+        const rect = e.target.getBoundingClientRect();
+        console.log("User CLick", rect.y, window.scrollY);
+
+        dispatch(setScrollPosition(rect.y));
+
+        router.push(`/u/${user}`, { scroll: true });
+    }
+
     return (
         <div>
             <div>
@@ -291,7 +333,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                     >
                                         <div className={styles.divImgClicked}>
-                                            
+
                                             <Image
                                                 src={cleanUrl(imgSource)}
                                                 alt={key}
@@ -347,8 +389,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
                                 <div className={styles.titleOverlay}>
-                                    <Link href={`/u/${author}`}><i><UserIcon className="size-4" /></i></Link>
-                                    <Link href={`/u/${author}`}> <span className="ml-3">{"u/" + author}</span></Link>
+                                    <i
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                    >
+                                        <UserIcon className="size-4" />
+                                    </i>
+                                    <span
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleUserClick(e, author);
+                                        }} 
+                                        className="ml-3">{"u/" + author}
+                                    </span>
                                 </div>
                             </div>
 
@@ -363,6 +417,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         className={styles.sentinel}
                     ></div>
                 )}
+
+                {/* {modalOpen && redditUser && (
+                    <div className={styles.modal}>
+                       <UserGallery params={{ user: redditUser }} />
+                    </div>
+                )} */}
             </>
         </div>
     );

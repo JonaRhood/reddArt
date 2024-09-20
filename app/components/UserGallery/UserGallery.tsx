@@ -3,7 +3,6 @@
 import styles from '@/app/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
-import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
 import { fetchUserReddit } from '@/app/lib/features/artLibrary/fetchData';
 import Image from "next/image";
 import Masonry from "react-masonry-css";
@@ -19,7 +18,7 @@ import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
-} from "@/app/lib/features/gallery/gallerySlice";
+} from "@/app/lib/features/userGallery/userGallerySlice"
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 
 export default function UserGallery({ params }: { params: { user: string } }) {
@@ -49,9 +48,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     const router = useRouter();
 
-    const posts = useAppSelector((state: RootState) => state.gallery.posts);
-    const loading = useAppSelector((state: RootState) => state.gallery.loading);
-    const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
+    const posts = useAppSelector((state: RootState) => state.userGallery.posts);
+    const loading = useAppSelector((state: RootState) => state.userGallery.loading);
+    const selectedSubReddit = useAppSelector((state: RootState) => state.userGallery.selectedSubReddit);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -252,6 +251,11 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             }, 500);
         }
     };
+
+    const handleClickBack= () => {
+        router.replace("/r/comics", { scroll: false });
+    }
+
     return (
         <div>
             <div>
@@ -342,7 +346,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                 <div className={styles.gradientOverlay}></div>
                                 <div className={styles.titleOverlay}>
                                     <i><UserIcon className="size-4" /></i>
-                                    <span className="ml-3">{"u/" + author}</span>
+                                    <span onClick={() => handleClickBack()} className="ml-3">{"u/" + author}</span>
                                 </div>
                             </div>
 

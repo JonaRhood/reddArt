@@ -303,8 +303,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 width={550}
                                                 height={300}
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                priority
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
                                                     top: `${imageStyles.top}px`,
                                                     left: `${imageStyles.left}px`,
@@ -312,6 +311,25 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 1000,
+                                                    transition: `${imageStyles.transition}`,
+                                                    padding: '0px',
+                                                    borderRadius: '20px',
+                                                }}
+                                            />
+                                            <Image
+                                                src={cleanUrl(imgSource)}
+                                                alt={key}
+                                                width={550}
+                                                height={300}
+                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
+                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                style={{
+                                                    top: `${imageStyles.top}px`,
+                                                    left: `${imageStyles.left}px`,
+                                                    width: `${imageStyles.width}px`,
+                                                    transform: 'scale(1)',
+                                                    position: 'absolute',
+                                                    zIndex: 800,
                                                     transition: `${imageStyles.transition}`,
                                                     padding: '0px',
                                                     borderRadius: '20px',
@@ -325,7 +343,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         width={800}
                                         height={600}
                                         className={styles.image}
-                                        priority
                                         placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                     />
                                 </div>

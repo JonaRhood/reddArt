@@ -94,10 +94,12 @@
     transform: translateY(100%);
     transition: transform 0.3s ease-in-out;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     border-radius: 0 0 20px 20px;
     overflow: hidden;
-    z-index: 5;
+    z-index: 5; 
+    height: 100%;
+    border-radius: 20px;
 }
 
 .titleOverlay span {
@@ -109,6 +111,10 @@
 .titleOverlay:hover i {
     cursor: pointer;
     color: #a0e7ff;
+}
+
+.titleOverlay i {
+    margin-bottom: 1.5%;
 }
 
 .skeleton {
@@ -146,27 +152,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-
-/* Zoom Background Image */
-
-.zoomBackground {
-    position: fixed;
-    /* transform: scale(0); */
-    transform: translateY(100%);
-    z-index: 500;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.0);
-    margin-left: -1%;
-    transition: background-color .3s ease-in-out;
-}
-
-.zoomBackgroundActive {
-    transform: translateY(0%);
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
 /* Zoom Image */
 
 .divContainerImgClicked {
@@ -197,14 +182,11 @@
     background-color: rgba(0, 0, 0, 0.0);
 }
 
-.divImgZoom {}
-
 .divImgClicked:hover {
     cursor: zoom-out;
 }
 
 .imageClicked {
-    /* padding-bottom: 8% !important; */
     transition-property: padding, outline;
     transition-duration: .3s;
     transition-delay: .2s;
@@ -213,9 +195,8 @@
     margin-bottom: 8%; 
 }
 
-.imageClicked::after, .imageClicked::before {
-    border: 20px solid green;
-    content: "";
+.imageClickedBackground {
+    padding-bottom: 5%;
+    transition-property: padding-bottom;
+    transition-delay: .3s;
 }
-
-.imageUnclicked {}

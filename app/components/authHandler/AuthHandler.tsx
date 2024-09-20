@@ -13,7 +13,7 @@ export const AuthHandler = () => {
       const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
       const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL;  // http://localhost:3000/    https://reddit-client-rho.vercel.app/;
       const state = uuidv4();
-      const scope = 'read';
+      const scope = 'read, history';
       const duration = 'permanent';
 
       const localState = localStorage.getItem("REDDART_AUTH_STATE");

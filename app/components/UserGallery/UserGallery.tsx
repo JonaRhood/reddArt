@@ -1,10 +1,10 @@
-
 "use client";
 
 import styles from '@/app/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
+import { fetchUserReddit } from '@/app/lib/features/artLibrary/fetchData';
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { useRouter } from "next/navigation";
@@ -22,8 +22,9 @@ import {
 } from "@/app/lib/features/gallery/gallerySlice";
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 
-export default function Gallery({ params }: { params: { reddit: string } }) {
-    const subReddit = params.reddit;
+export default function UserGallery({ params }: { params: { user: string } }) {
+    const redditUser = params.user;
+    console.log(redditUser);
 
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
@@ -78,7 +79,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         try {
-            const result = await fetchSubReddit(subReddit, 100);
+            const result = await fetchUserReddit(redditUser, 100);
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -90,7 +91,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 console.error("Data received is not an array:", data);
             }
         } catch (error) {
-            console.error("Error fetching subreddit data:", error);
+            console.error("Error fetching redditUser data:", error);
         } finally {
             dispatch(setLoading(false))
             handleCompleteLoading();;
@@ -104,7 +105,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             return;
         }
         try {
-            const result = await fetchSubReddit(subReddit, 100, after);
+            const result = await fetchUserReddit(redditUser, 100, after);
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -114,7 +115,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 console.error("Data received is not an array:", data);
             }
         } catch (error) {
-            console.error("Error fetching subreddit after", error);
+            console.error("Error fetching redditUser after", error);
         } finally {
             setSentinel(true);
             console.log("fetchDataAfterBackground finished");
@@ -132,7 +133,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }
 
             debounceRef.current = setTimeout(() => {
-                console.log("Fetch", subReddit)
+                console.log("Fetch", redditUser)
                 fetchData();
             }, 1000);
 
@@ -150,7 +151,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
-                const result = await fetchSubReddit(subReddit, 100, after);
+                const result = await fetchUserReddit(redditUser, 100, after);
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -161,7 +162,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     console.error("Data received is not an array:", data);
                 }
             } catch (error) {
-                console.error("Error fetching subreddit data:", error);
+                console.error("Error fetching redditUser data:", error);
             } finally {
                 setSentinel(true);
                 console.log("fetchDataAfterBackgroundEffect finished");
@@ -274,7 +275,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         const preview = item.data.preview;
                         const imgSource = preview?.images?.[0]?.source?.url;
                         const key = item.data.id + index
-                        const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
+                        const author = item.data.author;
 
                         if (!imgSource) {
                             return null;
@@ -291,7 +292,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                     >
                                         <div className={styles.divImgClicked}>
-                                            
                                             <Image
                                                 src={cleanUrl(imgSource)}
                                                 alt={key}
@@ -302,7 +302,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     top: `${imageStyles.top}`,
                                                     left: `${imageStyles.left}`,
                                                     width: `${imageStyles.width}`,
-                                                    height: "auto",
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 1000,
@@ -321,7 +320,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     top: `${imageStyles.top}`,
                                                     left: `${imageStyles.left}`,
                                                     width: `${imageStyles.width}`,
-                                                    height: "auto",
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 800,
@@ -339,16 +337,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         height={600}
                                         className={styles.image}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        style={{
-                                            width: "100%",
-                                            height: "auto",
-                                        }}
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
                                 <div className={styles.titleOverlay}>
-                                    <Link href={`/u/${author}`}><i><UserIcon className="size-4" /></i></Link>
-                                    <Link href={`/u/${author}`}> <span className="ml-3">{"u/" + author}</span></Link>
+                                    <i><UserIcon className="size-4" /></i>
+                                    <span className="ml-3">{"u/" + author}</span>
                                 </div>
                             </div>
 
@@ -356,7 +350,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         );
                     })}
                 </Masonry>
-
+                
                 {sentinel && (
                     <div
                         ref={sentinelRef}

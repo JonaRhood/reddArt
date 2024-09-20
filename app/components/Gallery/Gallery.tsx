@@ -31,15 +31,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [rect, setRect] = useState<DOMRect | null>(null);
     const [imageStyles, setImageStyles] = useState({
-        top: 0,
-        left: 0,
-        width: 0,
+        top: '',
+        left: '',
+        width: '',
+        height: '',
         transition: '',
     });
     const [imageStylesMemory, setImageStylesMemory] = useState({
-        top: 0,
-        left: 0,
-        width: 0,
+        top: '',
+        left: '',
+        width: '',
+        height: '',
         transition: '',
     });
 
@@ -207,25 +209,34 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             setZoomImg(true);
             setZoomImgId(key);
             const rect = e.target.getBoundingClientRect();
-            console.log("Imagen Actual", rect);
+
+            const target = e.currentTarget;
+            const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
+
+            const rectBackground = childDiv.getBoundingClientRect();
+            console.log("Rect Background", rectBackground);
+
+
             setImageStyles({
-                top: rect.top,
-                left: rect.left - 325,
-                width: rect.width,
+                top: `${rect.top}px`,
+                left: `${rect.left - rectBackground.left}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
                 transition: '',
             });
             setImageStylesMemory({
-                top: rect.top,
-                left: rect.left - 325,
-                width: rect.width,
+                top: `${rect.top}px`,
+                left: `${rect.left - rectBackground.left}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
                 transition: '',
             });
-
             setTimeout(() => {
                 setImageStyles({
-                    top: 125,
-                    left: 330,
-                    width: 500,
+                    top: '10%',
+                    left: `${rectBackground.left / 100 * 7.1}%`,
+                    width: `${rect.width * 1.8}px `,
+                    height: `${rect.height}px`,
                     transition: 'all .3s ease',
                 });
             }, 100);
@@ -234,6 +245,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 top: imageStylesMemory.top,
                 left: imageStylesMemory.left,
                 width: imageStylesMemory.width,
+                height: imageStylesMemory.height,
                 transition: 'all .3s ease',
             });
             setBackgroundOpacity(true);
@@ -305,9 +317,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
-                                                    top: `${imageStyles.top}px`,
-                                                    left: `${imageStyles.left}px`,
-                                                    width: `${imageStyles.width}px`,
+                                                    top: `${imageStyles.top}`,
+                                                    left: `${imageStyles.left}`,
+                                                    width: `${imageStyles.width}`,
+                                                    // height: `${imageStyles.height}`,
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 1000,
@@ -324,9 +337,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
-                                                    top: `${imageStyles.top}px`,
-                                                    left: `${imageStyles.left}px`,
-                                                    width: `${imageStyles.width}px`,
+                                                    top: `${imageStyles.top}`,
+                                                    left: `${imageStyles.left}`,
+                                                    width: `${imageStyles.width}`,
+                                                    // height: `${imageStyles.height}`,
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 800,

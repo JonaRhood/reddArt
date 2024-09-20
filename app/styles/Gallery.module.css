@@ -160,11 +160,11 @@
     display: flex;
     z-index: 900;
     top: 0;
-    left: 22.5%;
-    width: 78.5%;
+    left: 0;
+    right: 0;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.0);
-    margin-left: -1%;
+    margin-left: 320px;
     transition: background-color .3s ease-in-out;
     justify-content: center;
     overflow-y: auto;
@@ -196,7 +196,7 @@
 }
 
 .imageClickedBackground {
-    padding-bottom: 5%;
+    padding-bottom: 5% !important;
     transition-property: padding-bottom;
     transition-delay: .3s;
 }

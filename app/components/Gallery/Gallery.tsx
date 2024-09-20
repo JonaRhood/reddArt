@@ -234,7 +234,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             setTimeout(() => {
                 setImageStyles({
                     top: '10%',
-                    left: `${rectBackground.left / 100 * 7.1}%`,
+                    left: `${rectBackground.left / 100 * 9}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
                     transition: 'all .3s ease',

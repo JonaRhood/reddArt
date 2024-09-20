@@ -198,11 +198,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     }, [sentinel]);
 
-    const handleImageZoomIn = (imgSource: string) => {
-        sessionStorage.setItem("ZOOMED_IN", "true");
-
-    };
-
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
             setBackgroundOpacity(false);
@@ -255,18 +250,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }, 500);
         }
     };
-
-    const handleBackgroundClick = () => {
-        // setZoomImg(false);
-        // setZoomImgId("");
-        // setImageStyles({
-        //     top: 0,
-        //     left: 0,
-        //     width: 0,
-        //     transition: 'all .3s ease',
-        // });
-    }
-
     return (
         <div>
             <div>
@@ -297,7 +280,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         }
 
                         return (
-                            // <Link href={`/r/${subReddit}/${key}?imgUrl=${encodeURIComponent(cleanUrl(imgSource))}`} passHref key={key} scroll={false} onClick={() => handleImageZoomIn(imgSource)}>
                             <div
                                 key={key}
                                 className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
@@ -306,7 +288,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                 <div className='flex'>
                                     <div
                                         className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
-                                        onClick={() => handleBackgroundClick()}
                                     >
                                         <div className={styles.divImgClicked}>
                                             <Image
@@ -315,12 +296,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 width={550}
                                                 height={300}
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
                                                     left: `${imageStyles.left}`,
                                                     width: `${imageStyles.width}`,
-                                                    // height: `${imageStyles.height}`,
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 1000,
@@ -335,12 +314,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 width={550}
                                                 height={300}
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
-                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
                                                     left: `${imageStyles.left}`,
                                                     width: `${imageStyles.width}`,
-                                                    // height: `${imageStyles.height}`,
                                                     transform: 'scale(1)',
                                                     position: 'absolute',
                                                     zIndex: 800,
@@ -371,8 +348,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         );
                     })}
                 </Masonry>
-
-
+                
                 {sentinel && (
                     <div
                         ref={sentinelRef}

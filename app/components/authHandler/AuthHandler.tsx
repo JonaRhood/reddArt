@@ -33,7 +33,7 @@ export const AuthHandler = () => {
         console.error("Client id or Redirect Uri not defined");
       // Token Refreshment after 1 hour
       } else if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
-        localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
+        // localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());  // This line changes the time beforehand. Not needed?
         fetch(`api/reddit-refresh-token`, {
           method: 'GET',
           headers: {

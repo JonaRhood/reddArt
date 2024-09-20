@@ -223,7 +223,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
 
             const rectBackground = childDiv.getBoundingClientRect();
-            console.log("Rect Background", rectBackground);
+            // console.log("Rect Background", rectBackground);
 
 
             setImageStyles({
@@ -267,30 +267,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
-        useEffect(() => {
-            const handleScroll = () => {
-                scrollRef.current = window.scrollY; // Actualiza la posición del scroll
-                dispatch(setScrollPosition(window.scrollY));
-
-                console.log("SCROLL", window.scrollY);
-            };
-    
-            // Agregar el listener
-            window.addEventListener('scroll', handleScroll);
-    
-            // Limpiar el listener en el desmontaje del componente
-            return () => {
-                window.removeEventListener('scroll', handleScroll);
-            };
-        });
+    const [hideScroll, setHideScroll] = useState(false);
 
     const handleUserClick = (e: any, user: string) => {
-        const rect = e.target.getBoundingClientRect();
-        console.log("User CLick", rect.y, window.scrollY);
+        const rect = e.target.getClientRects();
+        console.log("User CLick", rect, window.scrollY, window.scrollX);
 
-        dispatch(setScrollPosition(rect.y));
+        hideScroll?document.body.style.overflow = "hidden":document.body.style.overflow = "auto";
 
-        router.push(`/u/${user}`, { scroll: true });
+        // dispatch(setScrollPosition(rect));
+
+        router.push(`/u/${user}`, { scroll: false });
     }
 
     return (

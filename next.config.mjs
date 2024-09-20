@@ -6,6 +6,9 @@ const nextConfig = {
     'styles.redditmedia.com', 'b.thumbs.redditmedia.com', 
     'www.redditstatic.com', 'i.redd.it'], // Añade los dominios necesarios
   },
+  experimental: {
+    scrollRestoration: false,
+}
 };
 
 export default nextConfig;

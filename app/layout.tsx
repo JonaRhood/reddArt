@@ -3,6 +3,7 @@ import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
 import "./styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
+import ClientSideScrollRestorer from "./components/ClientSideScrollRestorer/ClientSideScrollRestorer";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
@@ -36,13 +37,16 @@ export default function RootLayout({ children }: Props) {
             </div>
           </section>
         </body>
+        <Suspense>
+          <ClientSideScrollRestorer />
+        </Suspense>
       </html>
     </StoreProvider>
   );
 }
 
 export const metadata = {
-  title: 'reddArt', 
+  title: 'reddArt',
   description: 'Your site description here',
   icons: {
     icon: '/favicon.svg',

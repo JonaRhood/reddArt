@@ -370,13 +370,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
-                                <div className={styles.titleOverlay} onClick={(e) => handleUserClick(e, author)}>
+                                <div className={styles.titleOverlay}>
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
                                     {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
                                     <span
                                         className="ml-3"
+                                        onClick={(e) => handleUserClick(e, author)}
                                         // onClick={(e) => {
                                         //     e.stopPropagation()
                                         //     handleUserClick(e, author);

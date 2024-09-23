@@ -132,11 +132,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
-
             debounceRef.current = setTimeout(() => {
-                console.log("Fetch", subReddit)
                 fetchData();
-            }, 1000);
+            }, 100);
 
             return () => {
                 if (debounceRef.current) {
@@ -153,7 +151,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
-            console.log("AFTER:", after);
             try {
                 const result = await fetchSubReddit(subReddit, 100, after);
                 const data = result.data.children;
@@ -169,7 +166,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 console.error("Error fetching subreddit data:", error);
             } finally {
                 setSentinel(true);
-                console.log("fetchDataAfterBackgroundEffect finished");
             }
         };
 
@@ -181,7 +177,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                console.log('IntersectionObserver entry:', entry);
                 if (entry.isIntersecting) {
                     console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
@@ -220,8 +215,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
 
             const rectBackground = childDiv.getBoundingClientRect();
-            // console.log("Rect Background", rectBackground);
-
 
             setImageStyles({
                 top: `${rect.top}px`,
@@ -273,7 +266,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         e.stopPropagation();
         dispatch(setPastSubReddit("r/" + subReddit));
         // dispatch(resetGallery());
-        // router.push(`/u/${author}`, { scroll: true })
+        router.push(`/u/${author}`, { scroll: true })
     }
 
     return (
@@ -377,11 +370,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
-                                <div className={styles.titleOverlay}>
+                                <div className={styles.titleOverlay} onClick={(e) => handleUserClick(e, author)}>
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}>
+                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
                                     <span
                                         className="ml-3"
                                         // onClick={(e) => {
@@ -391,7 +384,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     >
                                         {"u/" + author}
                                     </span>
-                                    </Link>
+                                    {/* </Link> */}
                                 </div>
                             </div>
 

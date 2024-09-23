@@ -23,11 +23,9 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/userGallery/userGallerySlice"
-import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
-    console.log(redditUser);
 
     const [sentinel, setSentinel] = useState(false);
     const [after, setAfter] = useState<string | null>(null);
@@ -138,7 +136,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 const icon = result.data.icon_img;
 
                 if (icon) {
-                    console.log("AQUI:", result.data.icon_img)
                     setIconUser(result.data.icon_img);
                 } else {
                     console.error("icon_img no encontrado en los datos recibidos:", result.data);
@@ -149,7 +146,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         } catch (error) {
             console.error("Error fetching redditUser data:", error);
         } finally {
-            console.log("ICON USER:", iconUser);
             setLoadingIcon(true);
         }
     };
@@ -158,8 +154,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
-        console.log(posts.length);
-        console.log(zoomedIn)
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();
             if (debounceRef.current) {
@@ -167,10 +161,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             }
 
             debounceRef.current = setTimeout(() => {
-                console.log("Fetch", redditUser)
                 fetchData();
                 fetchIcon();
-            }, 1000);
+            }, 100);
 
             return () => {
                 if (debounceRef.current) {
@@ -212,7 +205,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                console.log('IntersectionObserver entry:', entry);
                 if (entry.isIntersecting) {
                     console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
@@ -325,12 +317,11 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 </div>
                 <div className='flex items-center'>
                         <Image
-                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`)}
                             alt="User Icon"
                             width={60}
                             height={60}
                             loading="lazy"
-                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                             className='border-2 border-light-primary/70'
                             style={{
                                 borderRadius: "50%",

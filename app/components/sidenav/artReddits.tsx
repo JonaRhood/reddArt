@@ -63,7 +63,7 @@ export default function ArtReddits() {
                 const results = await Promise.all(dataPromises);
                 setRedditData(results.filter(result => result && result.data));
 
-                console.log("Fetched Results:", results);
+                console.log("Fetched SubReddit Results:", results);
 
             } catch (error) {
                 console.error("Error fetching Reddit data:", error);

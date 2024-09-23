@@ -216,6 +216,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             setZoomImgId(key);
             dispatch(setZoomedIn(true));
             const rect = e.target.getBoundingClientRect();
+            document.body.style.overflowY = "hidden";
+            document.body.style.marginRight = "15px";
 
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
@@ -246,6 +248,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     height: `${rect.height}px`,
                     transition: 'all .3s ease',
                 });
+
+             
             }, 100);
         } else {
             setImageStyles({
@@ -263,6 +267,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }, 500);
             setIsmodalOpen(false);
             setRedditUser(null);
+            document.body.style.overflowY = "visible";
+            document.body.style.marginRight = "";
         }
     };
 
@@ -274,7 +280,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     return (
-        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 ${zoomedIn ? styles.scrollbarZoomIn : ''}`}>
+        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 ${zoomedIn ? `${styles.scrollbarZoomIn}` : ''}`}>
             <div>
                 <LoadingBar
                     color="#00BFFF"

@@ -257,7 +257,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     }
 
     return (
-        <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4'>
+        <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 '>
             <div>
                 <LoadingBar
                     color="#00BFFF"

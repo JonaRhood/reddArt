@@ -16,7 +16,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
-import { resetGallery, setSelectedSubReddit } from "@/app/lib/features/gallery/gallerySlice";
+import { resetGallery, setSelectedSubReddit, setPastSubReddit } from "@/app/lib/features/gallery/gallerySlice";
 import { RootState } from '@/app/lib/store';
 
 
@@ -25,7 +25,8 @@ export default function ArtReddits() {
     const [loading, setLoading] = useState(true);
     const [areLinksDisabled, setAreLinksDisabled] = useState(false);
 
-    const storeSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
+    const selectedSubreddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
+    const pastSubReddit = useAppSelector((state: RootState) => state.gallery.pastSubReddit);
 
     const router = useRouter();
 
@@ -75,8 +76,11 @@ export default function ArtReddits() {
     }, []);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
-        sessionStorage.removeItem("ZOOMED_IN");
+        dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));
+
+        console.log(currentSubreddit, subReddit);
+        
         setAreLinksDisabled(true);
         setTimeout(() => {
             setAreLinksDisabled(false);
@@ -99,9 +103,9 @@ export default function ArtReddits() {
                             key={subReddit}
                             className={`
                             ${styles.container}
-                            ${storeSubReddit === subReddit ? styles.selectedReddit : ""}
-                            ${storeSubReddit === subReddit ? "pointer-events-none cursor-pointer" : ""}
-                            ${areLinksDisabled && storeSubReddit !== subReddit ? "pointer-events-none transition duration-500 ease-in-out opacity-70" : ""}
+                            ${selectedSubreddit === subReddit ? styles.selectedReddit : ""}
+                            ${selectedSubreddit === subReddit ? "pointer-events-none cursor-pointer" : ""}
+                            ${areLinksDisabled && selectedSubreddit !== subReddit ? "pointer-events-none transition duration-500 ease-in-out opacity-70" : ""}
                             
                         `}
                         >
@@ -109,7 +113,7 @@ export default function ArtReddits() {
                             {/* Blue pseudo-element */}
                             <div className={`
                                 absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2
-                                ${storeSubReddit === subReddit ? "translate-x-0" : ""}
+                                ${selectedSubreddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
 
                                 <div className='relative flex-column items-center p-3'>

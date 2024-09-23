@@ -8,6 +8,8 @@ interface GalleryState {
   loading: boolean;
   scrollPosition: number;
   selectedSubReddit: string | null;
+  pastSubReddit: string | null,
+  zoomedIn: boolean,
 }
 
 const initialState: GalleryState = {
@@ -17,6 +19,8 @@ const initialState: GalleryState = {
   loading: false,
   scrollPosition: 0,
   selectedSubReddit: null,
+  pastSubReddit: null,
+  zoomedIn: false,
 };
 
 export const gallerySlice = createSlice({
@@ -35,6 +39,12 @@ export const gallerySlice = createSlice({
     setSelectedSubReddit(state, action: PayloadAction<string | null>) {
         state.selectedSubReddit = action.payload;
     },
+    setPastSubReddit(state, action: PayloadAction<string | null>) {
+        state.pastSubReddit = action.payload;
+    },
+    setZoomedIn(state, action: PayloadAction<boolean>) {
+        state.zoomedIn = action.payload
+    },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
@@ -47,6 +57,6 @@ export const gallerySlice = createSlice({
   },
 });
 
-export const { setPosts, setLoadMorePosts, setBackgroundPosts, setLoading, setScrollPosition, setSelectedSubReddit, resetGallery } = gallerySlice.actions;
+export const { setPosts, setLoadMorePosts, setBackgroundPosts, setLoading, setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, resetGallery } = gallerySlice.actions;
 export default gallerySlice.reducer;
 

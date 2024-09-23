@@ -20,7 +20,7 @@ import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
-    setLoading, setScrollPosition, resetGallery
+    setLoading, setScrollPosition, setZoomedIn, resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 import { Root } from 'postcss';
@@ -61,6 +61,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const loading = useAppSelector((state: RootState) => state.gallery.loading);
     const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
     const scrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
+    const pastSubReddit = useAppSelector((state: RootState) => state.gallery.pastSubReddit);
+    const zoomedIn = useAppSelector((state: RootState) => state.gallery.zoomedIn);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -135,7 +137,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         console.log("Effect Scroll Y Store:", scrollPosition)
         window.scrollTo(0, scrollPosition);
 
-        if (posts.length === 0) {
+        if (posts.length === 0 || pastSubReddit !== subReddit) {
             handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
@@ -211,9 +213,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
+            router.push(`?img=${key}`, { scroll: false })
             setBackgroundOpacity(false);
             setZoomImg(true);
             setZoomImgId(key);
+            dispatch(setZoomedIn(true));
             const rect = e.target.getBoundingClientRect();
 
             const target = e.currentTarget;
@@ -255,6 +259,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 transition: 'all .3s ease',
             });
             setBackgroundOpacity(true);
+            dispatch(setZoomedIn(false));
             setTimeout(() => {
                 setZoomImg(false);
                 setZoomImgId("");
@@ -264,17 +269,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
-    const [hideScroll, setHideScroll] = useState(false);
 
-    const handleUserClick = (e: any) => {
+    const handleUserClick = (e: any, author: string) => {
         e.stopPropagation();
-        console.log("Scroll Position:", window.scrollY);
-
-        dispatch(setScrollPosition(window.scrollY));
+        router.push(`/u/${author}`, { scroll: false })
     }
 
     return (
-        <div>
+        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 ${zoomedIn ? styles.scrollbarZoomIn : ''}`}>
             <div>
                 <LoadingBar
                     color="#00BFFF"
@@ -372,11 +374,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    <Link href={`/u/${author}`} key={key} scroll={false} onClick={(e) => handleUserClick(e)}>
-                                        <span
-                                            className="ml-3">{"u/" + author}
-                                        </span>
-                                    </Link>
+                                    <span
+                                        className="ml-3"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleUserClick(e, author);
+                                        }}
+                                    >
+                                        {"u/" + author}
+                                    </span>
                                 </div>
                             </div>
 

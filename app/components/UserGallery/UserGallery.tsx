@@ -137,9 +137,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (result && result.data) {
                 const icon = result.data.icon_img;
 
-                if (result) {
+                if (icon) {
                     console.log("AQUI:", result.data.icon_img)
-                    setIconUser(result.data.icon_img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9-FSmbJQb2Gqg1HWewtvynvFOJ8Po2MbAUeuZzDvIZew5nIgsqP2349VQpump3g_wp6A&usqp=CAU');
+                    setIconUser(result.data.icon_img);
                 } else {
                     console.error("icon_img no encontrado en los datos recibidos:", result.data);
                 }

@@ -78,13 +78,17 @@ export default function ArtReddits() {
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));
+        dispatch(resetGallery());
 
-        console.log(currentSubreddit, subReddit);
-        
+        document.body.style.overflow = "visible";
+        document.body.style.marginRight = "";
+
+        router.push(`/r/${subReddit}`);
+
         setAreLinksDisabled(true);
         setTimeout(() => {
             setAreLinksDisabled(false);
-        }, 2000)
+        }, 3000)
     };
 
     return (
@@ -109,9 +113,12 @@ export default function ArtReddits() {
                             
                         `}
                         >
-                            <Link href={`/${subReddit}`} key={i} onClick={(e) => handleLinkClick(e, subReddit)}>
-                            {/* Blue pseudo-element */}
-                            <div className={`
+                            <Link href={`/${subReddit}`} key={i} onClick={(e) => {
+                                e.stopPropagation;
+                                handleLinkClick(e, subReddit);
+                            }} scroll={false}>
+                                {/* Blue pseudo-element */}
+                                <div className={`
                                 absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2
                                 ${selectedSubreddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
@@ -122,13 +129,13 @@ export default function ArtReddits() {
                                             className="rounded-full border border-2 border-light-primary"
                                         />
                                         <div className="flex-inline ml-3">
-                                            <h4>{subReddit || <Skeleton width={150} />}</h4>
+                                            <h4>{subReddit}</h4>
                                         </div>
                                     </div>
                                     <div className="flex items-center">
                                         <div className="flex text-light-secondaryText text-xs items-center my-1">
                                             <UserIcon className="size-3" />
-                                            <p>{subscribers || <Skeleton width={30} />}</p>
+                                            <p>{subscribers}</p>
                                         </div>
                                     </div>
                                     <ChevronRightIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 size-3" />

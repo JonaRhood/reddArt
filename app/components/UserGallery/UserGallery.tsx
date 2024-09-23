@@ -4,13 +4,17 @@ import styles from '@/app/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchUserReddit } from '@/app/lib/features/artLibrary/fetchData';
+import { fetchUserIcon } from '@/app/lib/features/artLibrary/fetchData';
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
+import { grayShimmer } from '@/app/lib/utils/utils';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import { ChevronLeftIcon } from '@heroicons/react/24/solid';
+import Skeleton from 'react-loading-skeleton';
 import Link from 'next/link';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
@@ -19,6 +23,7 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/userGallery/userGallerySlice"
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
@@ -28,8 +33,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const [after, setAfter] = useState<string | null>(null);
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
+    const [iconUser, setIconUser] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [rect, setRect] = useState<DOMRect | null>(null);
+    const [loadingIcon, setLoadingIcon] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
@@ -49,7 +56,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     const posts = useAppSelector((state: RootState) => state.userGallery.posts);
     const loading = useAppSelector((state: RootState) => state.userGallery.loading);
-    const selectedSubReddit = useAppSelector((state: RootState) => state.userGallery.selectedSubReddit);
+    const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -120,7 +127,34 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     }
 
-     //Starter Effect
+    //Fetching User Icon
+    ////////////////////////////////////////////////////////////////////////////
+    const fetchIcon = async () => {
+        setLoadingIcon(true);
+        try {
+            const result = await fetchUserIcon(redditUser);
+
+            if (result && result.data) {
+                const icon = result.data.icon_img;
+
+                if (result) {
+                    console.log("AQUI:", result.data.icon_img)
+                    setIconUser(result.data.icon_img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9-FSmbJQb2Gqg1HWewtvynvFOJ8Po2MbAUeuZzDvIZew5nIgsqP2349VQpump3g_wp6A&usqp=CAU');
+                } else {
+                    console.error("icon_img no encontrado en los datos recibidos:", result.data);
+                }
+            } else {
+                console.error("Data received is not in expected format:", result);
+            }
+        } catch (error) {
+            console.error("Error fetching redditUser data:", error);
+        } finally {
+            console.log("ICON USER:", iconUser);
+            setLoadingIcon(true);
+        }
+    };
+
+    //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
@@ -135,6 +169,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             debounceRef.current = setTimeout(() => {
                 console.log("Fetch", redditUser)
                 fetchData();
+                fetchIcon();
             }, 1000);
 
             return () => {
@@ -200,7 +235,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     }, [sentinel]);
 
-     // Handle Zoom, transition and animation when Image is clicked
+    // Handle Zoom, transition and animation when Image is clicked
     ////////////////////////////////////////////////////////////////////////////////////////
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
@@ -234,14 +269,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             });
             setTimeout(() => {
                 setImageStyles({
-                    top: '10%',
+                    top: '15%',
                     left: `${rectBackground.left / 100 * 9}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
                     transition: 'all .3s ease',
                 });
 
-             
+
             }, 100);
         } else {
             document.body.style.overflow = "visible";
@@ -261,12 +296,12 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     };
 
-    const handleClickBack= () => {
-        router.replace("/r/comics", { scroll: false });
+    const handleClickBack = () => {
+        router.back();
     }
 
     return (
-        <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 '>
+        <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 mt-14'>
             <div>
                 <LoadingBar
                     color="#00BFFF"
@@ -276,6 +311,36 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     shadow={false}
                 // onLoaderFinished={() => console.log("Loader finished")} 
                 />
+            </div>
+
+
+            <div
+                className={styles.userFixedLayout}
+            >
+                <div
+                    className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
+                    onClick={(e) => { handleClickBack() }}
+                >
+                    <ChevronLeftIcon className='size-5' />
+                </div>
+                <div className='flex items-center'>
+                        <Image
+                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                            alt="User Icon"
+                            width={60}
+                            height={60}
+                            loading="lazy"
+                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                            className='border-2 border-light-primary/70'
+                            style={{
+                                borderRadius: "50%",
+                                marginLeft: "10%",
+                                width: "40px",
+                                height: "40px",
+                            }}
+                        />
+                    <h4 className='ml-3'>u/{redditUser}</h4>
+                </div>
             </div>
 
             <>
@@ -306,10 +371,12 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                     >
                                         <div className={styles.divImgClicked}>
                                             <Image
-                                                src={cleanUrl(imgSource)}
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={key}
                                                 width={550}
                                                 height={300}
+                                                loading="lazy"
+                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
@@ -322,12 +389,16 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                placeholder="blur"
                                             />
                                             <Image
-                                                src={cleanUrl(imgSource)}
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={key}
                                                 width={550}
                                                 height={300}
+                                                loading="lazy"
+                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
@@ -340,16 +411,20 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
                                     </div>
                                     <Image
-                                        src={cleanUrl(imgSource)}
+                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
                                         width={800}
                                         height={600}
+                                        sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                        loading="lazy"
                                         className={styles.image}
-                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                        placeholder="blur"
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
@@ -363,7 +438,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                         );
                     })}
                 </Masonry>
-                
+
                 {sentinel && (
                     <div
                         ref={sentinelRef}

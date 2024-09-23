@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
+import Link from 'next/link';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
@@ -17,8 +18,9 @@ import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
-     resetGallery
+    setSelectedSubReddit
 } from "@/app/lib/features/gallery/gallerySlice";
+import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
@@ -121,11 +123,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     }
 
-     //Starter Effect
+    //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (posts.length === 0 || pastSubReddit !==  selectedSubReddit) {
-            console.log("Posts Lenght and past present", posts.length, pastSubReddit, selectedSubReddit)
+        if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
+            dispatch(setSelectedSubReddit("r/" + subReddit));
             handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
@@ -244,7 +246,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     transition: 'all .3s ease',
                 });
 
-             
+
             }, 100);
         } else {
             document.body.style.overflow = "visible";
@@ -270,7 +272,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const handleUserClick = (e: any, author: string) => {
         e.stopPropagation();
         dispatch(setPastSubReddit("r/" + subReddit));
-        router.push(`/u/${author}`, { scroll: true })
+        // dispatch(resetGallery());
+        // router.push(`/u/${author}`, { scroll: true })
     }
 
     return (
@@ -315,10 +318,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         <div className={styles.divImgClicked}>
 
                                             <Image
-                                                src={cleanUrl(imgSource)}
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={key}
                                                 width={550}
                                                 height={300}
+                                                loading="lazy"
+                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
@@ -332,12 +337,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                placeholder="blur"
                                             />
                                             <Image
-                                                src={cleanUrl(imgSource)}
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={key}
                                                 width={550}
                                                 height={300}
+                                                loading="lazy"
+                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                 className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                 style={{
                                                     top: `${imageStyles.top}`,
@@ -351,20 +360,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
                                     </div>
                                     <Image
-                                        src={cleanUrl(imgSource)}
+                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
                                         width={800}
                                         height={600}
+                                        loading="lazy"
+                                        sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                         className={styles.image}
-                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        style={{
-                                            width: "100%",
-                                            height: "auto",
-                                        }}
+                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                        placeholder="blur"
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
@@ -372,15 +381,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
+                                    <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}>
                                     <span
                                         className="ml-3"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleUserClick(e, author);
-                                        }}
+                                        // onClick={(e) => {
+                                        //     e.stopPropagation()
+                                        //     handleUserClick(e, author);
+                                        // }}
                                     >
                                         {"u/" + author}
                                     </span>
+                                    </Link>
                                 </div>
                             </div>
 

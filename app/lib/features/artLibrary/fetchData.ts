@@ -79,3 +79,30 @@ export async function fetchUserReddit(redditUser: string, limit: number, after =
 
 
 
+export async function fetchUserIcon(redditUser: string) {
+    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
+    try {
+        // Construye la URL con los parámetros after y before
+        const url = `${BASE_URL}/user/${redditUser}/about?`;
+
+        // Fetch the Reddit data using the token
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+             console.log("USER ABOUT DATA", data);
+             return data;
+        } else {
+            console.error('HTTP Error:', response.statusText);
+            return {}; // Return an empty object in case of failure
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        return {}; // Return an empty object in case of error
+    }
+}

@@ -27,6 +27,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.redd.it',
       },
+      {
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
+      },
     ], // Añade los dominios necesarios
   },
   experimental: {

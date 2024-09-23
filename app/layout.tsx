@@ -3,7 +3,6 @@ import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
 import "./styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
-import ClientSideScrollRestorer from "./components/ClientSideScrollRestorer/ClientSideScrollRestorer";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
@@ -30,16 +29,15 @@ export default function RootLayout({ children }: Props) {
           </Suspense>
           <section className="flex">
             <div className="fixed w-56 sm:w-80 bg-light-surface h-screen overflow-hidden z-50">
-              <Sidenav />
+              <Suspense fallback={null}>
+                <Sidenav /> 
+              </Suspense>
             </div>
             <div className="flex-1 ml-56 sm:ml-80 bg-light-background h-screen overflow-auto">
               <main className="p-4">{children}</main>
             </div>
           </section>
         </body>
-        <Suspense>
-          <ClientSideScrollRestorer />
-        </Suspense>
       </html>
     </StoreProvider>
   );

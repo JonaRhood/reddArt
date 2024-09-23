@@ -30,7 +30,7 @@ const nextConfig = {
     ], // Añade los dominios necesarios
   },
   experimental: {
-    scrollRestoration: false,
+    scrollRestoration: true,
   },
 };
 

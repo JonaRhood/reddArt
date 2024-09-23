@@ -16,6 +16,7 @@ interface Props {
   readonly children: ReactNode;
 }
 
+
 export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: Props) {
                 <Sidenav /> 
               </Suspense>
             </div>
-            <div className="flex-1 ml-56 sm:ml-80 bg-light-background h-screen overflow-auto">
+            <div className="flex-1 ml-56 sm:ml-80 bg-light-background h-screen">
               <main className="p-4">{children}</main>
             </div>
           </section>

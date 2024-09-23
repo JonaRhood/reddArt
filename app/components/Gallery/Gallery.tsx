@@ -44,14 +44,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         top: '',
         left: '',
         width: 'auto',
-        height: '',
+        height: 'auto',
         transition: '',
     });
     const [imageStylesMemory, setImageStylesMemory] = useState({
         top: '',
         left: '',
         width: 'auto',
-        height: '',
+        height: 'auto',
         transition: '',
     });
 
@@ -132,13 +132,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     useEffect(() => {
-        const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
-        console.log(posts.length);
-        console.log(zoomedIn)
-        
-        console.log("Effect Scroll Y", scrollPosition)
+        console.log("Effect Scroll Y Store:", scrollPosition)
+        window.scrollTo(0, scrollPosition);
 
-        if (zoomedIn !== "true" || posts.length === 0) {
+        if (posts.length === 0) {
             handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
@@ -269,15 +266,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const [hideScroll, setHideScroll] = useState(false);
 
-    const handleUserClick = (e: any, user: string) => {
-        const rect = e.target.getClientRects();
-        console.log("User CLick", rect, window.scrollY, window.scrollX);
+    const handleUserClick = (e: any) => {
+        e.stopPropagation();
+        console.log("Scroll Position:", window.scrollY);
 
-        hideScroll?document.body.style.overflow = "hidden":document.body.style.overflow = "auto";
-
-        // dispatch(setScrollPosition(rect));
-
-        router.push(`/u/${user}`, { scroll: false });
+        dispatch(setScrollPosition(window.scrollY));
     }
 
     return (
@@ -376,20 +369,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                 </div>
                                 <div className={styles.gradientOverlay}></div>
                                 <div className={styles.titleOverlay}>
-                                    <i
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
+                                    <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    <span
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleUserClick(e, author);
-                                        }} 
-                                        className="ml-3">{"u/" + author}
-                                    </span>
+                                    <Link href={`/u/${author}`} key={key} scroll={false} onClick={(e) => handleUserClick(e)}>
+                                        <span
+                                            className="ml-3">{"u/" + author}
+                                        </span>
+                                    </Link>
                                 </div>
                             </div>
 

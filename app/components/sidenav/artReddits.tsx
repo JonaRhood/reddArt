@@ -38,13 +38,15 @@ export default function ArtReddits() {
     useEffect(() => {
         const waitForToken = () => {
             return new Promise((resolve) => {
-                dispatch(setSelectedSubReddit(currentSubreddit));
+                dispatch(setSelectedSubReddit(currentSubreddit));  // Used for the CSS Selector of the Subreddit
                 const checkToken = () => {
-                    const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
-                    if (token) {
-                        resolve(token);
+                    const localToken = localStorage.getItem("REDDART_ACCESS_TOKEN")
+                    const localTokenTime = localStorage.getItem('REDDART_TOKEN_TIME');
+                    const oneHour = 60 * 60 * 1000;
+                    if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
+                        setTimeout(checkToken, 1000);
                     } else {
-                        setTimeout(checkToken, 100);
+                        resolve(localToken);
                     }
                 };
                 checkToken();

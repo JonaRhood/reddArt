@@ -2,11 +2,13 @@
 
 import { useEffect } from 'react';
 import { redirect, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
 
 export const AuthHandler = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -76,6 +78,9 @@ export const AuthHandler = () => {
               localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
               
               console.log('%cToken received', 'color: green; font-weight: bold;');
+
+              router.refresh(); //Added line to fix the problem with getting stock in the beggining?
+              
             } else {
               console.error('Failed to get access token:', data.error);
             }

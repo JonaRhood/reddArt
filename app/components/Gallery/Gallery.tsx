@@ -136,6 +136,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }
             debounceRef.current = setTimeout(() => {
                 fetchData();
+                window.scrollTo(0, scrollPosition);
             }, 100);
 
             return () => {

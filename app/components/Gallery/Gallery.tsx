@@ -20,7 +20,7 @@ import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
-    setLoading, setScrollPosition, setZoomedIn, resetGallery
+    setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 import { Root } from 'postcss';
@@ -134,10 +134,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     useEffect(() => {
-        console.log("Effect Scroll Y Store:", scrollPosition)
-        window.scrollTo(0, scrollPosition);
-
-        if (posts.length === 0 || pastSubReddit !== subReddit) {
+        if (posts.length === 0 || pastSubReddit !==  selectedSubReddit) {
+            console.log("Posts Lenght and past present", posts.length, pastSubReddit, selectedSubReddit)
             handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
@@ -213,7 +211,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
-            router.push(`?img=${key}`, { scroll: false })
             setBackgroundOpacity(false);
             setZoomImg(true);
             setZoomImgId(key);
@@ -272,7 +269,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const handleUserClick = (e: any, author: string) => {
         e.stopPropagation();
-        router.push(`/u/${author}`, { scroll: false })
+        dispatch(setPastSubReddit("r/" + subReddit));
+        router.push(`/u/${author}`, { scroll: true })
     }
 
     return (

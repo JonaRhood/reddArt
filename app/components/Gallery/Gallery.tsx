@@ -20,7 +20,8 @@ import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
-    setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, resetGallery
+    setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
+     resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
 import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 import { Root } from 'postcss';
@@ -28,18 +29,11 @@ import { Root } from 'postcss';
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
-    const pathname = usePathname();
-
-    const scrollRef = useRef<number>(0);
-
     const [sentinel, setSentinel] = useState(false);
-    const [after, setAfter] = useState<string | null>(null);
+    // const [after, setAfter] = useState<string | null>(null);
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
-    const [rect, setRect] = useState<DOMRect | null>(null);
-    const [modalOpen, setIsmodalOpen] = useState(false);
-    const [redditUser, setRedditUser] = useState<string | null>(null);
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
@@ -63,12 +57,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const scrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
     const pastSubReddit = useAppSelector((state: RootState) => state.gallery.pastSubReddit);
     const zoomedIn = useAppSelector((state: RootState) => state.gallery.zoomedIn);
+    const after = useAppSelector((state: RootState) => state.gallery.after);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
     const loadingBarRef = useRef<LoadingBarRef>(null);
 
-    const fetchDataRef = useRef<() => void>(() => { });
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -95,7 +89,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
             if (Array.isArray(data)) {
                 dispatch(setPosts(data));
-                setAfter(result.data.after);
+                dispatch(setAfter(result.data.after));
                 fetchDataAfterBackground(result.data.after)
 
             } else {
@@ -121,7 +115,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
             if (Array.isArray(data)) {
                 dispatch(setBackgroundPosts(data))
-                setAfter(result.data.after);
+                dispatch(setAfter(result.data.after));
             } else {
                 console.error("Data received is not an array:", data);
             }
@@ -151,6 +145,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     clearTimeout(debounceRef.current);
                 }
             };
+        } else {
+            setSentinel(true);
         }
     }, []);
 
@@ -159,13 +155,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
+            console.log("AFTER:", after);
             try {
                 const result = await fetchSubReddit(subReddit, 100, after);
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
                     dispatch(setBackgroundPosts(data));
-                    setAfter(result.data.after);
+                    dispatch(setAfter(result.data.after));
 
                 } else {
                     console.error("Data received is not an array:", data);
@@ -209,6 +206,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     }, [sentinel]);
 
+    // Handle Zoom, transition and animation when Image is clicked
+    ////////////////////////////////////////////////////////////////////////////////////////
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
             setBackgroundOpacity(false);
@@ -267,13 +266,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 setZoomImg(false);
                 setZoomImgId("");
             }, 500);
-            setIsmodalOpen(false);
-            setRedditUser(null);
-          
         }
     };
 
-
+    // Handle user clicked
+    ////////////////////////////////////////////////////////////////////////////////////////
     const handleUserClick = (e: any, author: string) => {
         e.stopPropagation();
         dispatch(setPastSubReddit("r/" + subReddit));

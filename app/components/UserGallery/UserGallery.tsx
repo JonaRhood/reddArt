@@ -55,11 +55,11 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     const sentinelRef = useRef(null);
     const loadingBarRef = useRef<LoadingBarRef>(null);
-
-    const fetchDataRef = useRef<() => void>(() => { });
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
 
+    // Loading Bar
+    //////////////////////////////////////////////////////////////////////////////
     const handleStartLoading = () => {
         if (loadingBarRef.current) {
             loadingBarRef.current.continuousStart();
@@ -93,7 +93,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             console.error("Error fetching redditUser data:", error);
         } finally {
             dispatch(setLoading(false))
-            handleCompleteLoading();;
+            handleCompleteLoading();
         }
     };
 

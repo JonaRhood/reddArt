@@ -19,13 +19,13 @@ export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     // Modificamos los middleware predeterminados
-    // middleware: (getDefaultMiddleware) =>
-    //   getDefaultMiddleware({
-    //     // Deshabilitar el chequeo de serialización para mejorar el rendimiento
-    //     serializableCheck: false,
-    //     // Deshabilitar el chequeo de inmutabilidad para mejorar el rendimiento
-    //     immutableCheck: false,
-    //   }).concat(quotesApiSlice.middleware),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        // Deshabilitar el chequeo de serialización para mejorar el rendimiento
+        serializableCheck: false,
+        // Deshabilitar el chequeo de inmutabilidad para mejorar el rendimiento
+        immutableCheck: false,
+      }).concat(quotesApiSlice.middleware),
   });
 };
 

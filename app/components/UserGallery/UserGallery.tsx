@@ -34,15 +34,15 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
-        width: '',
-        height: '',
+        width: 'auto',
+        height: 'auto',
         transition: '',
     });
     const [imageStylesMemory, setImageStylesMemory] = useState({
         top: '',
         left: '',
-        width: '',
-        height: '',
+        width: 'auto',
+        height: 'auto',
         transition: '',
     });
 

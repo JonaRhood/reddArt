@@ -43,14 +43,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
-        width: '',
+        width: 'auto',
         height: '',
         transition: '',
     });
     const [imageStylesMemory, setImageStylesMemory] = useState({
         top: '',
         left: '',
-        width: '',
+        width: 'auto',
         height: '',
         transition: '',
     });

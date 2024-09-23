@@ -269,7 +269,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setPastSubReddit("r/" + subReddit));
         dispatch(setScrollPosition(window.scrollY));
         console.log("SCROLL:", scrollPosition, window.scrollY);
-        // dispatch(resetGallery());
+        dispatch(resetGallery());
         // router.push(`/u/${author}`, { scroll: true })
     }
 

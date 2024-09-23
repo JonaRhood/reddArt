@@ -16,7 +16,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
-import { resetGallery, setSelectedSubReddit, setPastSubReddit } from "@/app/lib/features/gallery/gallerySlice";
+import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition } from "@/app/lib/features/gallery/gallerySlice";
 import { RootState } from '@/app/lib/store';
 
 
@@ -76,6 +76,7 @@ export default function ArtReddits() {
     }, []);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
+        dispatch(setScrollPosition(0));
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));
         dispatch(resetGallery());

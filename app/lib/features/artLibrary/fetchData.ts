@@ -55,7 +55,7 @@ export async function fetchUserReddit(redditUser: string, limit: number, after =
     const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {
         // Construye la URL con los parámetros after y before
-        const url = `${BASE_URL}/user/${redditUser}/overview?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
+        const url = `${BASE_URL}/user/${redditUser}/overview?limit=${limit}&sort=top${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
 
         // Fetch the Reddit data using the token
         const response = await fetch(url, {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import styles from '@/app/styles/Gallery.module.css';
@@ -12,9 +11,6 @@ import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import UserGallery from '../UserGallery/UserGallery';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
@@ -23,8 +19,6 @@ import {
     setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
      resetGallery
 } from "@/app/lib/features/gallery/gallerySlice";
-import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
-import { Root } from 'postcss';
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
@@ -127,6 +121,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     }
 
+     //Starter Effect
+    ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         if (posts.length === 0 || pastSubReddit !==  selectedSubReddit) {
             console.log("Posts Lenght and past present", posts.length, pastSubReddit, selectedSubReddit)
@@ -150,7 +146,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     }, []);
 
-    //Sentinel Effect to Load More pictures automatically when scrolling down
+    //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
@@ -278,7 +274,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     return (
-        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 ${zoomedIn ? `${styles.scrollbarZoomIn}` : ''}`}>
+        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
             <div>
                 <LoadingBar
                     color="#00BFFF"
@@ -399,12 +395,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         className={styles.sentinel}
                     ></div>
                 )}
-
-                {/* {modalOpen && redditUser && (
-                    <div className={styles.modal}>
-                       <UserGallery params={{ user: redditUser }} />
-                    </div>
-                )} */}
             </>
         </div>
     );

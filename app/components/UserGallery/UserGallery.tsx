@@ -19,7 +19,6 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/userGallery/userGallerySlice"
-import ZoomInGallery from '../ZoomInGallery/ZoomInGallery';
 
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
@@ -121,6 +120,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     }
 
+     //Starter Effect
+    ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         console.log(posts.length);
@@ -144,7 +145,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     }, []);
 
-    //Sentinel Effect to Load More pictures automatically when scrolling down
+    //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
@@ -199,6 +200,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     }, [sentinel]);
 
+     // Handle Zoom, transition and animation when Image is clicked
+    ////////////////////////////////////////////////////////////////////////////////////////
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
             setBackgroundOpacity(false);

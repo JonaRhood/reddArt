@@ -380,8 +380,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
-                                                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                                placeholder="blur"
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                             <Image
                                                 src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
@@ -414,8 +413,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                         sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                         loading="lazy"
                                         className={styles.image}
-                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        placeholder="blur"
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                      
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

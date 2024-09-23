@@ -28,7 +28,7 @@ export default function RootLayout({ children }: Props) {
             <AuthHandler />
           </Suspense>
           <section className="flex">
-            <div className="fixed w-56 sm:w-80 bg-light-surface h-screen overflow-hidden z-50">
+            <div className="fixed w-56 sm:w-80 bg-light-surface h-screen z-50">
               <Suspense fallback={null}>
                 <Sidenav /> 
               </Suspense>

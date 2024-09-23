@@ -18,7 +18,7 @@ export default function Sidenav() {
     }
 
     return (
-        <div className="flex flex-col w-56 z-50 bg-light-surface h-screen overflow-hidden fixed sm:w-80">
+        <div className="flex flex-col w-56 z-50 bg-light-surface h-screen fixed sm:w-80">
             <Link href={`/`} onClick={(() => handleLinkClick())}>
                 <div className={`
                     ${styles.title}

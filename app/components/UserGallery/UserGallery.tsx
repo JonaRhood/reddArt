@@ -153,6 +153,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
+        window.scrollTo(0, 0);
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();

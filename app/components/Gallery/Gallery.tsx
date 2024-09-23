@@ -126,6 +126,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
+        window.scrollTo(0, scrollPosition);
+        console.log("SCROLL:", scrollPosition, window.scrollY);
         if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
             dispatch(setSelectedSubReddit("r/" + subReddit));
             handleStartLoading();
@@ -265,8 +267,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const handleUserClick = (e: any, author: string) => {
         e.stopPropagation();
         dispatch(setPastSubReddit("r/" + subReddit));
+        dispatch(setScrollPosition(window.scrollY));
+        console.log("SCROLL:", scrollPosition, window.scrollY);
         // dispatch(resetGallery());
-        router.push(`/u/${author}`, { scroll: true })
+        // router.push(`/u/${author}`, { scroll: true })
     }
 
     return (
@@ -372,10 +376,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
+                                    <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}>
                                     <span
                                         className="ml-3"
-                                        onClick={(e) => handleUserClick(e, author)}
                                         // onClick={(e) => {
                                         //     e.stopPropagation()
                                         //     handleUserClick(e, author);
@@ -383,7 +386,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     >
                                         {"u/" + author}
                                     </span>
-                                    {/* </Link> */}
+                                    </Link>
                                 </div>
                             </div>
 

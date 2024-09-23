@@ -7,6 +7,7 @@ import CustomIcon from '@/app/lib/resources/CustomIcon'
 import Link from "next/link";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { setSelectedSubReddit, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+import { Suspense } from 'react';
 
 
 export default function Sidenav() {
@@ -15,7 +16,7 @@ export default function Sidenav() {
     const handleLinkClick = () => {
         dispatch(resetGallery());
     }
-    
+
     return (
         <div className="flex flex-col w-56 z-50 bg-light-surface h-screen overflow-hidden fixed sm:w-80">
             <Link href={`/`} onClick={(() => handleLinkClick())}>
@@ -31,7 +32,9 @@ export default function Sidenav() {
                 </div>
             </Link>
             <div className="pt-24 overflow-hidden overflow-scroll overflow-x-hidden">
-                <ArtReddits />
+                <Suspense fallback={null}>
+                    <ArtReddits />
+                </Suspense>
             </div>
         </div>
     );

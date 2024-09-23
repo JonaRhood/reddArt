@@ -2,13 +2,36 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['preview.redd.it', 'external-preview.redd.it', 
-    'styles.redditmedia.com', 'b.thumbs.redditmedia.com', 
-    'www.redditstatic.com', 'i.redd.it'], // Añade los dominios necesarios
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'preview.redd.it',
+      },
+      {
+        protocol: 'https',
+        hostname: 'external-preview.redd.it',
+      },
+      {
+        protocol: 'https',
+        hostname: 'styles.redditmedia.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'b.thumbs.redditmedia.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.redditstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.redd.it',
+      },
+    ], // Añade los dominios necesarios
   },
   experimental: {
     scrollRestoration: false,
-}
+  },
 };
 
 export default nextConfig;

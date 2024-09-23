@@ -205,12 +205,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             setZoomImg(true);
             setZoomImgId(key);
             const rect = e.target.getBoundingClientRect();
+            document.body.style.overflow = "hidden";
+            document.body.style.marginRight = "15px";
 
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
 
             const rectBackground = childDiv.getBoundingClientRect();
-            console.log("Rect Background", rectBackground);
+            // console.log("Rect Background", rectBackground);
 
 
             setImageStyles({
@@ -235,8 +237,12 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     height: `${rect.height}px`,
                     transition: 'all .3s ease',
                 });
+
+             
             }, 100);
         } else {
+            document.body.style.overflow = "visible";
+            document.body.style.marginRight = "";
             setImageStyles({
                 top: imageStylesMemory.top,
                 left: imageStylesMemory.left,

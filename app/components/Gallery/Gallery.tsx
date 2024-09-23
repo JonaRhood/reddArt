@@ -216,7 +216,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             setZoomImgId(key);
             dispatch(setZoomedIn(true));
             const rect = e.target.getBoundingClientRect();
-            document.body.style.overflowY = "hidden";
+            document.body.style.overflow = "hidden";
             document.body.style.marginRight = "15px";
 
             const target = e.currentTarget;
@@ -252,6 +252,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
              
             }, 100);
         } else {
+            document.body.style.overflow = "visible";
+            document.body.style.marginRight = "";
             setImageStyles({
                 top: imageStylesMemory.top,
                 left: imageStylesMemory.left,
@@ -267,8 +269,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }, 500);
             setIsmodalOpen(false);
             setRedditUser(null);
-            document.body.style.overflowY = "visible";
-            document.body.style.marginRight = "";
+          
         }
     };
 

@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Props) {
             ${ibmPlexSans.className}
             bg-light-background text-light-text
         `}>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={null}>
             <AuthHandler />
           </Suspense>
           <section className="flex">
@@ -34,8 +34,8 @@ export default function RootLayout({ children }: Props) {
                 <Sidenav /> 
               </Suspense>
             </div>
-            <div className={``}>
-              <main className="">{children}</main>
+            <div id="root">
+              <main>{children}</main>
             </div>
           </section>
         </body>

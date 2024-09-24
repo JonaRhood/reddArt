@@ -12,15 +12,19 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import Link from 'next/link';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import UserGallery from '../UserGallery/UserGallery';
+import Modal from 'react-modal';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
-    setSelectedSubReddit
+    setSelectedSubReddit, setModalisOpen
 } from "@/app/lib/features/gallery/gallerySlice";
 import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
+
+Modal.setAppElement('#root');
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
@@ -53,6 +57,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const scrollPosition = useAppSelector((state: RootState) => state.gallery.scrollPosition);
     const pastSubReddit = useAppSelector((state: RootState) => state.gallery.pastSubReddit);
     const zoomedIn = useAppSelector((state: RootState) => state.gallery.zoomedIn);
+    const modalIsOpen = useAppSelector((state: RootState) => state.gallery.modalIsOpen);
     const after = useAppSelector((state: RootState) => state.gallery.after);
     const dispatch = useAppDispatch();
 
@@ -62,18 +67,38 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
 
+    function isSafari() {
+        return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
+
     const handleStartLoading = () => {
         if (loadingBarRef.current) {
             loadingBarRef.current.continuousStart();
         }
     };
 
-    // Function to complete the loading bar
     const handleCompleteLoading = () => {
         if (loadingBarRef.current) {
             loadingBarRef.current.complete();
         }
     };
+
+    // const [modalIsOpen, setIsOpen] = useState(false);
+    const [authorSelected, setAuthorSelected] = useState<string | null>(null);
+
+
+    function openModal() {
+        dispatch(setModalisOpen(true));
+    }
+
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+
+    }
+
+    function closeModal() {
+        dispatch(setModalisOpen(false));
+    }
 
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
@@ -126,8 +151,18 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        window.scrollTo(0, scrollPosition);
-        console.log("SCROLL:", scrollPosition, window.scrollY);
+        // window.scrollTo(0, scrollPosition);
+        // console.log("SCROLL:", scrollPosition, window.scrollY);
+
+        // setTimeout(() => {
+        //     window.scrollTo(0, scrollPosition);
+        // }, 300)
+
+        if (isSafari()) {
+            document.body.classList.add('isSafari');
+            console.log("SAFARI")
+        }
+
         if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
             dispatch(setSelectedSubReddit("r/" + subReddit));
             handleStartLoading();
@@ -136,7 +171,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }
             debounceRef.current = setTimeout(() => {
                 fetchData();
-                window.scrollTo(0, scrollPosition);
+                // window.scrollTo(0, scrollPosition);
             }, 100);
 
             return () => {
@@ -219,47 +254,74 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
             const rectBackground = childDiv.getBoundingClientRect();
 
-            setImageStyles({
-                top: `${rect.top}px`,
-                left: `${rect.left - rectBackground.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                transition: '',
-            });
-            setImageStylesMemory({
-                top: `${rect.top}px`,
-                left: `${rect.left - rectBackground.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                transition: '',
-            });
-            setTimeout(() => {
+            if (isSafari()) {
                 setImageStyles({
                     top: '10%',
                     left: `${rectBackground.left / 100 * 9}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
-                    transition: 'all .3s ease',
+                    transition: 'all 0s ease',
                 });
-
-
-            }, 100);
+                setImageStylesMemory({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+            } else {
+                setImageStyles({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+                setImageStylesMemory({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+                setTimeout(() => {
+                    setImageStyles({
+                        top: '10%',
+                        left: `${rectBackground.left / 100 * 9}%`,
+                        width: `${rect.width * 1.8}px `,
+                        height: `${rect.height}px`,
+                        transition: 'all .3s ease',
+                    });
+                }, 100);
+            }
         } else {
             document.body.style.overflow = "visible";
             document.body.style.marginRight = "";
-            setImageStyles({
-                top: imageStylesMemory.top,
-                left: imageStylesMemory.left,
-                width: imageStylesMemory.width,
-                height: imageStylesMemory.height,
-                transition: 'all .3s ease',
-            });
+            if (isSafari()) {
+                setImageStyles({
+                    top: imageStylesMemory.top,
+                    left: imageStylesMemory.left,
+                    width: imageStylesMemory.width,
+                    height: imageStylesMemory.height,
+                    transition: 'all 0s ease',
+                });
+                setZoomImg(false);
+                setZoomImgId("");
+            } else {
+                setImageStyles({
+                    top: imageStylesMemory.top,
+                    left: imageStylesMemory.left,
+                    width: imageStylesMemory.width,
+                    height: imageStylesMemory.height,
+                    transition: 'all .3s ease',
+                });
+            }
             setBackgroundOpacity(true);
             dispatch(setZoomedIn(false));
             setTimeout(() => {
                 setZoomImg(false);
                 setZoomImgId("");
-            }, 500);
+            }, 350);
         }
     };
 
@@ -286,6 +348,18 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 // onLoaderFinished={() => console.log("Loader finished")} 
                 />
             </div>
+
+            <Modal
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    className={styles.modal}
+                    shouldCloseOnEsc={true}
+                    preventScroll={true}
+                >
+                        {authorSelected && <UserGallery params={{ user: authorSelected }} />}
+
+                </Modal>
 
             <>
                 <Masonry
@@ -377,17 +451,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}>
+                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
                                     <span
                                         className="ml-3"
-                                        // onClick={(e) => {
-                                        //     e.stopPropagation()
-                                        //     handleUserClick(e, author);
-                                        // }}
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            openModal();
+                                            document.body.style.overflow = "hidden";
+                                            router.push(`?user=${author}`, { scroll: false })
+                                            setAuthorSelected(author);
+                                        }}
                                     >
                                         {"u/" + author}
                                     </span>
-                                    </Link>
+                                    {/* </Link> */}
                                 </div>
                             </div>
 

@@ -9,6 +9,7 @@ interface GalleryState {
   scrollPosition: number;
   selectedSubReddit: string | null;
   pastSubReddit: string | null,
+  modalIsOpen: boolean,
   zoomedIn: boolean,
 }
 
@@ -20,6 +21,7 @@ const initialState: GalleryState = {
   scrollPosition: 0,
   selectedSubReddit: null,
   pastSubReddit: null,
+  modalIsOpen: false,
   zoomedIn: false,
 };
 
@@ -54,6 +56,9 @@ export const gallerySlice = createSlice({
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
+    setModalisOpen(state, action: PayloadAction<boolean>) {
+      state.modalIsOpen = action.payload;
+    },
     resetGallery(state) {
       return { ...initialState }
     },
@@ -62,7 +67,7 @@ export const gallerySlice = createSlice({
 
 export const { 
   setPosts, setLoadMorePosts, setBackgroundPosts, setAfter, setLoading, 
-  setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, 
+  setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, setModalisOpen,
   resetGallery 
 } = gallerySlice.actions;
 export default gallerySlice.reducer;

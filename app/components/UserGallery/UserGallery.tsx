@@ -23,6 +23,7 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery
 } from "@/app/lib/features/userGallery/userGallerySlice"
+import { setModalisOpen } from '@/app/lib/features/gallery/gallerySlice';
 
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
@@ -61,6 +62,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const loadingBarRef = useRef<LoadingBarRef>(null);
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
+    function isSafari() {
+        return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
 
     // Loading Bar
     //////////////////////////////////////////////////////////////////////////////
@@ -153,7 +157,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();
@@ -228,7 +232,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     }, [sentinel]);
 
-    // Handle Zoom, transition and animation when Image is clicked
+      // Handle Zoom, transition and animation when Image is clicked
     ////////////////////////////////////////////////////////////////////////////////////////
     const handleImageZoom = (e: any, key: string) => {
         if (zoomImg === false) {
@@ -243,44 +247,69 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
 
             const rectBackground = childDiv.getBoundingClientRect();
-            // console.log("Rect Background", rectBackground);
 
-
-            setImageStyles({
-                top: `${rect.top}px`,
-                left: `${rect.left - rectBackground.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                transition: '',
-            });
-            setImageStylesMemory({
-                top: `${rect.top}px`,
-                left: `${rect.left - rectBackground.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                transition: '',
-            });
-            setTimeout(() => {
+            if (isSafari()) {
                 setImageStyles({
-                    top: '15%',
+                    top: '10%',
                     left: `${rectBackground.left / 100 * 9}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
-                    transition: 'all .3s ease',
+                    transition: 'all 0s ease',
                 });
-
-
-            }, 100);
+                setImageStylesMemory({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+            } else {
+                setImageStyles({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+                setImageStylesMemory({
+                    top: `${rect.top}px`,
+                    left: `${rect.left - rectBackground.left}px`,
+                    width: `${rect.width}px`,
+                    height: `${rect.height}px`,
+                    transition: '',
+                });
+                setTimeout(() => {
+                    setImageStyles({
+                        top: '10%',
+                        left: `${rectBackground.left / 100 * 9}%`,
+                        width: `${rect.width * 1.8}px `,
+                        height: `${rect.height}px`,
+                        transition: 'all .3s ease',
+                    });
+                }, 100);
+            }
         } else {
             document.body.style.overflow = "visible";
             document.body.style.marginRight = "";
-            setImageStyles({
-                top: imageStylesMemory.top,
-                left: imageStylesMemory.left,
-                width: imageStylesMemory.width,
-                height: imageStylesMemory.height,
-                transition: 'all .3s ease',
-            });
+            if (isSafari()) {
+                setImageStyles({
+                    top: imageStylesMemory.top,
+                    left: imageStylesMemory.left,
+                    width: imageStylesMemory.width,
+                    height: imageStylesMemory.height,
+                    transition: 'all 0s ease',
+                });
+                setZoomImg(false);
+                setZoomImgId("");
+            } else {
+                setImageStyles({
+                    top: imageStylesMemory.top,
+                    left: imageStylesMemory.left,
+                    width: imageStylesMemory.width,
+                    height: imageStylesMemory.height,
+                    transition: 'all .3s ease',
+                });
+            }
             setBackgroundOpacity(true);
             setTimeout(() => {
                 setZoomImg(false);
@@ -312,11 +341,15 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             >
                 <div
                     className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
-                    onClick={(e) => { handleClickBack() }}
+                    onClick={(e) => {
+                        dispatch(setModalisOpen(false)); 
+                        document.body.style.overflow = "visible"
+                        router.back();
+                    }}
                 >
                     <ChevronLeftIcon className='size-5' />
                 </div>
-                <div className='flex items-center'>
+                <div className='flex items-center w-full'>
                         <Image
                             src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`)}
                             alt="User Icon"
@@ -326,12 +359,12 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                             className='border-2 border-light-primary/70'
                             style={{
                                 borderRadius: "50%",
-                                marginLeft: "10%",
+                                marginLeft: "2%",
                                 width: "40px",
                                 height: "40px",
                             }}
                         />
-                    <h4 className='ml-3'>u/{redditUser}</h4>
+                    <h4 className='flex ml-3 w-full'>u/{redditUser}</h4>
                 </div>
             </div>
 

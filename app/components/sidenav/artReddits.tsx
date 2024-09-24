@@ -32,7 +32,7 @@ export default function ArtReddits() {
 
     const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
     const pathSegments = currentPath.split('/');
-    const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : null || "";
+    const currentSubreddit = pathSegments.length > 2 ? `r/${pathSegments[2]}` : "";
 
     const dispatch = useAppDispatch();
 
@@ -84,7 +84,7 @@ export default function ArtReddits() {
         document.body.style.overflow = "visible";
         document.body.style.marginRight = "";
 
-        
+
         router.push(`/r/${subReddit}`);
 
         setAreLinksDisabled(true);

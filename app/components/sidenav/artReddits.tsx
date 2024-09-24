@@ -84,6 +84,7 @@ export default function ArtReddits() {
         document.body.style.overflow = "visible";
         document.body.style.marginRight = "";
 
+        
         router.push(`/r/${subReddit}`);
 
         setAreLinksDisabled(true);

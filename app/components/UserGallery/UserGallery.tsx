@@ -240,8 +240,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             setZoomImg(true);
             setZoomImgId(key);
             const rect = e.target.getBoundingClientRect();
-            document.body.style.overflow = "hidden";
-            document.body.style.marginRight = "15px";
+            // document.body.style.overflow = "hidden";
+            // document.body.style.marginRight = "15px";
 
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
@@ -250,7 +250,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
             if (isSafari()) {
                 setImageStyles({
-                    top: '10%',
+                    top: '15%',
                     left: `${rectBackground.left / 100 * 9}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
@@ -280,7 +280,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 });
                 setTimeout(() => {
                     setImageStyles({
-                        top: '10%',
+                        top: '15%',
                         left: `${rectBackground.left / 100 * 9}%`,
                         width: `${rect.width * 1.8}px `,
                         height: `${rect.height}px`,
@@ -289,8 +289,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 }, 100);
             }
         } else {
-            document.body.style.overflow = "visible";
-            document.body.style.marginRight = "";
+            // document.body.style.overflow = "visible";
+            // document.body.style.marginRight = "";
             if (isSafari()) {
                 setImageStyles({
                     top: imageStylesMemory.top,
@@ -324,7 +324,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     return (
         <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 mt-14'>
-            <div>
+             <div>
                 <LoadingBar
                     color="#00BFFF"
                     ref={loadingBarRef}
@@ -335,7 +335,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 />
             </div>
 
-
             <div
                 className={styles.userFixedLayout}
             >
@@ -343,6 +342,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                     onClick={(e) => {
                         dispatch(setModalisOpen(false)); 
+                        dispatch(resetGallery());
                         document.body.style.overflow = "visible"
                         router.back();
                     }}

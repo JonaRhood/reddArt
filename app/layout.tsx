@@ -10,6 +10,7 @@ import { Suspense } from "react";
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
+  display: 'swap',
 });
 
 interface Props {

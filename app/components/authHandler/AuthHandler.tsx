@@ -79,7 +79,7 @@ export const AuthHandler = () => {
               
               console.log('%cToken received', 'color: green; font-weight: bold;');
 
-              router.refresh(); //Added line to fix the problem with getting stock in the beggining?
+              window.location.reload() //Added line to fix the problem with getting stock in the beggining?
               
             } else {
               console.error('Failed to get access token:', data.error);

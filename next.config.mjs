@@ -1,7 +1,6 @@
-import withBundleAnalyzer from '@next/bundle-analyzer';
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     unoptimized: false,
     remotePatterns: [
@@ -33,14 +32,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'encrypted-tbn0.gstatic.com',
       },
-    ],
+    ], 
   },
   experimental: {
     scrollRestoration: true,
   },
 };
 
-// Exporta la configuración combinada con el analizador de paquetes
-export default withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-})(nextConfig);
+export default nextConfig;

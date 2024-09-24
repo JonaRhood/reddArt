@@ -1,4 +1,7 @@
 "use client";
+
+export const runtime = 'edge';
+
 import ZoomInGallery from "@/app/components/ZoomInGallery/ZoomInGallery";
 import { Suspense } from "react";
 

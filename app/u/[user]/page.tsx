@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = 'edge';
+
 import UserGallery from "@/app/components/UserGallery/UserGallery";
 import { Suspense, useRef } from "react";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";

@@ -1,13 +1,11 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { counterSlice } from "./features/counter/counterSlice";
-import { quotesApiSlice } from "./features/quotes/quotesApiSlice";
 import { gallerySlice } from "./features/gallery/gallerySlice";
 import { userGallerySlice } from "./features/userGallery/userGallerySlice";
 
 // `combineSlices` automáticamente combina los reductores usando
 // sus `reducerPath`, por lo que ya no necesitamos llamar a `combineReducers`.
-const rootReducer = combineSlices(counterSlice, quotesApiSlice, gallerySlice, userGallerySlice);
+const rootReducer = combineSlices( gallerySlice, userGallerySlice);
 
 // Inferimos el tipo `RootState` a partir del `rootReducer`
 export type RootState = ReturnType<typeof rootReducer>;
@@ -25,7 +23,7 @@ export const makeStore = () => {
         serializableCheck: false,
         // Deshabilitar el chequeo de inmutabilidad para mejorar el rendimiento
         immutableCheck: false,
-      }).concat(quotesApiSlice.middleware),
+      })
   });
 };
 

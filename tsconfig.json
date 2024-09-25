@@ -17,7 +17,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["node", "uuid"],
+    "types": [
+      "node", 
+      "uuid", 
+      "@cloudflare/workers-types"
+    ],
     "plugins": [{ "name": "next" }]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

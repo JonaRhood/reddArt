@@ -29,7 +29,7 @@ Through this project, I honed my skills in React state management, React Redux, 
 
 
 
-<!-- **Link to live project:** <a href="https://flashcards-cp.netlify.app/">https://flashcards-cp.netlify.app/</a><br/> -->
+**Link to live project:** <a href="https://reddit-client-49g.pages.dev/">https://reddit-client-49g.pages.dev/</a><br/>
 
 
 

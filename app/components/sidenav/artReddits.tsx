@@ -19,6 +19,15 @@ import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
 import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition } from "@/app/lib/features/gallery/gallerySlice";
 import { RootState } from '@/app/lib/store';
 
+interface RedditData {
+    data: {
+        display_name_prefixed: string;
+        icon_img?: string;
+        community_icon?: string;
+        subscribers: number;
+    };
+}
+
 
 export default function ArtReddits() {
     const [redditData, setRedditData] = useState<{ [key: string]: any }[]>([]);
@@ -60,7 +69,7 @@ export default function ArtReddits() {
                 await waitForToken();
 
                 const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));
-                const results = await Promise.all(dataPromises);
+                const results = await Promise.all(dataPromises) as RedditData[]; // Explicitly type the results as RedditData[]
                 setRedditData(results.filter(result => result && result.data));
 
                 console.log("Fetched SubReddit Results:", results);
@@ -116,7 +125,7 @@ export default function ArtReddits() {
                         `}
                         >
                             <Link href={`/${subReddit}`} key={i} onClick={(e) => {
-                                e.stopPropagation;
+                                e.stopPropagation();
                                 handleLinkClick(e, subReddit);
                             }} scroll={false}>
                                 {/* Blue pseudo-element */}

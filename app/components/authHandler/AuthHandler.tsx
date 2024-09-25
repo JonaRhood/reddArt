@@ -5,6 +5,11 @@ import { redirect, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
+interface RedditResponse {
+  token: string;
+  refresh_token: string;
+  error?: string;
+}
 
 export const AuthHandler = () => {
   const searchParams = useSearchParams();
@@ -43,17 +48,18 @@ export const AuthHandler = () => {
           }
         })
           .then(response => response.json())
-          .then(data => {
-            if (data.token) {
-              localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
+          .then((data) => {
+            const parsedData = data as RedditResponse;
+            if (parsedData.token) {
+              localStorage.setItem("REDDART_ACCESS_TOKEN", parsedData.token);
               localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
 
               console.log('%cToken Refreshed', 'color: green; font-weight: bold;');
             } else {
-              console.error('Failed to Refresh the Access Token', data.error);
+              console.error('Failed to Refresh the Access Token', parsedData.error);
             }
           })
-          .catch(error => {
+          .catch((error: any) => {
             console.error('Error Refreshing the token:', error);
           });
       // First Log in to the app or authorization declined by user
@@ -71,10 +77,11 @@ export const AuthHandler = () => {
           }
         })
           .then(response => response.json())
-          .then(data => {
-            if (data.token && data.refresh_token) {
-              localStorage.setItem("REDDART_ACCESS_TOKEN", data.token);
-              localStorage.setItem("REDDART_REFRESH_TOKEN", data.refresh_token);
+          .then((data) => {
+            const parsedData = data as RedditResponse;
+            if (parsedData.token && parsedData.refresh_token) {
+              localStorage.setItem("REDDART_ACCESS_TOKEN", parsedData.token);
+              localStorage.setItem("REDDART_REFRESH_TOKEN", parsedData.refresh_token);
               localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
               
               console.log('%cToken received', 'color: green; font-weight: bold;');
@@ -82,10 +89,10 @@ export const AuthHandler = () => {
               window.location.reload() //Added line to fix the problem with getting stock in the beggining?
               
             } else {
-              console.error('Failed to get access token:', data.error);
+              console.error('Failed to get access token:', parsedData.error);
             }
           })
-          .catch(error => {
+          .catch((error: any) => {
             console.error('Error fetching token:', error);
           });
       //Token defined and working

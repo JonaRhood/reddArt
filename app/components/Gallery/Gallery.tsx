@@ -26,6 +26,13 @@ import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
 
 Modal.setAppElement('#root');
 
+interface RedditResponse {
+    data: {
+        children: Array<{ /* Define the structure of each post here */ }>;
+        after: string | null;
+    };
+}
+
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
@@ -105,14 +112,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         try {
-            const result = await fetchSubReddit(subReddit, 100);
+            const result = await fetchSubReddit(subReddit, 100) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
                 dispatch(setPosts(data));
                 dispatch(setAfter(result.data.after));
-                fetchDataAfterBackground(result.data.after)
-
+                const after = result.data.after;
+                if (after) {
+                    fetchDataAfterBackground(after);
+                }
             } else {
                 console.error("Data received is not an array:", data);
             }
@@ -131,7 +140,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             return;
         }
         try {
-            const result = await fetchSubReddit(subReddit, 100, after);
+            const result = await fetchSubReddit(subReddit, 100, after) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -190,7 +199,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
-                const result = await fetchSubReddit(subReddit, 100, after);
+                const result = await fetchSubReddit(subReddit, 100, after) as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {

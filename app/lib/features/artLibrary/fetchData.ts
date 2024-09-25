@@ -1,108 +1,55 @@
 // fetchData.ts
 const BASE_URL = 'https://oauth.reddit.com';
 
+async function fetchRedditData(url: string) {
+    const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
+    if (!token) {
+        console.error('Token is missing');
+        return null; // O lanza un error
+    }
 
-export async function fetchToNavBar(subreddit: string) {
-    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
     try {
-        // Fetch the Reddit data using the token
-        const response = await fetch(`${BASE_URL}/r/${subreddit}/about`, {
+        const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
 
-        if (response.ok) {
-            return response.json();
-        } else {
+        if (!response.ok) {
             console.error('HTTP Error:', response.statusText);
-            return {}; // Return an empty object in case of failure
+            return null; // O lanza un error en lugar de devolver un objeto vacío
         }
+
+        return await response.json();
     } catch (error) {
         console.error('Fetch Error:', error);
-        return {}; // Return an empty object in case of error
+        return null; // O lanza un error
     }
+}
+
+export async function fetchToNavBar(subreddit: string) {
+    const url = `${BASE_URL}/r/${subreddit}/about`;
+    return fetchRedditData(url);
 }
 
 export async function fetchSubReddit(subreddit: string, limit: number, after = '', before = '') {
-    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
-    try {
-        // Construye la URL con los parámetros after y before
-        const url = `${BASE_URL}/r/${subreddit}/hot?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
-
-        // Fetch the Reddit data using the token
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            return response.json();
-        } else {
-            console.error('HTTP Error:', response.statusText);
-            return {}; // Return an empty object in case of failure
-        }
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        return {}; // Return an empty object in case of error
-    }
+    const url = `${BASE_URL}/r/${subreddit}/hot?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
+    return fetchRedditData(url);
 }
 
 export async function fetchUserReddit(redditUser: string, limit: number, after = '', before = '') {
-    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
-    try {
-        // Construye la URL con los parámetros after y before
-        const url = `${BASE_URL}/user/${redditUser}/overview?limit=${limit}&sort=top${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
-
-        // Fetch the Reddit data using the token
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            return response.json();
-        } else {
-            console.error('HTTP Error:', response.statusText);
-            return {}; // Return an empty object in case of failure
-        }
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        return {}; // Return an empty object in case of error
-    }
+    const url = `${BASE_URL}/user/${redditUser}/overview?limit=${limit}&sort=top${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
+    return fetchRedditData(url);
 }
 
-
-
 export async function fetchUserIcon(redditUser: string) {
-    const token = localStorage.getItem('REDDART_ACCESS_TOKEN')
-    try {
-        // Construye la URL con los parámetros after y before
-        const url = `${BASE_URL}/user/${redditUser}/about?`;
-
-        // Fetch the Reddit data using the token
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-             console.log("USER ABOUT DATA", data);
-             return data;
-        } else {
-            console.error('HTTP Error:', response.statusText);
-            return {}; // Return an empty object in case of failure
-        }
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        return {}; // Return an empty object in case of error
+    const url = `${BASE_URL}/user/${redditUser}/about`;
+    const data = await fetchRedditData(url);
+    
+    if (data) {
+        console.log("USER ABOUT DATA", data);
     }
+
+    return data;
 }

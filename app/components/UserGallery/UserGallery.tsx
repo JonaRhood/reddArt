@@ -25,6 +25,20 @@ import {
 } from "@/app/lib/features/userGallery/userGallerySlice"
 import { setModalisOpen } from '@/app/lib/features/gallery/gallerySlice';
 
+interface RedditResponse {
+    data: {
+        children: Array<{ /* Define the structure of each post here */ }>;
+        after: string | null;
+    };
+}
+
+interface IconResponse {
+    data: {
+        children: Array<{ /* Define the structure of each post here */ }>;
+        icon_img: string | null;
+    };
+}
+
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
 
@@ -86,13 +100,16 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         try {
-            const result = await fetchUserReddit(redditUser, 100);
+            const result = await fetchUserReddit(redditUser, 100) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
                 dispatch(setPosts(data));
                 setAfter(result.data.after);
-                fetchDataAfterBackground(result.data.after)
+                const after = result.data.after;
+                if (after) {
+                    fetchDataAfterBackground(after);
+                }
 
             } else {
                 console.error("Data received is not an array:", data);
@@ -112,7 +129,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             return;
         }
         try {
-            const result = await fetchUserReddit(redditUser, 100, after);
+            const result = await fetchUserReddit(redditUser, 100, after) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -134,7 +151,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const fetchIcon = async () => {
         setLoadingIcon(true);
         try {
-            const result = await fetchUserIcon(redditUser);
+            const result = await fetchUserIcon(redditUser) as IconResponse  ;
 
             if (result && result.data) {
                 const icon = result.data.icon_img;
@@ -184,7 +201,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
-                const result = await fetchUserReddit(redditUser, 100, after);
+                const result = await fetchUserReddit(redditUser, 100, after) as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {

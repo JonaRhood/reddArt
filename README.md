@@ -69,6 +69,9 @@ The primary objective of this project was to create a React-based web applicatio
   - Ensure the application is fully responsive, providing an optimal viewing experience on mobile devices.
 - [ ] **Performance and Efficiency Improvements:** 
   - Enhance the performance and efficiency of the application to ensure fast loading times and a smooth user experience.
+- [ ] **Night Mode Implementation:** 
+  - Add a night mode feature to allow users to switch to a darker theme for a comfortable viewing experience in low-light conditions.
+  
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

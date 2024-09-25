@@ -1,0 +1,7 @@
+.landingImage {
+    border-radius: 24px;
+    border: 8px solid white; 
+    min-width: 100%; 
+    min-height: auto; 
+    object-fit: cover; 
+}

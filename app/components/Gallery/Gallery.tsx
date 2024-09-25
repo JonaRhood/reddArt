@@ -100,7 +100,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
-
     }
 
     function closeModal() {
@@ -112,7 +111,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         try {
-            const result = await fetchSubReddit(subReddit, 100) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 25) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -140,7 +139,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             return;
         }
         try {
-            const result = await fetchSubReddit(subReddit, 100, after) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 25, after) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -199,7 +198,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
-                const result = await fetchSubReddit(subReddit, 100, after) as RedditResponse;
+                const result = await fetchSubReddit(subReddit, 25, after) as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -440,6 +439,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                                quality={1} 
                                             // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
@@ -447,12 +447,13 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <Image
                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
-                                        width={800}
-                                        height={600}
-                                        loading="lazy"
+                                        width={550}
+                                        height={300}
+                                        loading="eager"
                                         sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                         className={styles.image}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                        quality={75} 
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

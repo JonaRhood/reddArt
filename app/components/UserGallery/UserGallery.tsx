@@ -100,7 +100,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         try {
-            const result = await fetchUserReddit(redditUser, 100) as RedditResponse;
+            const result = await fetchUserReddit(redditUser, 25) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -129,7 +129,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             return;
         }
         try {
-            const result = await fetchUserReddit(redditUser, 100, after) as RedditResponse;
+            const result = await fetchUserReddit(redditUser, 25, after) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -201,7 +201,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
             try {
-                const result = await fetchUserReddit(redditUser, 100, after) as RedditResponse;
+                const result = await fetchUserReddit(redditUser, 25, after) as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -452,6 +452,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
+                                                quality={1} 
                                             // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
@@ -459,13 +460,13 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                     <Image
                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
-                                        width={800}
-                                        height={600}
+                                        width={550}
+                                        height={300}
                                         sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                        loading="lazy"
+                                        loading="eager"
                                         className={styles.image}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                      
+                                        quality={75} 
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

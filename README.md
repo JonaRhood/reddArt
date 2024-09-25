@@ -3,7 +3,13 @@
 <!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/232bd46e-23c2-4478-9490-61fdcbf23020/deploy-status)](https://app.netlify.com/sites/flashcards-cp/deploys) -->
 
 
-# <img src="https://media.giphy.com/media/ffumjakqlYO2kaRPKL/giphy.gif?cid=790b7611krpdermigmst5mjlw59ha0zhrqh979x7gy7cdo3h&ep=v1_gifs_search&rid=giphy.gif&ct=s" width="30">&nbsp; Reddit Art Client
+# <img src="https://media.giphy.com/media/ffumjakqlYO2kaRPKL/giphy.gif?cid=790b7611krpdermigmst5mjlw59ha0zhrqh979x7gy7cdo3h&ep=v1_gifs_search&rid=giphy.gif&ct=s" width="30">&nbsp; reddArt
+
+
+<div align="center">
+    <img src="./public/screenshot.png" alt="Logo" width="800" >
+</div>
+<br />
 
 <div align="center">
     <h2>Wireframe</h2>
@@ -49,17 +55,20 @@ The primary objective of this project was to create a React-based web applicatio
 
 ## 💿 &nbsp; <a id="features">Features and Enhancements</a>
 
-- [ ] **Art Community Selection:** 
+- [x] **Art Community Selection:** 
   - Provide a list of different art communities on Reddit, allowing users to choose and explore content from their favorite groups.
-- [ ] **Community and Art Display:** 
+- [x] **Community and Art Display:** 
   - Show the official community page along with a picture list of artworks when a community is selected, making it easy to browse through art content.
-- [ ] **Artist and Art Details:** 
+- [x] **Artist and Art Details:** 
   - Display details of each artwork, including the artist's name, comments, and more, with direct links to the artist’s Reddit profile for further interaction.
-- [ ] **Seamless Reddit Integration:** 
+- [x] **Seamless Reddit Integration:** 
   - Ensure all art details and community interactions redirect seamlessly to Reddit, maintaining the connection with the original platform.
-- [ ] **Immersive Art Experience:** 
+- [x] **Immersive Art Experience:** 
   - Design the app to provide an immersive browsing experience, allowing users to access and appreciate Reddit art content within seconds.
-
+- [ ] **Responsive Design for Mobile:** 
+  - Ensure the application is fully responsive, providing an optimal viewing experience on mobile devices.
+- [ ] **Performance and Efficiency Improvements:** 
+  - Enhance the performance and efficiency of the application to ensure fast loading times and a smooth user experience.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -77,16 +86,16 @@ npm install
 
 3. Run the application:
 ```bash
-npm start
+npm run dev
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## ⚙️ &nbsp; <a id="technologies-used">Technologies Used</a>
 
+[![NEXT.JS][NEXT.js]][NEXTJS-url]
 [![REACT][REACT.js]][REACT-url]
 [![REDUX][REDUX.js]][REDUX-url]
-[![NEXT.JS][NEXT.js]][NEXTJS-url]
 [![TYPESCRIPT][TYPESCRIPT.js]][TYPESCRIPT-url]
 [![JAVASCRIPT][JAVASCRIPT.js]][JAVASCRIPT-url]
 [![CSS][CSS.js]][CSS-url]

@@ -37,7 +37,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
     const [sentinel, setSentinel] = useState(false);
-    // const [after, setAfter] = useState<string | null>(null);
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
@@ -70,6 +69,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const sentinelRef = useRef(null);
     const loadingBarRef = useRef<LoadingBarRef>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -106,12 +106,23 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setModalisOpen(false));
     }
 
+    const abortFetch = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        abortControllerRef.current = new AbortController();
+    };
+
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
+        abortFetch();
+
+        const signal = abortControllerRef.current?.signal;
+
         try {
-            const result = await fetchSubReddit(subReddit, 25) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 25, '', '', signal) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -125,21 +136,27 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 console.error("Data received is not an array:", data);
             }
         } catch (error) {
-            console.error("Error fetching subreddit data:", error);
+            if (error === "AbortError") {
+                console.log("Request aborted");
+            } else {
+                console.error("Error fetching subreddit data:", error);
+            }
         } finally {
             dispatch(setLoading(false))
-            handleCompleteLoading();;
+            handleCompleteLoading();
         }
     };
 
     //Function to Fetch After Data on the backround
     ////////////////////////////////////////////////////////////////////////////
     const fetchDataAfterBackground = async (after: string) => {
-        if (!after) {
-            return;
-        }
+        if (!after) return;
+        abortFetch();
+
+        const signal = abortControllerRef.current?.signal;
+
         try {
-            const result = await fetchSubReddit(subReddit, 25, after) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 25, after, '', signal) as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -149,7 +166,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 console.error("Data received is not an array:", data);
             }
         } catch (error) {
-            console.error("Error fetching subreddit after", error);
+            if (error === "AbortError") {
+                console.log("Request aborted");
+            } else {
+                console.error("Error fetching subreddit after", error);
+            }
         } finally {
             setSentinel(true);
             console.log("fetchDataAfterBackground finished");
@@ -159,13 +180,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        // window.scrollTo(0, scrollPosition);
-        // console.log("SCROLL:", scrollPosition, window.scrollY);
-
-        // setTimeout(() => {
-        //     window.scrollTo(0, scrollPosition);
-        // }, 300)
-
         if (isSafari()) {
             document.body.classList.add('isSafari');
             console.log("SAFARI")
@@ -186,19 +200,25 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
                 }
+                abortFetch();
             };
         } else {
             setSentinel(true);
         }
-    }, []);
+
+    }, [subReddit]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
+            abortFetch();
+
+            const signal = abortControllerRef.current?.signal;
+
             try {
-                const result = await fetchSubReddit(subReddit, 25, after) as RedditResponse;
+                const result = await fetchSubReddit(subReddit, 25, after, '', signal) as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -209,7 +229,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     console.error("Data received is not an array:", data);
                 }
             } catch (error) {
-                console.error("Error fetching subreddit data:", error);
+                if (error === "AbortError") {
+                    console.log("Request aborted");
+                } else {
+                    console.error("Error fetching subreddit data:", error);
+                }
             } finally {
                 setSentinel(true);
             }
@@ -358,16 +382,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             </div>
 
             <Modal
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    className={styles.modal}
-                    shouldCloseOnEsc={true}
-                    preventScroll={true}
-                >
-                        {authorSelected && <UserGallery params={{ user: authorSelected }} />}
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                className={styles.modal}
+                shouldCloseOnEsc={true}
+                preventScroll={true}
+            >
+                {authorSelected && <UserGallery params={{ user: authorSelected }} />}
 
-                </Modal>
+            </Modal>
 
             <>
                 <Masonry
@@ -439,7 +463,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     padding: '0px',
                                                     borderRadius: '20px',
                                                 }}
-                                                quality={1} 
+                                                quality={1}
                                             // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
@@ -453,7 +477,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                         className={styles.image}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        quality={75} 
+                                        quality={75}
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

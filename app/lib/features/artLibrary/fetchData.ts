@@ -1,7 +1,7 @@
 // fetchData.ts
 const BASE_URL = 'https://oauth.reddit.com';
 
-async function fetchRedditData(url: string) {
+async function fetchRedditData(url: string, signal?: AbortSignal) {
     const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
     if (!token) {
         console.error('Token is missing');
@@ -13,7 +13,8 @@ async function fetchRedditData(url: string) {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            signal
         });
 
         if (!response.ok) {
@@ -33,9 +34,9 @@ export async function fetchToNavBar(subreddit: string) {
     return fetchRedditData(url);
 }
 
-export async function fetchSubReddit(subreddit: string, limit: number, after = '', before = '') {
+export async function fetchSubReddit(subreddit: string, limit: number, after = '', before = '', signal?: AbortSignal) {
     const url = `${BASE_URL}/r/${subreddit}/hot?limit=${limit}${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
-    return fetchRedditData(url);
+    return fetchRedditData(url, signal);
 }
 
 export async function fetchUserReddit(redditUser: string, limit: number, after = '', before = '') {

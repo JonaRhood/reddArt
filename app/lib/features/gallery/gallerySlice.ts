@@ -59,6 +59,11 @@ export const gallerySlice = createSlice({
     setModalisOpen(state, action: PayloadAction<boolean>) {
       state.modalIsOpen = action.payload;
     },
+    stopGalleryLoading(state) {
+      state.posts = [];  // Vaciamos los posts de inmediato
+      state.backgroundPosts = [];  // También vaciamos los backgroundPosts
+      state.loading = false;  // Detenemos cualquier estado de carga
+    },
     resetGallery(state) {
       return { ...initialState }
     },
@@ -68,7 +73,7 @@ export const gallerySlice = createSlice({
 export const { 
   setPosts, setLoadMorePosts, setBackgroundPosts, setAfter, setLoading, 
   setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, setModalisOpen,
-  resetGallery 
+  stopGalleryLoading, resetGallery 
 } = gallerySlice.actions;
 export default gallerySlice.reducer;
 

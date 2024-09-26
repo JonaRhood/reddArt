@@ -16,7 +16,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
-import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition } from "@/app/lib/features/gallery/gallerySlice";
+import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition, stopGalleryLoading } from "@/app/lib/features/gallery/gallerySlice";
 import { RootState } from '@/app/lib/store';
 
 interface RedditData {
@@ -85,21 +85,18 @@ export default function ArtReddits() {
     }, []);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
-        dispatch(setScrollPosition(0));
+        e.stopPropagation();
+        dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));
-        dispatch(resetGallery());
 
         document.body.style.overflow = "visible";
         document.body.style.marginRight = "";
 
-
-        router.push(`/r/${subReddit}`);
-
-        setAreLinksDisabled(true);
-        setTimeout(() => {
-            setAreLinksDisabled(false);
-        }, 3000)
+        // setAreLinksDisabled(true);
+        // setTimeout(() => {
+        //     setAreLinksDisabled(false);
+        // }, 3000)
     };
 
     return (
@@ -125,7 +122,6 @@ export default function ArtReddits() {
                         `}
                         >
                             <Link href={`/${subReddit}`} key={i} onClick={(e) => {
-                                e.stopPropagation();
                                 handleLinkClick(e, subReddit);
                             }} scroll={false}>
                                 {/* Blue pseudo-element */}

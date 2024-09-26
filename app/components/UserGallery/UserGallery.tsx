@@ -139,11 +139,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             } else {
                 console.error("Data received is not an array:", data);
             }
-        } catch (error) {
-            if (error === "AbortError") {
-                console.log("Request aborted");
-            } else {
-                console.error("Error fetching redditUser data:", error);
+        } catch (error: unknown) {
+            if (error instanceof TypeError) {
+            } else if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Fetch Error:', error);
+                }
             }
         } finally {
             dispatch(setLoading(false))
@@ -169,11 +172,17 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             } else {
                 console.error("Data received is not an array:", data);
             }
-        } catch (error) {
-            console.error("Error fetching redditUser after", error);
+        } catch (error: unknown) {
+            if (error instanceof TypeError) {
+            } else if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Fetch Error:', error);
+                }
+            }
         } finally {
             setSentinel(true);
-            console.log("fetchDataAfterBackground finished");
         }
     }
 
@@ -199,11 +208,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             } else {
                 console.error("Data received is not in expected format:", result);
             }
-        } catch (error) {
-            if (error === "AbortError") {
-                console.log("Request aborted");
-            } else {
-                console.error("Error fetching redditUser data:", error);
+        } catch (error: unknown) {
+            if (error instanceof TypeError) {
+            } else if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Fetch Error:', error);
+                }
             }
         } finally {
             setLoadingIcon(true);
@@ -224,7 +236,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 debounceRef.current = setTimeout(() => {
                     fetchData();
                     fetchIcon();
-                    console.log("LLEGAMOS AQUÍ")
                 }, 100);
 
                 return () => {
@@ -232,7 +243,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                         clearTimeout(debounceRef.current);
                     }
                     abortFetch();
-                    console.log("Se aborta el fetch");
                 };
             }
         }
@@ -258,15 +268,17 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     } else {
                         console.error("Data received is not an array:", data);
                     }
-                } catch (error) {
-                    if (error === "AbortError") {
-                        console.log("Request aborted");
-                    } else {
-                        console.error("Error fetching redditUser data:", error);
+                } catch (error: unknown) {
+                    if (error instanceof TypeError) {
+                    } else if (error instanceof Error) {
+                        if (error.name === 'AbortError') {
+                            console.log('Fetch aborted');
+                        } else {
+                            console.error('Fetch Error:', error);
+                        }
                     }
                 } finally {
                     setSentinel(true);
-                    console.log("fetchDataAfterBackgroundEffect finished");
                 }
             };
 
@@ -411,6 +423,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                         className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                         onClick={(e) => {
                             abortFetch();
+                            router.refresh();
                             setIsMounted(false);
                             dispatch(setModalIsOpen(false));
                             dispatch(stopGalleryLoading());

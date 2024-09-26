@@ -86,12 +86,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     useEffect(() => {
         setIsMounted(true);
-        console.log(subReddit, "MONTADO")
         abortFetch();
 
         return () => {
             setIsMounted(false);
-            console.log(subReddit, "DESMONTADO")
             abortFetch();
         };
     }, []);
@@ -139,34 +137,39 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         abortFetch();
-
+    
         const signal = abortControllerRef.current?.signal;
-
+    
         try {
             const result = await fetchSubReddit(subReddit, 25, '', '', signal) as RedditResponse;
-            const data = result.data.children;
-
-            if (Array.isArray(data)) {
-                dispatch(setPosts(data));
-                dispatch(setAfter(result.data.after));
-                console.log("fetchData BIEN");
-                const after = result.data.after;
-                if (after) {
-                    fetchDataAfterBackground(after);
+    
+            if (result && result.data) {
+                const data = result.data.children;
+    
+                if (Array.isArray(data)) {
+                    dispatch(setPosts(data));
+                    dispatch(setAfter(result.data.after));
+                    const after = result.data.after;
+                    if (after) {
+                        fetchDataAfterBackground(after);
+                    }
+                } else {
+                    console.error("Data received is not an array:", data);
                 }
             } else {
-                console.error("Data received is not an array:", data);
+                // console.warn("Result or result.data is null:", result);
             }
         } catch (error: unknown) {
-            if (error instanceof Error) {
+            if (error instanceof TypeError) {
+            } else if (error instanceof Error) {
                 if (error.name === 'AbortError') {
-                    console.log('Fetch aborted'); // O simplemente no registres nada
+                    console.log('Fetch aborted');
                 } else {
                     console.error('Fetch Error:', error);
                 }
             }
         } finally {
-            dispatch(setLoading(false))
+            dispatch(setLoading(false));
             handleCompleteLoading();
         }
     };
@@ -186,21 +189,20 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (Array.isArray(data)) {
                 dispatch(setBackgroundPosts(data))
                 dispatch(setAfter(result.data.after));
-                console.log("fetchDataAfterBckg BIEN")
             } else {
                 console.error("Data received is not an array:", data);
             }
         } catch (error: unknown) {
-        if (error instanceof Error) {
-            if (error.name === 'AbortError') {
-                console.log('Fetch aborted'); // O simplemente no registres nada
-            } else {
-                console.error('Fetch Error:', error);
+            if (error instanceof TypeError) {
+            } else if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Fetch Error:', error);
+                }
             }
-        }
         } finally {
             setSentinel(true);
-            console.log("fetchDataAfterBackground finished");
         }
     }
 
@@ -210,7 +212,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (isMounted) {
             if (isSafari()) {
                 document.body.classList.add('isSafari');
-                console.log("SAFARI")
             }
 
             if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
@@ -250,17 +251,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 if (Array.isArray(data)) {
                     dispatch(setBackgroundPosts(data));
                     dispatch(setAfter(result.data.after));
-
-                    console.log("fetchDataAfterBackgroundEffect FINISHED")
-
                 } else {
                     console.error("Data received is not an array:", data);
                 }
-            } catch (error) {
-                if (error === "AbortError") {
-                    console.log("Request aborted");
-                } else {
-                    console.error("Error fetching subreddit data:", error);
+            } catch (error: unknown) {
+                if (error instanceof TypeError) {
+                } else if (error instanceof Error) {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch aborted');
+                    } else {
+                        console.error('Fetch Error:', error);
+                    }
                 }
             } finally {
                 setSentinel(true);
@@ -391,7 +392,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         e.stopPropagation();
         dispatch(setPastSubReddit("r/" + subReddit));
         dispatch(setScrollPosition(window.scrollY));
-        console.log("SCROLL:", scrollPosition, window.scrollY);
         dispatch(resetGallery());
         // router.push(`/u/${author}`, { scroll: true })
     }

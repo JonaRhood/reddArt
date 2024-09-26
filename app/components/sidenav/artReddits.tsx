@@ -86,6 +86,7 @@ export default function ArtReddits() {
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
         e.stopPropagation();
+        router.refresh();
         dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));

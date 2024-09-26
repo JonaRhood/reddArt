@@ -31,11 +31,13 @@ export default function RootLayout({ children }: Props) {
           <section className="flex">
             <div className="fixed w-56 sm:w-80 bg-light-surface h-screen z-50">
               <Suspense fallback={null}>
-                <Sidenav /> 
+                <Sidenav />
               </Suspense>
             </div>
             <div id="root">
-              <main>{children}</main>
+              <Suspense fallback={null}>
+                <main>{children}</main>
+              </Suspense>
             </div>
           </section>
         </body>

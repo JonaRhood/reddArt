@@ -19,13 +19,19 @@ async function fetchRedditData(url: string, signal?: AbortSignal) {
 
         if (!response.ok) {
             console.error('HTTP Error:', response.statusText);
-            return null; // O lanza un error en lugar de devolver un objeto vacío
+            return null; 
         }
 
         return await response.json();
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        return null; // O lanza un error
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+                console.log('Fetch aborted'); // O simplemente no registres nada
+            } else {
+                console.error('Fetch Error:', error);
+            }
+        }
+        return null; 
     }
 }
 
@@ -39,14 +45,14 @@ export async function fetchSubReddit(subreddit: string, limit: number, after = '
     return fetchRedditData(url, signal);
 }
 
-export async function fetchUserReddit(redditUser: string, limit: number, after = '', before = '') {
+export async function fetchUserReddit(redditUser: string, limit: number, after = '', before = '', signal?: AbortSignal) {
     const url = `${BASE_URL}/user/${redditUser}/overview?limit=${limit}&sort=top${after ? `&after=${after}` : ''}${before ? `&before=${before}` : ''}`;
-    return fetchRedditData(url);
+    return fetchRedditData(url, signal);
 }
 
-export async function fetchUserIcon(redditUser: string) {
+export async function fetchUserIcon(redditUser: string, signal?: AbortSignal) {
     const url = `${BASE_URL}/user/${redditUser}/about`;
-    const data = await fetchRedditData(url);
+    const data = await fetchRedditData(url, signal);
     
     if (data) {
         console.log("USER ABOUT DATA", data);

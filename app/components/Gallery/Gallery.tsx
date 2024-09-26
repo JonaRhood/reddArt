@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
+import { Suspense } from 'react';
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
@@ -20,7 +21,7 @@ import { RootState } from "@/app/lib/store";
 import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
-    setSelectedSubReddit, setModalisOpen
+    setSelectedSubReddit, setModalIsOpen
 } from "@/app/lib/features/gallery/gallerySlice";
 import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
 
@@ -28,13 +29,23 @@ Modal.setAppElement('#root');
 
 interface RedditResponse {
     data: {
-        children: Array<{ /* Define the structure of each post here */ }>;
+        children: Array<{ 
+            data: {
+                title: string;
+                url: string;
+                author: string;
+                id: string;
+                // Add other fields as necessary
+            }
+        }>;
         after: string | null;
     };
 }
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
+
+    const [isMounted, setIsMounted] = useState(false);
 
     const [sentinel, setSentinel] = useState(false);
     const [zoomImg, setZoomImg] = useState(false);
@@ -73,6 +84,18 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
+    useEffect(() => {
+        setIsMounted(true);
+        console.log(subReddit, "MONTADO")
+        abortFetch();
+
+        return () => {
+            setIsMounted(false);
+            console.log(subReddit, "DESMONTADO")
+            abortFetch();
+        };
+    }, []);
+
 
     function isSafari() {
         return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -95,7 +118,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
 
     function openModal() {
-        dispatch(setModalisOpen(true));
+        dispatch(setModalIsOpen(true));
     }
 
     function afterOpenModal() {
@@ -103,13 +126,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     function closeModal() {
-        dispatch(setModalisOpen(false));
+        dispatch(setModalIsOpen(false));
     }
 
     const abortFetch = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
+        abortControllerRef.current?.abort();
         abortControllerRef.current = new AbortController();
     };
 
@@ -128,6 +149,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (Array.isArray(data)) {
                 dispatch(setPosts(data));
                 dispatch(setAfter(result.data.after));
+                console.log("fetchData BIEN");
                 const after = result.data.after;
                 if (after) {
                     fetchDataAfterBackground(after);
@@ -135,11 +157,13 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             } else {
                 console.error("Data received is not an array:", data);
             }
-        } catch (error) {
-            if (error === "AbortError") {
-                console.log("Request aborted");
-            } else {
-                console.error("Error fetching subreddit data:", error);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted'); // O simplemente no registres nada
+                } else {
+                    console.error('Fetch Error:', error);
+                }
             }
         } finally {
             dispatch(setLoading(false))
@@ -150,8 +174,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Function to Fetch After Data on the backround
     ////////////////////////////////////////////////////////////////////////////
     const fetchDataAfterBackground = async (after: string) => {
-        if (!after) return;
         abortFetch();
+        if (!after) return;
 
         const signal = abortControllerRef.current?.signal;
 
@@ -162,15 +186,18 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (Array.isArray(data)) {
                 dispatch(setBackgroundPosts(data))
                 dispatch(setAfter(result.data.after));
+                console.log("fetchDataAfterBckg BIEN")
             } else {
                 console.error("Data received is not an array:", data);
             }
-        } catch (error) {
-            if (error === "AbortError") {
-                console.log("Request aborted");
+        } catch (error: unknown) {
+        if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+                console.log('Fetch aborted'); // O simplemente no registres nada
             } else {
-                console.error("Error fetching subreddit after", error);
+                console.error('Fetch Error:', error);
             }
+        }
         } finally {
             setSentinel(true);
             console.log("fetchDataAfterBackground finished");
@@ -180,41 +207,40 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (isSafari()) {
-            document.body.classList.add('isSafari');
-            console.log("SAFARI")
-        }
-
-        if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
-            dispatch(setSelectedSubReddit("r/" + subReddit));
-            handleStartLoading();
-            if (debounceRef.current) {
-                clearTimeout(debounceRef.current);
+        if (isMounted) {
+            if (isSafari()) {
+                document.body.classList.add('isSafari');
+                console.log("SAFARI")
             }
-            debounceRef.current = setTimeout(() => {
-                fetchData();
-                // window.scrollTo(0, scrollPosition);
-            }, 100);
 
-            return () => {
+            if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
+                dispatch(setSelectedSubReddit("r/" + subReddit));
+                handleStartLoading();
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
                 }
-                abortFetch();
-            };
-        } else {
-            setSentinel(true);
-        }
+                debounceRef.current = setTimeout(() => {
+                    fetchData();
+                }, 100);
 
-    }, [subReddit]);
+                return () => {
+                    if (debounceRef.current) {
+                        clearTimeout(debounceRef.current);
+                    }
+                    abortFetch();
+                };
+            } else {
+                setSentinel(true);
+            }
+        }
+    }, [subReddit, isMounted]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
-            abortFetch();
-
+            
             const signal = abortControllerRef.current?.signal;
 
             try {
@@ -224,6 +250,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 if (Array.isArray(data)) {
                     dispatch(setBackgroundPosts(data));
                     dispatch(setAfter(result.data.after));
+
+                    console.log("fetchDataAfterBackgroundEffect FINISHED")
 
                 } else {
                     console.error("Data received is not an array:", data);
@@ -369,151 +397,154 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     }
 
     return (
-        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
-            <div>
-                <LoadingBar
-                    color="#00BFFF"
-                    ref={loadingBarRef}
-                    height={4}
-                    className={styles.loadingBar}
-                    shadow={false}
-                // onLoaderFinished={() => console.log("Loader finished")} 
-                />
-            </div>
+        !isMounted ? "" : (
+            <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
+                <div>
+                    <LoadingBar
+                        color="#00BFFF"
+                        ref={loadingBarRef}
+                        height={4}
+                        className={styles.loadingBar}
+                        shadow={false}
+                    // onLoaderFinished={() => console.log("Loader finished")} 
+                    />
+                </div>
 
-            <Modal
-                isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                className={styles.modal}
-                shouldCloseOnEsc={true}
-                preventScroll={true}
-            >
-                {authorSelected && <UserGallery params={{ user: authorSelected }} />}
-
-            </Modal>
-
-            <>
-                <Masonry
-                    breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}
-                    className={styles.masonryGrid}
-                    columnClassName={styles.masonryGridColumn}
+                <Modal
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    className={styles.modal}
+                    shouldCloseOnEsc={true}
+                    preventScroll={true}
                 >
-                    {Array.isArray(posts) && posts.map((item, index) => {
-                        const preview = item.data.preview;
-                        const imgSource = preview?.images?.[0]?.source?.url;
-                        const key = item.data.id + index
-                        const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
+                    {authorSelected && <Suspense fallback={null}><UserGallery params={{ user: authorSelected }} /></Suspense>}
 
-                        if (!imgSource) {
-                            return null;
-                        }
+                </Modal>
 
-                        return (
-                            <div
-                                key={key}
-                                className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                                onClick={(e) => handleImageZoom(e, key)}
-                            >
-                                <div className='flex'>
-                                    <div
-                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
-                                    >
-                                        <div className={styles.divImgClicked}>
+                <>
+                    <Masonry
+                        breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}
+                        className={styles.masonryGrid}
+                        columnClassName={styles.masonryGridColumn}
+                    >
+                        {Array.isArray(posts) && posts.map((item, index) => {
+                            const preview = item.data.preview;
+                            const imgSource = preview?.images?.[0]?.source?.url;
+                            const key = item.data.id + index
+                            const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
 
-                                            <Image
-                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key}
-                                                width={550}
-                                                height={300}
-                                                loading="lazy"
-                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                style={{
-                                                    top: `${imageStyles.top}`,
-                                                    left: `${imageStyles.left}`,
-                                                    width: `${imageStyles.width}`,
-                                                    height: "auto",
-                                                    transform: 'scale(1)',
-                                                    position: 'absolute',
-                                                    zIndex: 1000,
-                                                    transition: `${imageStyles.transition}`,
-                                                    padding: '0px',
-                                                    borderRadius: '20px',
-                                                }}
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            />
-                                            <Image
-                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key}
-                                                width={550}
-                                                height={300}
-                                                loading="lazy"
-                                                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
-                                                style={{
-                                                    top: `${imageStyles.top}`,
-                                                    left: `${imageStyles.left}`,
-                                                    width: `${imageStyles.width}`,
-                                                    height: "auto",
-                                                    transform: 'scale(1)',
-                                                    position: 'absolute',
-                                                    zIndex: 800,
-                                                    transition: `${imageStyles.transition}`,
-                                                    padding: '0px',
-                                                    borderRadius: '20px',
-                                                }}
-                                                quality={1}
-                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            />
+                            if (!imgSource) {
+                                return null;
+                            }
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
+                                    onClick={(e) => handleImageZoom(e, key)}
+                                >
+                                    <div className='flex'>
+                                        <div
+                                            className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
+                                        >
+                                            <div className={styles.divImgClicked}>
+
+                                                <Image
+                                                    src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                    alt={key}
+                                                    width={550}
+                                                    height={300}
+                                                    loading="lazy"
+                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                                    className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                    style={{
+                                                        top: `${imageStyles.top}`,
+                                                        left: `${imageStyles.left}`,
+                                                        width: `${imageStyles.width}`,
+                                                        height: "auto",
+                                                        transform: 'scale(1)',
+                                                        position: 'absolute',
+                                                        zIndex: 1000,
+                                                        transition: `${imageStyles.transition}`,
+                                                        padding: '0px',
+                                                        borderRadius: '20px',
+                                                    }}
+                                                    // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                />
+                                                <Image
+                                                    src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                    alt={key}
+                                                    width={550}
+                                                    height={300}
+                                                    loading="lazy"
+                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                                    className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
+                                                    style={{
+                                                        top: `${imageStyles.top}`,
+                                                        left: `${imageStyles.left}`,
+                                                        width: `${imageStyles.width}`,
+                                                        height: "auto",
+                                                        transform: 'scale(1)',
+                                                        position: 'absolute',
+                                                        zIndex: 800,
+                                                        transition: `${imageStyles.transition}`,
+                                                        padding: '0px',
+                                                        borderRadius: '20px',
+                                                    }}
+                                                    quality={1}
+                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                />
+                                            </div>
                                         </div>
+                                        <Image
+                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                            alt={key}
+                                            width={550}
+                                            height={300}
+                                            loading="lazy"
+                                            sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                            className={styles.image}
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            quality={75}
+                                        />
                                     </div>
-                                    <Image
-                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                        alt={key}
-                                        width={550}
-                                        height={300}
-                                        loading="eager"
-                                        sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                        className={styles.image}
-                                        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        quality={75}
-                                    />
+                                    <div className={styles.gradientOverlay}></div>
+                                    <div className={styles.titleOverlay}>
+                                        <i>
+                                            <UserIcon className="size-4" />
+                                        </i>
+                                        {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
+                                        <span
+                                            className="ml-3"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                openModal();
+                                                document.body.style.overflow = "hidden";
+                                                router.push(`?user=${author}`, { scroll: false })
+                                                setAuthorSelected(author);
+                                                abortFetch();
+                                            }}
+                                        >
+                                            {"u/" + author}
+                                        </span>
+                                        {/* </Link> */}
+                                    </div>
                                 </div>
-                                <div className={styles.gradientOverlay}></div>
-                                <div className={styles.titleOverlay}>
-                                    <i>
-                                        <UserIcon className="size-4" />
-                                    </i>
-                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
-                                    <span
-                                        className="ml-3"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            openModal();
-                                            document.body.style.overflow = "hidden";
-                                            router.push(`?user=${author}`, { scroll: false })
-                                            setAuthorSelected(author);
-                                        }}
-                                    >
-                                        {"u/" + author}
-                                    </span>
-                                    {/* </Link> */}
-                                </div>
-                            </div>
 
-                            // </Link>
-                        );
-                    })}
-                </Masonry>
+                                // </Link>
+                            );
+                        })}
+                    </Masonry>
 
-                {sentinel && (
-                    <div
-                        ref={sentinelRef}
-                        className={styles.sentinel}
-                    ></div>
-                )}
-            </>
-        </div>
+                    {sentinel && (
+                        <div
+                            ref={sentinelRef}
+                            className={styles.sentinel}
+                        ></div>
+                    )}
+                </>
+            </div>
+        )
     );
 }

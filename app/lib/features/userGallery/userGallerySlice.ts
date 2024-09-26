@@ -41,12 +41,18 @@ export const userGallerySlice = createSlice({
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
+    stopGalleryLoading(state) {
+      state.posts = [];  // Vaciamos los posts de inmediato
+      state.backgroundPosts = [];  // También vaciamos los backgroundPosts
+      state.loading = false;  // Detenemos cualquier estado de carga
+    },
     resetGallery(state) {
       return { ...initialState }
     },
   },
 });
 
-export const { setPosts, setLoadMorePosts, setBackgroundPosts, setLoading, setScrollPosition, setSelectedSubReddit, resetGallery } = userGallerySlice.actions;
+export const { setPosts, setLoadMorePosts, setBackgroundPosts, setLoading, setScrollPosition, setSelectedSubReddit, 
+  stopGalleryLoading, resetGallery } = userGallerySlice.actions;
 export default userGallerySlice.reducer;
 

@@ -56,7 +56,7 @@ export const gallerySlice = createSlice({
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
-    setModalisOpen(state, action: PayloadAction<boolean>) {
+    setModalIsOpen(state, action: PayloadAction<boolean>) {
       state.modalIsOpen = action.payload;
     },
     stopGalleryLoading(state) {
@@ -72,7 +72,7 @@ export const gallerySlice = createSlice({
 
 export const { 
   setPosts, setLoadMorePosts, setBackgroundPosts, setAfter, setLoading, 
-  setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, setModalisOpen,
+  setScrollPosition, setSelectedSubReddit, setPastSubReddit, setZoomedIn, setModalIsOpen,
   stopGalleryLoading, resetGallery 
 } = gallerySlice.actions;
 export default gallerySlice.reducer;

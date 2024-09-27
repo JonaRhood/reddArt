@@ -4,7 +4,7 @@ import Image from "next/image"
 import mockup from "@/public/mockup3.jpg"
 import { useInView } from "react-intersection-observer"
 
-import styles from "@/app/styles/landing.module.css"
+import styles from "@/public/styles/landing.module.css"
 
 export default function Landing() {
 

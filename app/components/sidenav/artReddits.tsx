@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '@/app/styles/artReddits.module.css'
+import styles from '@/public/styles/artReddits.module.css'
 
 import { fetchToNavBar } from "@/app/lib/features/artLibrary/fetchData";
 import { reddits } from "@/app/lib/features/artLibrary/data";

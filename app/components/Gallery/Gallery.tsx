@@ -1,7 +1,7 @@
 
 "use client";
 
-import styles from '@/app/styles/Gallery.module.css';
+import styles from '@/public/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
@@ -113,6 +113,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     function closeModal() {
         dispatch(setModalIsOpen(false));
     }
+    
 
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////

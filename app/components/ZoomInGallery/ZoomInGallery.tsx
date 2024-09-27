@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import styles from '@/app/styles/image.module.css';
+import styles from '@/public/styles/image.module.css';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { shimmer, toBase64 } from '@/app/lib/utils/utils';
 import { useRouter } from 'next/navigation';

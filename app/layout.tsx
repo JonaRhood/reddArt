@@ -1,56 +1,46 @@
-"use client"
 
 import type { ReactNode } from "react";
+import Head from "next/head";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
-import "./styles/globals.css";
+import "/public/styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
-import { useEffect } from "react";
+import { SWRegister } from "./components/SWRegister/SWRegister";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
 
 
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  display: 'swap',
-});
+// const ibmPlexSans = IBM_Plex_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '700'],
+//   display: 'swap',
+// });
 
 interface Props {
   readonly children: ReactNode;
 }
 
 export default function RootLayout({ children }: Props) {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js', { scope: '/' })
-        .then(serviceWorker => {
-          console.log('Service Worker registered: ', serviceWorker);
-
-          // Verifica si el SW está controlando la página
-          if (!navigator.serviceWorker.controller) {
-            console.log('No SW controlling the page yet, reloading...');
-            window.location.reload(); // Recarga la página si no está controlada por un SW
-          } else {
-            console.log('Service Worker is already controlling the page');
-          }
-
-        })
-        .catch(error => {
-          console.error('Error registering the Service Worker: ', error);
-        });
-    }
-  }, []);
 
   return (
     <StoreProvider>
       <html lang="en">
+        <Head>
+        <link rel="stylesheet" href="/app/styles/global.css" />
+        <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
+        <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
+        <link rel="stylesheet" href="/app/styles/Gallery.module.css" />
+        <link rel="stylesheet" href="/app/styles/sidenav.module.css" />
+        <link rel="stylesheet" href="/app/styles/layout.module.css" />
+        </Head>
         <body className={`
-            ${ibmPlexSans.className}
+
             bg-light-background text-light-text
         `}>
+          <Suspense>
+            <SWRegister />
+          </Suspense>
           <Suspense fallback={null}>
             <AuthHandler />
           </Suspense>
@@ -72,10 +62,10 @@ export default function RootLayout({ children }: Props) {
   );
 }
 
-// export const metadata = {
-//   title: 'reddArt',
-//   description: 'Your site description here',
-//   icons: {
-//     icon: '/favicon.svg',
-//   },
-// };
+export const metadata = {
+  title: 'reddArt',
+  description: 'Your site description here',
+  icons: {
+    icon: '/favicon.svg',
+  },
+};

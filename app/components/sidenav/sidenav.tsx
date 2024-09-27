@@ -1,6 +1,6 @@
 "use client";
 
-import styles from '@/app/styles/sidenav.module.css'
+import styles from '@/public/styles/sidenav.module.css'
 
 import ArtReddits from "./artReddits";
 import CustomIcon from '@/app/lib/resources/CustomIcon'

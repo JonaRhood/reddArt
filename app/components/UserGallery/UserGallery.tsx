@@ -1,6 +1,6 @@
 "use client";
 
-import styles from '@/app/styles/Gallery.module.css';
+import styles from '@/public/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchUserReddit } from '@/app/lib/features/artLibrary/fetchData';

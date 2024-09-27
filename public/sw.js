@@ -24,7 +24,7 @@ self.addEventListener('fetch', (event) => {
             })
             .catch(err => {
                 if (err.name === 'AbortError') {
-                    console.log('Request aborted:', event.request.url);
+                    // console.log('Request aborted:', event.request.url);
                     return new Response('', { status: 200, statusText: 'Request Aborted' });
                 }
                 throw err; // Manejar otros errores

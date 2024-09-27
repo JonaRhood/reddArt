@@ -1,3 +1,4 @@
+
 import type { ReactNode } from "react";
 import { StoreProvider } from "./StoreProvider";
 import Sidenav from "./components/sidenav/sidenav";
@@ -6,6 +7,7 @@ import { IBM_Plex_Sans } from 'next/font/google';
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
+
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -17,7 +19,7 @@ interface Props {
   readonly children: ReactNode;
 }
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: Props) {  
   return (
     <StoreProvider>
       <html lang="en">

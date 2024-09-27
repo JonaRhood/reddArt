@@ -13,13 +13,14 @@ import { Suspense } from 'react';
 export default function Sidenav() {
     const dispatch = useAppDispatch();
 
-    const handleLinkClick = () => {
+    const handleLinkClick = (e: any) => {
+        e.stopPropagation();
         dispatch(resetGallery());
     }
 
     return (
         <div className="flex flex-col w-56 z-50 bg-light-surface h-screen fixed sm:w-80">
-            <Link href={`/`} onClick={(() => handleLinkClick())}>
+            <Link href={`/`} onClick={((e) => handleLinkClick(e))}>
                 <div className={`
                     ${styles.title}
                     flex w-56 sm:w-80 items-center justify-center bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-10

@@ -92,7 +92,7 @@ export default function ArtReddits() {
             } else {
               console.log('No active Service Worker to send message to.');
             }
-        router.refresh();
+        // router.refresh();
         dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));

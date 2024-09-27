@@ -86,17 +86,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        setIsMounted(true);
-        abortFetch();
-
-        return () => {
-            setIsMounted(false);
-            abortFetch();
-        };
-    }, []);
-
-
     function isSafari() {
         return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     }
@@ -112,8 +101,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             loadingBarRef.current.complete();
         }
     };
-
-    // const [modalIsOpen, setIsOpen] = useState(false);
     const [authorSelected, setAuthorSelected] = useState<string | null>(null);
 
 
@@ -129,21 +116,13 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setModalIsOpen(false));
     }
 
-    const abortFetch = () => {
-        abortControllerRef.current?.abort();
-        abortControllerRef.current = new AbortController();
-    };
-
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
-        abortFetch();
-
-        const signal = abortControllerRef.current?.signal;
 
         try {
-            const result = await fetchSubReddit(subReddit, 25, '', '', signal) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 50, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -167,7 +146,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 if (error.name === 'AbortError') {
                     console.log('Fetch aborted');
                 } else {
-                    console.error('Fetch Error:', error);
+                    // console.error('Fetch Error:', error);
                 }
             }
         } finally {
@@ -179,13 +158,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Function to Fetch After Data on the backround
     ////////////////////////////////////////////////////////////////////////////
     const fetchDataAfterBackground = async (after: string) => {
-        abortFetch();
         if (!after) return;
 
-        const signal = abortControllerRef.current?.signal;
-
         try {
-            const result = await fetchSubReddit(subReddit, 25, after, '', signal) as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -200,7 +176,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 if (error.name === 'AbortError') {
                     console.log('Fetch aborted');
                 } else {
-                    console.error('Fetch Error:', error);
+                    // console.error('Fetch Error:', error);
                 }
             }
         } finally {
@@ -211,7 +187,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (isMounted) {
             if (isSafari()) {
                 document.body.classList.add('isSafari');
             }
@@ -230,13 +205,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     if (debounceRef.current) {
                         clearTimeout(debounceRef.current);
                     }
-                    abortFetch();
                 };
             } else {
                 setSentinel(true);
             }
-        }
-    }, [subReddit, isMounted]);
+    }, [subReddit]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -244,10 +217,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
 
-            const signal = abortControllerRef.current?.signal;
-
             try {
-                const result = await fetchSubReddit(subReddit, 25, after, '', signal) as RedditResponse;
+                const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -262,7 +233,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     if (error.name === 'AbortError') {
                         console.log('Fetch aborted');
                     } else {
-                        console.error('Fetch Error:', error);
+                        // console.error('Fetch Error:', error);
                     }
                 }
             } finally {
@@ -388,22 +359,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
-    // Handle user clicked
-    ////////////////////////////////////////////////////////////////////////////////////////
-    const handleUserClick = (e: any, author: string) => {
-        e.stopPropagation();
-        dispatch(setPastSubReddit("r/" + subReddit));
-        dispatch(setScrollPosition(window.scrollY));
-        dispatch(resetGallery());
-        // router.push(`/u/${author}`, { scroll: true })
-    }
-
-    const { ref, inView } = useInView({
-        triggerOnce: true,
-    })
-
     return (
-        !isMounted ? "" : (
+        // !isMounted ? "" : (
             <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
                 <div>
                     <LoadingBar
@@ -451,7 +408,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     onClick={(e) => handleImageZoom(e, key)}
                                 >
                                     <div className='flex'>
-                                        {/* <div
+                                        <div
                                             className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                         >
                                             <div className={styles.divImgClicked}>
@@ -461,7 +418,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     alt={key}
                                                     width={550}
                                                     height={300}
-                                                    loading="lazy"
+                                                    // loading="lazy"
                                                     sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                     style={{
@@ -476,6 +433,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
+                                                    priority
                                                     // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                                 <Image
@@ -502,9 +460,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                             </div>
-                                        </div> */}
+                                        </div>
                                         <Image
-                                            ref={ref}
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={key}
                                             width={preview?.images?.[0]?.source?.width}
@@ -513,7 +470,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             priority
                                             // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                             // className={styles.image}
-                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />
                                     </div>
@@ -531,7 +488,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 document.body.style.overflow = "hidden";
                                                 router.push(`?user=${author}`, { scroll: false })
                                                 setAuthorSelected(author);
-                                                abortFetch();
+                                                // abortFetch();
                                             }}
                                         >
                                             {"u/" + author}
@@ -554,5 +511,5 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 </>
             </div>
         )
-    );
+    // );
 }

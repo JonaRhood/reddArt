@@ -50,7 +50,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [iconUser, setIconUser] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
-    const [rect, setRect] = useState<DOMRect | null>(null);
     const [loadingIcon, setLoadingIcon] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
@@ -72,7 +71,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const posts = useAppSelector((state: RootState) => state.userGallery.posts);
     const loading = useAppSelector((state: RootState) => state.userGallery.loading);
     const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
-    const abortControllerRef = useRef<AbortController | null>(null);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -85,7 +83,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
         return () => {
             setIsMounted(false);
-            abortFetch();
             console.log(redditUser, "DESMONTADO")
         };
     }, []);
@@ -109,23 +106,15 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     };
 
-    const abortFetch = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
-        abortControllerRef.current = new AbortController();
-    };
+
 
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
-        // abortFetch();
-
-        const signal = abortControllerRef.current?.signal;
-
+      
         try {
-            const result = await fetchUserReddit(redditUser, 25, '', '', signal) as RedditResponse;
+            const result = await fetchUserReddit(redditUser, 50, '', '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -158,12 +147,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     ////////////////////////////////////////////////////////////////////////////
     const fetchDataAfterBackground = async (after: string) => {
         if (!after) return;
-        abortFetch();
-
-        const signal = abortControllerRef.current?.signal;
 
         try {
-            const result = await fetchUserReddit(redditUser, 25, after, '', signal) as RedditResponse;
+            const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -190,12 +176,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     ////////////////////////////////////////////////////////////////////////////
     const fetchIcon = async () => {
         setLoadingIcon(true);
-        abortFetch();
-
-        const signal = abortControllerRef.current?.signal;
 
         try {
-            const result = await fetchUserIcon(redditUser, signal) as IconResponse;
+            const result = await fetchUserIcon(redditUser) as IconResponse;
 
             if (result && result.data) {
                 const icon = result.data.icon_img;
@@ -225,7 +208,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (isMounted) {
             const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
             if (zoomedIn !== "true" || posts.length === 0) {
                 handleStartLoading();
@@ -242,23 +224,18 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     if (debounceRef.current) {
                         clearTimeout(debounceRef.current);
                     }
-                    abortFetch();
                 };
             }
-        }
-    }, [redditUser, isMounted]);
+    }, [redditUser]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (isMounted) {
             const fetchDataAfterBackgroundEffect = async () => {
                 if (!after) return;
 
-                const signal = abortControllerRef.current?.signal;
-
                 try {
-                    const result = await fetchUserReddit(redditUser, 25, after, '', signal) as RedditResponse;
+                    const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
                     const data = result.data.children;
 
                     if (Array.isArray(data)) {
@@ -309,8 +286,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     observer.unobserve(sentinelRef.current);
                 }
             };
-        }
-    }, [sentinel, isMounted]);
+    }, [sentinel]);
 
     // Handle Zoom, transition and animation when Image is clicked
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -422,13 +398,11 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     <div
                         className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                         onClick={(e) => {
-                            abortFetch();
-                            router.refresh();
+                            router.back();
                             setIsMounted(false);
                             dispatch(setModalIsOpen(false));
                             dispatch(stopGalleryLoading());
                             document.body.style.overflow = "visible"
-                            router.back();
                         }}
                     >
                         <ChevronLeftIcon className='size-5' />
@@ -524,16 +498,17 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 />
                                             </div>
                                         </div>
-                                        <Image
+                                         <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={key}
-                                            width={550}
-                                            height={300}
-                                            sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                            loading="lazy"
-                                            className={styles.image}
+                                            width={preview?.images?.[0]?.source?.width}
+                                            height={preview?.images?.[0]?.source?.height}
+                                            // loading="lazy"
+                                            priority
+                                            // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                            // className={styles.image}
                                             placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            quality={75}
+                                            // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />
                                     </div>
                                     <div className={styles.gradientOverlay}></div>

@@ -486,7 +486,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 document.body.style.overflow = "hidden";
                                                 router.push(`?user=${author}`, { scroll: false })
                                                 setAuthorSelected(author);
-                                                // abortFetch();
                                             }}
                                         >
                                             {"u/" + author}

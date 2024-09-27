@@ -47,8 +47,6 @@ interface RedditResponse {
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
 
-    const [isMounted, setIsMounted] = useState(false);
-
     const [sentinel, setSentinel] = useState(false);
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);

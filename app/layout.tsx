@@ -21,33 +21,29 @@ interface Props {
   readonly children: ReactNode;
 }
 
-export default function RootLayout({ children }: Props) {  
+export default function RootLayout({ children }: Props) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' }).then((registration) => {
-          console.log('Service Worker registered with scope:', registration.scope);
-    
-          // Verificar si el SW está controlando la página
-          if (navigator.serviceWorker.controller) {
-            console.log('Service Worker is controlling the page');
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then(serviceWorker => {
+          console.log('Service Worker registered: ', serviceWorker);
+
+          // Verifica si el SW está controlando la página
+          if (!navigator.serviceWorker.controller) {
+            console.log('No SW controlling the page yet, reloading...');
+            window.location.reload(); // Recarga la página si no está controlada por un SW
           } else {
-            console.log('Service Worker is not controlling the page yet');
+            console.log('Service Worker is already controlling the page');
           }
-    
-          // Escuchar cuando el Service Worker toma control
-          navigator.serviceWorker.addEventListener('controllerchange', () => {
-            console.log('Service Worker has taken control of the page');
-          });
-    
-        }).catch((error) => {
-          console.log('Service Worker registration failed:', error);
+
+        })
+        .catch(error => {
+          console.error('Error registering the Service Worker: ', error);
         });
-      });
-    }    
-    
+    }
   }, []);
-  
+
   return (
     <StoreProvider>
       <html lang="en">

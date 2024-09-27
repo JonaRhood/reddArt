@@ -1,3 +1,4 @@
+
 "use client";
 
 import styles from '@/app/styles/Gallery.module.css';
@@ -15,6 +16,7 @@ import Link from 'next/link';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 import UserGallery from '../UserGallery/UserGallery';
 import Modal from 'react-modal';
+import { useInView } from 'react-intersection-observer';
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { RootState } from "@/app/lib/store";
@@ -29,7 +31,7 @@ Modal.setAppElement('#root');
 
 interface RedditResponse {
     data: {
-        children: Array<{ 
+        children: Array<{
             data: {
                 title: string;
                 url: string;
@@ -137,15 +139,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
         abortFetch();
-    
+
         const signal = abortControllerRef.current?.signal;
-    
+
         try {
             const result = await fetchSubReddit(subReddit, 25, '', '', signal) as RedditResponse;
-    
+
             if (result && result.data) {
                 const data = result.data.children;
-    
+
                 if (Array.isArray(data)) {
                     dispatch(setPosts(data));
                     dispatch(setAfter(result.data.after));
@@ -241,7 +243,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const fetchDataAfterBackgroundEffect = async () => {
             if (!after) return;
-            
+
             const signal = abortControllerRef.current?.signal;
 
             try {
@@ -396,6 +398,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         // router.push(`/u/${author}`, { scroll: true })
     }
 
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+    })
+
     return (
         !isMounted ? "" : (
             <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
@@ -445,7 +451,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     onClick={(e) => handleImageZoom(e, key)}
                                 >
                                     <div className='flex'>
-                                        <div
+                                        {/* <div
                                             className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                         >
                                             <div className={styles.divImgClicked}>
@@ -496,17 +502,19 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <Image
+                                            ref={ref}
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={key}
-                                            width={550}
-                                            height={300}
-                                            loading="lazy"
-                                            sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                            className={styles.image}
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            quality={75}
+                                            width={preview?.images?.[0]?.source?.width}
+                                            height={preview?.images?.[0]?.source?.height}
+                                            // loading="lazy"
+                                            priority
+                                            // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                            // className={styles.image}
+                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />
                                     </div>
                                     <div className={styles.gradientOverlay}></div>

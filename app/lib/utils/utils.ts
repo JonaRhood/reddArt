@@ -108,21 +108,20 @@ export const grayShimmer = (w: number, h: number) => {
     <defs>
       <linearGradient id="g">
         <stop stop-color="${color}" offset="0%" />
-        <stop stop-color="${color2}" offset="50%" />
+        <stop stop-color="${color}" offset="50%" />
         <stop stop-color="${color}" offset="100%" />
       </linearGradient>
     </defs>
     <rect width="${w}" height="${h}" fill="${color}" />
     <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-    <animate
-      xlink:href="#r"
-      attributeName="x"
-      from="-${w}"
-      to="${w}"
-      dur="2s"
-      repeatCount="indefinite"
-      calcMode="linear"
-    />
+    <g transform="translate(${w / 2.3}, ${h / 2.7}) scale(5)">
+        <g class="layer">
+          <rect fill="none" height="500" width="500" x="0" y="0"/>
+          <g id="svg_2">
+              <path fill="rgba(255,255,255,0.2)" d="m9.18,2.54c1.1,0.37 -2.12,2.19 -0.11,3.41c1.13,0.69 3.61,-2.42 4.85,-3.12c1.06,-0.59 2.91,-0.71 3.85,1.34c1.19,2.59 0.15,9.34 -4.13,12.05c-4.33,2.72 -9.77,1.34 -11.66,-2.9c-2.19,-4.93 3.4,-12.08 7.2,-10.78zm1.32,7.03c0.8,1.79 5.12,-0.54 4.13,-3.05c-0.64,-1.62 -4.88,1.36 -4.13,3.05z"/>
+          </g>
+          </g>
+        </g>  
   </svg>`;
 };
 

@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Props) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then((registration) => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).then((registration) => {
           console.log('Service Worker registered with scope:', registration.scope);
     
           // Verificar si el SW está controlando la página
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: Props) {
         });
       });
     }    
+    
   }, []);
   
   return (

@@ -9,7 +9,7 @@ import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { Suspense } from 'react';
 import { useRouter } from "next/navigation";
-import { shimmer, toBase64 } from "@/app/lib/utils/utils";
+import { shimmer, grayShimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import Link from 'next/link';
@@ -415,8 +415,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                     alt={key}
                                                     width={550}
-                                                    height={300}
-                                                    // loading="lazy"
+                                                    height={300}                                                    
+                                                    priority={true}
                                                     sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                     style={{
@@ -431,7 +431,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
-                                                    priority
                                                     // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                                 <Image
@@ -465,11 +464,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             width={preview?.images?.[0]?.source?.width}
                                             height={preview?.images?.[0]?.source?.height}
                                             // loading="lazy"
-                                            priority
+                                            priority={true}
                                             // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                             // className={styles.image}
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            // style={{
+                                            //     backgroundColor: "lightgray"
+                                            // }}
                                         />
                                     </div>
                                     <div className={styles.gradientOverlay}></div>

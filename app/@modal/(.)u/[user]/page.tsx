@@ -2,13 +2,13 @@
 
 import UserGallery from "@/app/components/UserGallery/UserGallery";
 import { Suspense, useRef } from "react";
-import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import { Modal } from "./modal";
 
-export default function Other({ params }: { params: { user: string } }) {
+export default function Page({ params }: { params: { user: string } }) {
     return (
         <>
             <Suspense fallback={null}>
-                <UserGallery params={params} />
+                    <Modal><UserGallery params={params} /></Modal>
             </Suspense>
         </>
     );

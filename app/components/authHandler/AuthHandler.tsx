@@ -86,14 +86,17 @@ export const AuthHandler = () => {
 
               console.log('%cToken received', 'color: green; font-weight: bold;');
 
-              window.location.reload() //Added line to fix the problem with getting stock in the beggining?
+              window.location.href = 'http://localhost:3000/' //Added line to fix the problem with getting stock in the beggining?
 
             } 
             // When State is alone, delete and refresh website.
             else if (localState && !localCode && !localToken) {
               console.log("Local State alone, refreshing page...");
-              localStorage.removeItem("REDDART_AUTH_STATE");
-              window.location.reload();
+              setTimeout(() => {
+                localStorage.removeItem("REDDART_AUTH_STATE");
+                localStorage.removeItem("REDDART_CODE");
+                window.location.reload();
+              }, 1000)
             } else {
               console.error('Failed to get access token:', parsedData.error);
             }
@@ -106,7 +109,11 @@ export const AuthHandler = () => {
         console.log('%cAll set', 'color: green; font-weight: bold;');
       } else {
         console.error('No code or state provided, reloading...');
-        window.location.reload()
+        setTimeout(() => {
+          localStorage.removeItem("REDDART_AUTH_STATE");
+          localStorage.removeItem("REDDART_CODE");
+          window.location.reload();
+        }, 1000)
       }
     }
   }, [searchParams]);

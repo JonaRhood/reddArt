@@ -21,18 +21,23 @@ interface Props {
   readonly children: ReactNode;
 }
 
-export default function RootLayout({ children }: Props) {
-
+export default function RootLayout({
+  modal,
+  children,
+}: {
+  modal: React.ReactNode
+  children: React.ReactNode
+}) {
   return (
     <StoreProvider>
       <html lang="en">
         <Head>
-        <link rel="stylesheet" href="/app/styles/global.css" />
-        <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
-        <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
-        <link rel="stylesheet" href="/app/styles/Gallery.module.css" />
-        <link rel="stylesheet" href="/app/styles/sidenav.module.css" />
-        <link rel="stylesheet" href="/app/styles/layout.module.css" />
+          <link rel="stylesheet" href="/app/styles/global.css" />
+          <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
+          <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
+          <link rel="stylesheet" href="/app/styles/Gallery.module.css" />
+          <link rel="stylesheet" href="/app/styles/sidenav.module.css" />
+          <link rel="stylesheet" href="/app/styles/layout.module.css" />
         </Head>
         <body className={`
 
@@ -52,7 +57,10 @@ export default function RootLayout({ children }: Props) {
             </div>
             <div id="root">
               <Suspense fallback={null}>
-                <main>{children}</main>
+                <main>
+                  {children}
+                  {modal}
+                </main>
               </Suspense>
             </div>
           </section>

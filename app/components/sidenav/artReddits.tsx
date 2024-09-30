@@ -86,13 +86,12 @@ export default function ArtReddits() {
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
         e.stopPropagation();
-            if (navigator.serviceWorker.controller) {
-              navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-              console.log("ABORT")
-            } else {
-              console.log('No active Service Worker to send message to.');
-            }
-        // router.refresh();
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
+            console.log("ABORT")
+        } else {
+            console.log('No active Service Worker to send message to.');
+        }
         dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));

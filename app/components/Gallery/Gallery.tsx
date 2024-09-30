@@ -193,12 +193,19 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
         if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
             dispatch(setSelectedSubReddit("r/" + subReddit));
-            handleStartLoading();
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
             debounceRef.current = setTimeout(() => {
-                fetchData();
+                if (localStorage.getItem("USER_CLICKED") === "true") {
+                    localStorage.removeItem("USER_CLICKED");
+                    console.log("LLEGADO AQUI")
+                    setSentinel(true);
+                    return;
+                } else {
+                    handleStartLoading();
+                    fetchData();
+                }
             }, 100);
 
             return () => {
@@ -496,7 +503,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <i>
                                         <UserIcon className="size-4" />
                                     </i>
-                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
+                                    {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
+                                        e.stopPropagation();
+                                        setAuthorSelected(author);
+                                        localStorage.setItem("USER_CLICKED", "true");
+                                    }}> */}
                                     <span
                                         className="ml-3"
                                         onClick={(e) => {

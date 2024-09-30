@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
 import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition, stopGalleryLoading } from "@/app/lib/features/gallery/gallerySlice";
+import { setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
 import { RootState } from '@/app/lib/store';
 
 interface RedditData {
@@ -92,12 +93,17 @@ export default function ArtReddits() {
         } else {
             console.log('No active Service Worker to send message to.');
         }
+        if (window.innerWidth < 640) {
+            console.log("Pantalla menor de 640px");
+            dispatch(setClickedNav(true));
+        }
         dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));
         dispatch(setSelectedSubReddit(subReddit));
 
         document.body.style.overflow = "visible";
         document.body.style.marginRight = "";
+        
 
         // setAreLinksDisabled(true);
         // setTimeout(() => {

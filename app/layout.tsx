@@ -6,6 +6,7 @@ import Sidenav from "./components/sidenav/sidenav";
 import "/public/styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
 import { SWRegister } from "./components/SWRegister/SWRegister";
+import MobileChecker from "./components/mobileChecker/MobileChecker";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
@@ -43,14 +44,17 @@ export default function RootLayout({
 
             bg-light-background text-light-text
         `}>
-          <Suspense>
+          <Suspense fallback={null}>
             <SWRegister />
           </Suspense>
           <Suspense fallback={null}>
             <AuthHandler />
           </Suspense>
+          <Suspense fallback={null}>
+            <MobileChecker />
+          </Suspense>
           <section className="flex">
-            <div className="fixed w-56 sm:w-80 bg-light-surface h-screen z-50">
+            <div className="fixed bg-light-surface h-screen z-50">
               <Suspense fallback={null}>
                 <Sidenav />
               </Suspense>

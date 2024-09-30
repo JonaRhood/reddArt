@@ -435,7 +435,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
                 <>
                     <Masonry
-                        breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2, 700: 1 }}
+                        breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2 }}
                         className={styles.masonryGrid}
                         columnClassName={styles.masonryGridColumn}
                     >

@@ -79,6 +79,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const zoomedIn = useAppSelector((state: RootState) => state.gallery.zoomedIn);
     const modalIsOpen = useAppSelector((state: RootState) => state.gallery.modalIsOpen);
     const after = useAppSelector((state: RootState) => state.gallery.after);
+    const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -379,7 +380,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     return (
         // !isMounted ? "" : (
-        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
+        <div className={`flex-1 ml-80 bg-light-background h-screen p-4 ${isMobile ? 'ml-0 mt-14' : ""}`}>
             <div>
                 <LoadingBar
                     color="#00BFFF"
@@ -405,7 +406,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
             <>
                 <Masonry
-                    breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2, 700: 1 }}
+                    breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2 }}
                     className={styles.masonryGrid}
                     columnClassName={styles.masonryGridColumn}
                 >

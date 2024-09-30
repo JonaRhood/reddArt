@@ -24,7 +24,6 @@ export default function Landing() {
                         width={550}
                         height={300}
                         className={`${styles.landingImage} rounded-2xl`}
-                        loading="eager"
                         priority={true}
                         placeholder="blur"
                         style={{

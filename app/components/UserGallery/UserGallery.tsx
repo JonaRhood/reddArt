@@ -13,6 +13,7 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import { grayShimmer } from '@/app/lib/utils/utils';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import { grayShimmerIcon } from '@/app/lib/utils/utils';
 import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 import Skeleton from 'react-loading-skeleton';
 import Link from 'next/link';
@@ -415,7 +416,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     </div>
                     <div className='flex items-center w-full'>
                         <Image
-                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`)}
+                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmerIcon(700, 475))}`)}
                             alt="User Icon"
                             width={60}
                             height={60}
@@ -462,10 +463,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                     alt={key}
-                                                    width={550}
-                                                    height={300}
+                                                    width={preview?.images?.[0]?.source?.width}
+                                                    height={preview?.images?.[0]?.source?.height}
                                                     priority
-                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                     style={{
                                                         top: `${imageStyles.top}`,
@@ -481,15 +481,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
                                                     }}
-                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                    placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 />
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                     alt={key}
-                                                    width={550}
-                                                    height={300}
+                                                    width={preview?.images?.[0]?.source?.width}
+                                                    height={preview?.images?.[0]?.source?.height}
                                                     loading="lazy"
-                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                     style={{
                                                         top: `${imageStyles.top}`,

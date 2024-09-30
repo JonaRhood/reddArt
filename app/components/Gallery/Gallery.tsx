@@ -434,10 +434,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                     alt={key}
-                                                    width={550}
-                                                    height={300}                                                    
+                                                    width={preview?.images?.[0]?.source?.width}
+                                                    height={preview?.images?.[0]?.source?.height}                                                  
                                                     priority={true}
-                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
@@ -455,15 +454,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
-                                                    // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                    placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 />
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                     alt={key}
-                                                    width={550}
-                                                    height={300}
+                                                    width={preview?.images?.[0]?.source?.width}
+                                                    height={preview?.images?.[0]?.source?.height}
                                                     loading="lazy"
-                                                    sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'

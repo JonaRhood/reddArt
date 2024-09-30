@@ -13,3 +13,6 @@ export default function Page({ params }: { params: { user: string } }) {
         </>
     );
 }
+
+
+// Rename main folder with: (.)u and it will work.

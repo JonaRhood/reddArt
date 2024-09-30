@@ -8,7 +8,7 @@ import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { Suspense } from 'react';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { shimmer, grayShimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
@@ -46,6 +46,8 @@ interface RedditResponse {
 
 export default function Gallery({ params }: { params: { reddit: string } }) {
     const subReddit = params.reddit;
+    const searchParams = useSearchParams();
+    const user = searchParams.get('user');
 
     const [sentinel, setSentinel] = useState(false);
     const [zoomImg, setZoomImg] = useState(false);
@@ -189,6 +191,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         if (isSafari()) {
             document.body.classList.add('isSafari');
+        }
+        if (user) {
+            router.push(`/u/${user}`);
         }
 
         if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {

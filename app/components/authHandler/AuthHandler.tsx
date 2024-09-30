@@ -38,6 +38,11 @@ export const AuthHandler = () => {
       // Logic Starts if there's a client ID and Redirect URI defined in .env.local
       if (!clientId || !redirectUri) {
         console.error("Client id or Redirect Uri not defined");
+      // When State is alone, delete and refresh website.
+      } else if (localState && !localCode && !localToken) {
+        console.log("Local State alone, refreshing page...");
+        localStorage.removeItem("REDDART_AUTH_STATE");
+        window.location.reload();
       // Token Refreshment after 1 hour
       } else if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
         localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString()); 
@@ -99,7 +104,8 @@ export const AuthHandler = () => {
       } else if (localToken) {
         console.log('%cAll set', 'color: green; font-weight: bold;');
       } else {
-        console.error('No code or state provided');
+        console.error('No code or state provided, reloading...');
+        window.location.reload()
       }
     }
   }, [searchParams]);

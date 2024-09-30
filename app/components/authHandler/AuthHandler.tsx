@@ -34,18 +34,13 @@ export const AuthHandler = () => {
       const currentUrl = window.location.href === redirectUri;
 
       const oneHour = 60 * 60 * 1000;
-      
+
       // Logic Starts if there's a client ID and Redirect URI defined in .env.local
       if (!clientId || !redirectUri) {
         console.error("Client id or Redirect Uri not defined");
-      // When State is alone, delete and refresh website.
-      } else if (localState && !localCode && !localToken) {
-        console.log("Local State alone, refreshing page...");
-        localStorage.removeItem("REDDART_AUTH_STATE");
-        window.location.reload();
-      // Token Refreshment after 1 hour
+        // Token Refreshment after 1 hour
       } else if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
-        localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString()); 
+        localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
         fetch(`api/reddit-refresh-token`, {
           method: 'GET',
           headers: {
@@ -67,12 +62,12 @@ export const AuthHandler = () => {
           .catch((error: any) => {
             console.error('Error Refreshing the token:', error);
           });
-      // First Log in to the app or authorization declined by user
+        // First Log in to the app or authorization declined by user
       } else if (!localState || urlError) {
         localStorage.setItem("REDDART_AUTH_STATE", state);
         const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&duration=${duration}&scope=${scope}`;
         window.location.href = authUrl;
-      // Reddit Token Retrieval
+        // Reddit Token Retrieval
       } else if (urlCode && !localCode) {
         localStorage.setItem("REDDART_CODE", urlCode);
         fetch(`/api/reddit-token`, {
@@ -88,11 +83,17 @@ export const AuthHandler = () => {
               localStorage.setItem("REDDART_ACCESS_TOKEN", parsedData.token);
               localStorage.setItem("REDDART_REFRESH_TOKEN", parsedData.refresh_token);
               localStorage.setItem("REDDART_TOKEN_TIME", Date.now().toString());
-              
+
               console.log('%cToken received', 'color: green; font-weight: bold;');
 
               window.location.reload() //Added line to fix the problem with getting stock in the beggining?
-              
+
+            } 
+            // When State is alone, delete and refresh website.
+            else if (localState && !localCode && !localToken) {
+              console.log("Local State alone, refreshing page...");
+              localStorage.removeItem("REDDART_AUTH_STATE");
+              window.location.reload();
             } else {
               console.error('Failed to get access token:', parsedData.error);
             }
@@ -100,7 +101,7 @@ export const AuthHandler = () => {
           .catch((error: any) => {
             console.error('Error fetching token:', error);
           });
-      //Token defined and working
+        //Token defined and working
       } else if (localToken) {
         console.log('%cAll set', 'color: green; font-weight: bold;');
       } else {

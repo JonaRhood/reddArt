@@ -380,7 +380,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     return (
         // !isMounted ? "" : (
-        <div className={`flex-1 ml-80 bg-light-background h-screen p-4 ${isMobile ? 'ml-0 mt-14' : ""}`}>
+        <div className={`flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4`}>
             <div>
                 <LoadingBar
                     color="#00BFFF"

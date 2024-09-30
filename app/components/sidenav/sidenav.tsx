@@ -4,12 +4,14 @@ import styles from '@/public/styles/sidenav.module.css'
 
 import ArtReddits from "./artReddits";
 import CustomIcon from '@/app/lib/resources/CustomIcon'
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import Link from "next/link";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { setSelectedSubReddit, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
 import { Suspense } from 'react';
 import { useAppSelector } from '@/app/lib/hooks';
 import { RootState } from '@/app/lib/store';
+import { setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
 
 
 export default function Sidenav() {
@@ -60,6 +62,11 @@ export default function Sidenav() {
                     <Suspense fallback={null}>
                         <ArtReddits />
                     </Suspense>
+                </div>
+                <div className='flex sm:hidden h-4 w-full bg-gray-500 bg-opacity-5 justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center'>
+                    <div className={`flex`} onClick={(e) => dispatch(setClickedNav(false))}>
+                        <ChevronDownIcon className="size-4"/>
+                    </div>
                 </div>
             </div>
         </div>

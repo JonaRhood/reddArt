@@ -391,7 +391,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     return (
         !isMounted ? "" : (
-            <div className='flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4 mt-14' >
+            <div className='flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4 mt-14' >
                 <div>
                     <LoadingBar
                         color="#00BFFF"

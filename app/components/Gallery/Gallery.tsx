@@ -51,6 +51,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImg, setZoomImg] = useState(false);
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
+    const [imageIsError, setImageIsError] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
@@ -113,7 +114,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     function closeModal() {
         dispatch(setModalIsOpen(false));
     }
-    
+
 
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
@@ -186,28 +187,28 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-            if (isSafari()) {
-                document.body.classList.add('isSafari');
-            }
+        if (isSafari()) {
+            document.body.classList.add('isSafari');
+        }
 
-            if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
-                dispatch(setSelectedSubReddit("r/" + subReddit));
-                handleStartLoading();
+        if (posts.length === 0 || pastSubReddit !== selectedSubReddit) {
+            dispatch(setSelectedSubReddit("r/" + subReddit));
+            handleStartLoading();
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+            debounceRef.current = setTimeout(() => {
+                fetchData();
+            }, 100);
+
+            return () => {
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
                 }
-                debounceRef.current = setTimeout(() => {
-                    fetchData();
-                }, 100);
-
-                return () => {
-                    if (debounceRef.current) {
-                        clearTimeout(debounceRef.current);
-                    }
-                };
-            } else {
-                setSentinel(true);
-            }
+            };
+        } else {
+            setSentinel(true);
+        }
     }, [subReddit]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
@@ -358,56 +359,62 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
+    const handleImageError = (e: any) => {
+        return (
+            <div></div>
+        )
+    }
+
     return (
         // !isMounted ? "" : (
-            <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
-                <div>
-                    <LoadingBar
-                        color="#00BFFF"
-                        ref={loadingBarRef}
-                        height={4}
-                        className={styles.loadingBar}
-                        shadow={false}
-                    // onLoaderFinished={() => console.log("Loader finished")} 
-                    />
-                </div>
+        <div className={`flex-1 ml-56 sm:ml-80 bg-light-background h-screen p-4`}>
+            <div>
+                <LoadingBar
+                    color="#00BFFF"
+                    ref={loadingBarRef}
+                    height={4}
+                    className={styles.loadingBar}
+                    shadow={false}
+                // onLoaderFinished={() => console.log("Loader finished")} 
+                />
+            </div>
 
-                <Modal
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    className={styles.modal}
-                    shouldCloseOnEsc={true}
-                    preventScroll={true}
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                className={styles.modal}
+                shouldCloseOnEsc={true}
+                preventScroll={true}
+            >
+                {authorSelected && <Suspense fallback={null}><UserGallery params={{ user: authorSelected }} /></Suspense>}
+
+            </Modal>
+
+            <>
+                <Masonry
+                    breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2, 700: 1 }}
+                    className={styles.masonryGrid}
+                    columnClassName={styles.masonryGridColumn}
                 >
-                    {authorSelected && <Suspense fallback={null}><UserGallery params={{ user: authorSelected }} /></Suspense>}
+                    {Array.isArray(posts) && posts.map((item, index) => {
+                        const preview = item.data.preview;
+                        const imgSource = preview?.images?.[0]?.source?.url;
+                        const key = item.data.id + index
+                        const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
 
-                </Modal>
+                        if (!imgSource) {
+                            return null;
+                        }
 
-                <>
-                    <Masonry
-                        breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}
-                        className={styles.masonryGrid}
-                        columnClassName={styles.masonryGridColumn}
-                    >
-                        {Array.isArray(posts) && posts.map((item, index) => {
-                            const preview = item.data.preview;
-                            const imgSource = preview?.images?.[0]?.source?.url;
-                            const key = item.data.id + index
-                            const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
-
-                            if (!imgSource) {
-                                return null;
-                            }
-
-                            return (
-                                <div
-                                    key={key}
-                                    className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                                    onClick={(e) => handleImageZoom(e, key)}
-                                >
-                                    <div className='flex'>
-                                        <div
+                        return (
+                            <div
+                                key={key}
+                                className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
+                                onClick={(e) => handleImageZoom(e, key)}
+                            >
+                                <div className='flex'>
+                                    <div
                                             className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                         >
                                             <div className={styles.divImgClicked}>
@@ -432,6 +439,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                    }}
                                                     // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                                 <Image
@@ -455,61 +466,69 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         borderRadius: '20px',
                                                     }}
                                                     quality={1}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                    }}
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                             </div>
                                         </div>
-                                        <Image
-                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                            alt={key}
-                                            width={preview?.images?.[0]?.source?.width}
-                                            height={preview?.images?.[0]?.source?.height}
-                                            // loading="lazy"
-                                            priority={true}
-                                            // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                            // className={styles.image}
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                            // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            // style={{
-                                            //     backgroundColor: "lightgray"
-                                            // }}
-                                        />
-                                    </div>
-                                    <div className={styles.gradientOverlay}></div>
-                                    <div className={styles.titleOverlay}>
-                                        <i>
-                                            <UserIcon className="size-4" />
-                                        </i>
-                                        {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
-                                        <span
-                                            className="ml-3"
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                openModal();
-                                                document.body.style.overflow = "hidden";
-                                                router.push(`?user=${author}`, { scroll: false })
-                                                setAuthorSelected(author);
-                                            }}
-                                        >
-                                            {"u/" + author}
-                                        </span>
-                                        {/* </Link> */}
-                                    </div>
+                                    <Image
+                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                        alt={key}
+                                        width={preview?.images?.[0]?.source?.width}
+                                        height={preview?.images?.[0]?.source?.height}
+                                        // loading="lazy"
+                                        priority={true}
+                                        // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                                        // className={styles.image}
+                                        placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                        onError={(e) => {
+                                            e.currentTarget.className = 'hidden'
+                                            // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                        }}
+                                    // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                    // style={{
+                                    //     backgroundColor: "lightgray"
+                                    // }}
+                                    />
                                 </div>
+                                <div className={styles.gradientOverlay}></div>
+                                <div className={styles.titleOverlay}>
+                                    <i>
+                                        <UserIcon className="size-4" />
+                                    </i>
+                                    {/* <Link href={`/u/${author}`} onClick={(e) => handleUserClick(e, author)}> */}
+                                    <span
+                                        className="ml-3"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            openModal();
+                                            document.body.style.overflow = "hidden";
+                                            router.push(`?user=${author}`, { scroll: false })
+                                            setAuthorSelected(author);
+                                        }}
+                                    >
+                                        {"u/" + author}
+                                    </span>
+                                    {/* </Link> */}
+                                </div>
+                            </div>
 
-                                // </Link>
-                            );
-                        })}
-                    </Masonry>
+                            // </Link>
+                        );
+                    })}
+                </Masonry>
 
-                    {sentinel && (
-                        <div
-                            ref={sentinelRef}
-                            className={styles.sentinel}
-                        ></div>
-                    )}
-                </>
-            </div>
-        )
+                {sentinel && (
+                    <div
+                        ref={sentinelRef}
+                        className={styles.sentinel}
+                    ></div>
+                )}
+            </>
+        </div>
+    )
     // );
 }

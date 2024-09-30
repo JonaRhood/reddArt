@@ -86,7 +86,7 @@ export const AuthHandler = () => {
 
               console.log('%cToken received', 'color: green; font-weight: bold;');
 
-              window.location.href = 'http://localhost:3000/' //Added line to fix the problem with getting stock in the beggining?
+              window.location.href = redirectUri //Added line to fix the problem with getting stock in the beggining?
 
             } 
             // When State is alone, delete and refresh website.

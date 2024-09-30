@@ -27,7 +27,6 @@ self.addEventListener('fetch', (event) => {
                     // console.log('Request aborted:', event.request.url);
                     return new Response('', { status: 200, statusText: 'Request Aborted' });
                 }
-                throw err; // Manejar otros errores
             })
     );
 });

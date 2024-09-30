@@ -257,3 +257,11 @@
     overflow-y: scroll;
     background: #F5F5F5;
 }
+
+
+/* Media Queries */
+@media screen and (max-width: 640px) {
+    .divContainerImgClicked {
+        margin-left: 0;
+    }
+}

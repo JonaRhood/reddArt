@@ -291,7 +291,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (isSafari()) {
                 setImageStyles({
                     top: '10%',
-                    left: `${rectBackground.left / 100 * 9}%`,
+                    left: `${rectBackground.left / 10}%`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
                     transition: 'all 0s ease',
@@ -321,7 +321,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 setTimeout(() => {
                     setImageStyles({
                         top: '10%',
-                        left: `${rectBackground.left / 100 * 9}%`,
+                        left: `${rectBackground.left / 10}%`,
                         width: `${rect.width * 1.8}px `,
                         height: `${rect.height}px`,
                         transition: 'all .3s ease',
@@ -427,6 +427,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     priority={true}
                                                     sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                    }}
                                                     style={{
                                                         top: `${imageStyles.top}`,
                                                         left: `${imageStyles.left}`,
@@ -439,10 +443,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
-                                                    onError={(e) => {
-                                                        e.currentTarget.className = 'hidden'
-                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                    }}
                                                     // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                                 <Image
@@ -453,6 +453,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     loading="lazy"
                                                     sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                    }}
                                                     style={{
                                                         top: `${imageStyles.top}`,
                                                         left: `${imageStyles.left}`,
@@ -466,10 +470,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         borderRadius: '20px',
                                                     }}
                                                     quality={1}
-                                                    onError={(e) => {
-                                                        e.currentTarget.className = 'hidden'
-                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                    }}
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                             </div>
@@ -479,10 +479,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         alt={key}
                                         width={preview?.images?.[0]?.source?.width}
                                         height={preview?.images?.[0]?.source?.height}
-                                        // loading="lazy"
                                         priority={true}
-                                        // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                        // className={styles.image}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                         onError={(e) => {
                                             e.currentTarget.className = 'hidden'

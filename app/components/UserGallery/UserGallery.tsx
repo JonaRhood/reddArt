@@ -112,7 +112,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
         dispatch(setLoading(true));
-      
+
         try {
             const result = await fetchUserReddit(redditUser, 50, '', '') as RedditResponse;
             const data = result.data.children;
@@ -208,84 +208,84 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-            const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
-            if (zoomedIn !== "true" || posts.length === 0) {
-                handleStartLoading();
+        const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
+        if (zoomedIn !== "true" || posts.length === 0) {
+            handleStartLoading();
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                fetchData();
+                fetchIcon();
+            }, 100);
+
+            return () => {
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
                 }
-
-                debounceRef.current = setTimeout(() => {
-                    fetchData();
-                    fetchIcon();
-                }, 100);
-
-                return () => {
-                    if (debounceRef.current) {
-                        clearTimeout(debounceRef.current);
-                    }
-                };
-            }
+            };
+        }
     }, [redditUser]);
 
     //Sentinel Effect to Load More pictures automatically when scrolling down, depends on sentinel view
     ////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-            const fetchDataAfterBackgroundEffect = async () => {
-                if (!after) return;
+        const fetchDataAfterBackgroundEffect = async () => {
+            if (!after) return;
 
-                try {
-                    const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
-                    const data = result.data.children;
+            try {
+                const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
+                const data = result.data.children;
 
-                    if (Array.isArray(data)) {
-                        dispatch(setBackgroundPosts(data));
-                        setAfter(result.data.after);
+                if (Array.isArray(data)) {
+                    dispatch(setBackgroundPosts(data));
+                    setAfter(result.data.after);
 
+                } else {
+                    console.error("Data received is not an array:", data);
+                }
+            } catch (error: unknown) {
+                if (error instanceof TypeError) {
+                } else if (error instanceof Error) {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch aborted');
                     } else {
-                        console.error("Data received is not an array:", data);
+                        console.error('Fetch Error:', error);
                     }
-                } catch (error: unknown) {
-                    if (error instanceof TypeError) {
-                    } else if (error instanceof Error) {
-                        if (error.name === 'AbortError') {
-                            console.log('Fetch aborted');
-                        } else {
-                            console.error('Fetch Error:', error);
-                        }
-                    }
-                } finally {
-                    setSentinel(true);
                 }
-            };
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 1.0,
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        console.log('Sentinel is in view');
-                        dispatch(setLoadMorePosts())
-                        fetchDataAfterBackgroundEffect();
-                        setSentinel(false);
-                    }
-                });
-            }, observerOptions);
-
-            if (sentinelRef.current) {
-                observer.observe(sentinelRef.current);
+            } finally {
+                setSentinel(true);
             }
+        };
 
-            // Cleanup on component unmount
-            return () => {
-                if (sentinelRef.current) {
-                    observer.unobserve(sentinelRef.current);
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    console.log('Sentinel is in view');
+                    dispatch(setLoadMorePosts())
+                    fetchDataAfterBackgroundEffect();
+                    setSentinel(false);
                 }
-            };
+            });
+        }, observerOptions);
+
+        if (sentinelRef.current) {
+            observer.observe(sentinelRef.current);
+        }
+
+        // Cleanup on component unmount
+        return () => {
+            if (sentinelRef.current) {
+                observer.unobserve(sentinelRef.current);
+            }
+        };
     }, [sentinel]);
 
     // Handle Zoom, transition and animation when Image is clicked
@@ -374,8 +374,18 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     };
 
-    const handleClickBack = () => {
+    const handleClickBack = (e: any) => {
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
+            console.log("ABORT")
+        } else {
+            console.log('No active Service Worker to send message to.');
+        }
         router.back();
+        setIsMounted(false);
+        dispatch(setModalIsOpen(false));
+        dispatch(stopGalleryLoading());
+        document.body.style.overflow = "visible"
     }
 
     return (
@@ -398,11 +408,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     <div
                         className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                         onClick={(e) => {
-                            router.back();
-                            setIsMounted(false);
-                            dispatch(setModalIsOpen(false));
-                            dispatch(stopGalleryLoading());
-                            document.body.style.overflow = "visible"
+                            handleClickBack(e)
                         }}
                     >
                         <ChevronLeftIcon className='size-5' />
@@ -428,7 +434,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
                 <>
                     <Masonry
-                        breakpointCols={{ default: 4, 1400: 3, 1000: 2, 700: 1 }}
+                        breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2, 700: 1 }}
                         className={styles.masonryGrid}
                         columnClassName={styles.masonryGridColumn}
                     >
@@ -458,7 +464,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     alt={key}
                                                     width={550}
                                                     height={300}
-                                                    loading="lazy"
+                                                    priority
                                                     sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                     style={{
@@ -472,7 +478,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                         padding: '0px',
                                                         borderRadius: '20px',
                                                     }}
-                                                    placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                    }}
+                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
@@ -494,27 +503,31 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                         borderRadius: '20px',
                                                     }}
                                                     quality={1}
+                                                    onError={(e) => {
+                                                        e.currentTarget.className = 'hidden'
+                                                    }}
                                                 // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                 />
                                             </div>
                                         </div>
-                                         <Image
+                                        <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={key}
                                             width={preview?.images?.[0]?.source?.width}
                                             height={preview?.images?.[0]?.source?.height}
-                                            // loading="lazy"
                                             priority
-                                            // sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                                            // className={styles.image}
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            onError={(e) => {
+                                                e.currentTarget.className = 'hidden'
+                                                // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                            }}
+                                        // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />
                                     </div>
                                     <div className={styles.gradientOverlay}></div>
                                     <div className={styles.titleOverlay}>
                                         <i><UserIcon className="size-4" /></i>
-                                        <span onClick={() => handleClickBack()} className="ml-3">{"u/" + author}</span>
+                                        <span className="ml-3">{"u/" + author}</span>
                                     </div>
                                 </div>
 

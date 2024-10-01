@@ -372,12 +372,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
-    const handleImageError = (e: any) => {
-        return (
-            <div></div>
-        )
-    }
-
     return (
         // !isMounted ? "" : (
         <div className={`flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4`}>
@@ -392,7 +386,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 />
             </div>
 
-            <Modal
+            {/* <Modal
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
                 onRequestClose={closeModal}
@@ -402,7 +396,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             >
                 {authorSelected && <Suspense fallback={null}><UserGallery params={{ user: authorSelected }} /></Suspense>}
 
-            </Modal>
+            </Modal> */}
 
             <>
                 <Masonry

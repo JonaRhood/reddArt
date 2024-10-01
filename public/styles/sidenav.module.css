@@ -68,10 +68,9 @@
 /* Mobile CSS parameters */
 
 .navClicked {
-    transform: translateY(-95%);
-    display: none !important;
+    transform: translateY(-98.4%)
 }
 
 .navUnClicked {
-    transform: translateY(0%);
+    transform: translateY(0%)
 }

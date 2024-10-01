@@ -491,7 +491,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         style={{
-                                            maxHeight: "500px",
+                                            maxHeight: "350px",
                                         }}
                                     />
                                 </div>

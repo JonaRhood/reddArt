@@ -50,7 +50,7 @@ export default function Sidenav() {
             <div
                 className={`flex flex-col t-8 w-full z-0 bg-light-surface mt-14 sm:mt-0 h-screen fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}`}
                 style={{
-                    transition: 'transform 1s ease'
+                    transition: 'transform .5s ease'
                 }}
             >
                 <div className={`

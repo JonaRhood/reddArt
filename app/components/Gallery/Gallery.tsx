@@ -25,6 +25,7 @@ import {
     setLoading, setScrollPosition, setZoomedIn, setPastSubReddit, setAfter,
     setSelectedSubReddit, setModalIsOpen
 } from "@/app/lib/features/gallery/gallerySlice";
+import { setUserClicked } from '@/app/lib/features/mobileSlice/mobileSlice';
 import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
 import { current } from '@reduxjs/toolkit';
 import { setIsMobile } from '@/app/lib/features/mobileSlice/mobileSlice';
@@ -492,6 +493,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         document.body.style.overflow = "hidden";
                                                         router.push(`?user=${author}`, { scroll: false })
                                                         setAuthorSelected(author);
+                                                        dispatch(setUserClicked(true));
                                                     }}
                                                 >
                                                     {"u/" + author}

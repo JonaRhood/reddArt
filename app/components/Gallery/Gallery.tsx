@@ -486,10 +486,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         height={preview?.images?.[0]?.source?.height}
                                         priority={true}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                        onError={(e) => {
+                                        // onError={(e) => {
                                             // e.currentTarget.className = 'invisible'
-                                            e.currentTarget.src = `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}` // line to replace the src.
-                                        }}
+                                        // }}
                                     // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                     // style={{
                                     //     backgroundColor: "lightgray"

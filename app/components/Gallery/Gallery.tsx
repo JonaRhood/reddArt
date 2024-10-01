@@ -458,10 +458,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             // Desplazamiento hacia la imagen clickeada
                                             setTimeout(() => {
                                                 imageRefs.current[index]?.scrollIntoView({
-                                                    behavior: 'smooth',
+                                                    behavior: 'instant',
                                                     block: 'center',
                                                 });
-                                            }, 100);
+                                            }, 0);
                                         }}
                                     >
                                         <Image
@@ -476,32 +476,30 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />
-                                        <div className={styles.gradientOverlay}></div>
-                                        <div className={styles.titleOverlay}>
-                                            <i>
-                                                <UserIcon className="size-4" />
-                                            </i>
-                                            {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
-                                        e.stopPropagation();
-                                        setAuthorSelected(author);
-                                        localStorage.setItem("USER_CLICKED", "true");
-                                    }}> */}
-                                            <span
-                                                className="ml-3"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    openModal();
-                                                    document.body.style.overflow = "hidden";
-                                                    router.push(`?user=${author}`, { scroll: false })
-                                                    setAuthorSelected(author);
-                                                }}
-                                            >
-                                                {"u/" + author}
-                                            </span>
-                                            {/* </Link> */}
-                                        </div>
+                                        {isMobileImageClicked ? (
+                                            <div className={styles.titleOverlayMobile}>
+                                                <i>
+                                                    <UserIcon className="size-4" />
+                                                </i>
+                                                <span
+                                                    className="ml-3"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        openModal();
+                                                        document.body.style.overflow = "hidden";
+                                                        router.push(`?user=${author}`, { scroll: false })
+                                                        setAuthorSelected(author);
+                                                    }}
+                                                >
+                                                    {"u/" + author}
+                                                </span>
+                                            </div>
+
+                                        ) : (
+                                            ""
+                                        )}
                                     </div>
-                                    
+
                                 ) : (
                                     <div
                                         key={key}

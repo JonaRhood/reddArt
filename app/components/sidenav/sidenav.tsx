@@ -55,7 +55,7 @@ export default function Sidenav() {
             >
                 <div className={`
                     ${styles.title}
-                    hidden sm:flex w-full sm:w-80 items-center justify-center bg-light-surface p-2 h-24 fixed top-0 left-0 right-0
+                    hidden sm:flex w-full sm:w-80 items-center justify-center bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-50
                     `}>
                     <Link href={`/`} onClick={((e) => handleLinkClick(e))}>
                         <div className='flex items-center'>

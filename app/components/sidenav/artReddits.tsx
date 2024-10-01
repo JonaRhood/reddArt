@@ -87,28 +87,26 @@ export default function ArtReddits() {
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, subReddit: string) => {
         e.stopPropagation();
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-            console.log("ABORT")
-        } else {
-            console.log('No active Service Worker to send message to.');
-        }
-        if (window.innerWidth < 640) {
-            console.log("Pantalla menor de 640px");
+        if (selectedSubreddit === subReddit) {
             dispatch(setClickedNav(false));
+        } else {
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
+                console.log("ABORT")
+            } else {
+                console.log('No active Service Worker to send message to.');
+            }
+            if (window.innerWidth < 640) {
+                console.log("Pantalla menor de 640px");
+                dispatch(setClickedNav(false));
+            }
+            dispatch(stopGalleryLoading());
+            dispatch(setPastSubReddit(currentSubreddit));
+            dispatch(setSelectedSubReddit(subReddit));
+    
+            document.body.style.overflow = "visible";
+            document.body.style.marginRight = "";
         }
-        dispatch(stopGalleryLoading());
-        dispatch(setPastSubReddit(currentSubreddit));
-        dispatch(setSelectedSubReddit(subReddit));
-
-        document.body.style.overflow = "visible";
-        document.body.style.marginRight = "";
-        
-
-        // setAreLinksDisabled(true);
-        // setTimeout(() => {
-        //     setAreLinksDisabled(false);
-        // }, 3000)
     };
 
     return (
@@ -128,7 +126,7 @@ export default function ArtReddits() {
                             className={`
                             ${styles.container}
                             ${selectedSubreddit === subReddit ? styles.selectedReddit : ""}
-                            ${selectedSubreddit === subReddit ? "pointer-events-none cursor-pointer" : ""}
+                            ${selectedSubreddit === subReddit ? "sm:pointer-events-none cursor-pointer" : ""}
                             ${areLinksDisabled && selectedSubreddit !== subReddit ? "pointer-events-none transition duration-500 ease-in-out opacity-70" : ""}
                             
                         `}

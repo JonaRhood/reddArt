@@ -15,8 +15,7 @@
             #7A9A4E 33%, #7A9A4E 55%,
             #D65A6F 55%, #D65A6F 70%,
             #4183C4 70%, #4183C4 87%,
-            #B47A5D 87%
-        );
+            #B47A5D 87%);
     background-size: 50%;
     background-clip: text;
     -webkit-background-clip: text;
@@ -67,10 +66,12 @@
 
 /* Mobile CSS parameters */
 
-.navClicked {
-    transform: translateY(-98.4%)
-}
+@media only screen and (max-width: 640px) {
+    .navClicked {
+        transform: translateY(-98.4%)
+    }
 
-.navUnClicked {
-    transform: translateY(0%)
+    .navUnClicked {
+        transform: translateY(0%)
+    }
 }

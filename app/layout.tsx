@@ -44,9 +44,9 @@ export default function RootLayout({
 
             bg-light-background text-light-text
         `}>
-          <Suspense fallback={null}>
+          {/* <Suspense fallback={null}>
             <SWRegister />
-          </Suspense>
+          </Suspense> */}
           <Suspense fallback={null}>
             <AuthHandler />
           </Suspense>

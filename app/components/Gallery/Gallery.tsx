@@ -487,8 +487,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         priority={true}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                         onError={(e) => {
-                                            e.currentTarget.className = 'invisible'
-                                            // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                            // e.currentTarget.className = 'invisible'
+                                            e.currentTarget.src = `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}` // line to replace the src.
                                         }}
                                     // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                     // style={{

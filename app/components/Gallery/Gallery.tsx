@@ -417,8 +417,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         return (
                             <div
                                 key={key}
-                                className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                                onClick={(e) => handleImageZoom(e, key)}
+                                // className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
+                                // onClick={(e) => handleImageZoom(e, key)}
                             >
                                 <div className='flex'>
                                     {/* <div

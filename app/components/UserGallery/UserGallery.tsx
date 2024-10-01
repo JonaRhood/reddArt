@@ -9,13 +9,14 @@ import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { useRouter } from "next/navigation";
 import { shimmer, toBase64 } from "@/app/lib/utils/utils";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { ChevronUpDownIcon, UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import { grayShimmer } from '@/app/lib/utils/utils';
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 import { grayShimmerIcon } from '@/app/lib/utils/utils';
-import { ChevronLeftIcon } from '@heroicons/react/24/solid';
-import { setIsMobile } from '@/app/lib/features/mobileSlice/mobileSlice';
+import { ChevronLeftIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import { setClickedNav, setIsMobile } from '@/app/lib/features/mobileSlice/mobileSlice';
+import { usePathname } from 'next/navigation';
 import Skeleton from 'react-loading-skeleton';
 import Link from 'next/link';
 
@@ -44,6 +45,9 @@ interface IconResponse {
 
 export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
+    const pathname = usePathname();
+    const hasUPath = pathname.includes("/u");
+    console.log("PATHNAME:", hasUPath);
 
     const [isMounted, setIsMounted] = useState(false);
 
@@ -76,6 +80,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const loading = useAppSelector((state: RootState) => state.userGallery.loading);
     const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
+    const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -380,18 +385,24 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     };
 
     const handleClickBack = (e: any) => {
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-            console.log("ABORT")
+        if (hasUPath && !clickedNav) {
+            dispatch(setClickedNav(true));
+        } else if (hasUPath && clickedNav) {
+            dispatch(setClickedNav(false));
         } else {
-            console.log('No active Service Worker to send message to.');
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
+                console.log("ABORT")
+            } else {
+                console.log('No active Service Worker to send message to.');
+            }
+            router.back();
+            setIsMounted(false);
+            dispatch(setModalIsOpen(false));
+            dispatch(setUserClicked(false));
+            dispatch(stopGalleryLoading());
+            document.body.style.overflow = "visible"
         }
-        router.back();
-        setIsMounted(false);
-        dispatch(setModalIsOpen(false));
-        dispatch(setUserClicked(false));
-        dispatch(stopGalleryLoading());
-        document.body.style.overflow = "visible"
     }
 
     useEffect(() => {
@@ -415,7 +426,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
-    }, []); 
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -456,7 +467,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 </div>
 
                 <div
-                className={styles.userFixedLayout}
+                    className={styles.userFixedLayout}
                 >
                     <div
                         className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
@@ -464,7 +475,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                             handleClickBack(e)
                         }}
                     >
-                        <ChevronLeftIcon className='size-5' />
+                        {hasUPath ? <ChevronDownIcon className='size-5' /> : <ChevronLeftIcon className='size-5' />}
                     </div>
                     <div className='flex items-center w-full'>
                         <Image

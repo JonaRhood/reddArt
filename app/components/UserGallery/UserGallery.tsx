@@ -538,6 +538,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 width={preview?.images?.[0]?.source?.width}
                                                 height={preview?.images?.[0]?.source?.height}
                                                 priority={true}
+                                                loading='lazy'
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'
@@ -589,6 +590,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                             width={preview?.images?.[0]?.source?.width}
                                                             height={preview?.images?.[0]?.source?.height}
                                                             priority={true}
+                                                            loading='lazy'
                                                             className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                             onError={(e) => {
                                                                 e.currentTarget.className = 'hidden'
@@ -642,6 +644,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     width={preview?.images?.[0]?.source?.width}
                                                     height={preview?.images?.[0]?.source?.height}
                                                     priority={true}
+                                                    loading='lazy'
                                                     placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'

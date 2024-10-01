@@ -421,64 +421,64 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                 onClick={(e) => handleImageZoom(e, key)}
                             >
                                 <div className='flex'>
-                                    <div
-                                            className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
-                                        >
-                                            <div className={styles.divImgClicked}>
+                                    {/* <div
+                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
+                                    >
+                                        <div className={styles.divImgClicked}>
 
-                                                <Image
-                                                    src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                    alt={key}
-                                                    width={preview?.images?.[0]?.source?.width}
-                                                    height={preview?.images?.[0]?.source?.height}                                                  
-                                                    priority={true}
-                                                    className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                    onError={(e) => {
-                                                        e.currentTarget.className = 'hidden'
-                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                    }}
-                                                    style={{
-                                                        top: `${imageStyles.top}`,
-                                                        left: `${imageStyles.left}`,
-                                                        width: `${imageStyles.width}`,
-                                                        height: "auto",
-                                                        transform: 'scale(1)',
-                                                        position: 'absolute',
-                                                        zIndex: 1000,
-                                                        transition: `${imageStyles.transition}`,
-                                                        padding: '0px',
-                                                        borderRadius: '20px',
-                                                    }}
-                                                    placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                                />
-                                                <Image
-                                                    src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                    alt={key}
-                                                    width={preview?.images?.[0]?.source?.width}
-                                                    height={preview?.images?.[0]?.source?.height}
-                                                    loading="lazy"
-                                                    className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
-                                                    onError={(e) => {
-                                                        e.currentTarget.className = 'hidden'
-                                                        // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                    }}
-                                                    style={{
-                                                        top: `${imageStyles.top}`,
-                                                        left: `${imageStyles.left}`,
-                                                        width: `${imageStyles.width}`,
-                                                        height: "auto",
-                                                        transform: 'scale(1)',
-                                                        position: 'absolute',
-                                                        zIndex: 800,
-                                                        transition: `${imageStyles.transition}`,
-                                                        padding: '0px',
-                                                        borderRadius: '20px',
-                                                    }}
-                                                    quality={1}
-                                                // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                                />
-                                            </div>
+                                            <Image
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                alt={key}
+                                                width={preview?.images?.[0]?.source?.width}
+                                                height={preview?.images?.[0]?.source?.height}
+                                                priority={true}
+                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                onError={(e) => {
+                                                    e.currentTarget.className = 'hidden'
+                                                    // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                }}
+                                                style={{
+                                                    top: `${imageStyles.top}`,
+                                                    left: `${imageStyles.left}`,
+                                                    width: `${imageStyles.width}`,
+                                                    height: "auto",
+                                                    transform: 'scale(1)',
+                                                    position: 'absolute',
+                                                    zIndex: 1000,
+                                                    transition: `${imageStyles.transition}`,
+                                                    padding: '0px',
+                                                    borderRadius: '20px',
+                                                }}
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            />
+                                            <Image
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                alt={key}
+                                                width={preview?.images?.[0]?.source?.width}
+                                                height={preview?.images?.[0]?.source?.height}
+                                                loading="lazy"
+                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
+                                                onError={(e) => {
+                                                    e.currentTarget.className = 'hidden'
+                                                    // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                }}
+                                                style={{
+                                                    top: `${imageStyles.top}`,
+                                                    left: `${imageStyles.left}`,
+                                                    width: `${imageStyles.width}`,
+                                                    height: "auto",
+                                                    transform: 'scale(1)',
+                                                    position: 'absolute',
+                                                    zIndex: 800,
+                                                    transition: `${imageStyles.transition}`,
+                                                    padding: '0px',
+                                                    borderRadius: '20px',
+                                                }}
+                                                quality={1}
+                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            />
                                         </div>
+                                    </div> */}
                                     <Image
                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
@@ -527,12 +527,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     })}
                 </Masonry>
 
-                {/* {sentinel && (
+                {sentinel && (
                     <div
                         ref={sentinelRef}
                         className={styles.sentinel}
                     ></div>
-                )} */}
+                )}
             </>
         </div>
     )

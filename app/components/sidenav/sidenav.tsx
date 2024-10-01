@@ -29,7 +29,7 @@ export default function Sidenav() {
             <div>
                 <div className={`
                     ${styles.title}
-                    flex sm:hidden w-full sm:w-80 items-center bg-light-surface p-2 h-14 fixed top-0 left-0 right-0 z-50 
+                    flex sm:hidden w-full sm:w-80 items-center bg-light-surface p-2 h-14 fixed top-0 left-0 right-0 z-50 shadow-sm
                     `}>
                     <Link
                         href={`/`}
@@ -67,7 +67,7 @@ export default function Sidenav() {
                         </div>
                     </Link>
                 </div>
-                <div className="pt-0 sm:pt-24 overflow-hidden overflow-scroll overflow-x-hidden border-2">
+                <div className="pt-0 pb-10 sm:pt-24 overflow-hidden overflow-scroll overflow-x-hidden">
                     <Suspense fallback={null}>
                         <ArtReddits />
                     </Suspense>

@@ -27,7 +27,12 @@ export default function Sidenav() {
     return (
         <div>
             <div>
-                <Link href={`/`} onClick={((e) => handleLinkClick(e))}>
+                <Link 
+                href={`/`} 
+                onClick={((e) => {
+                    handleLinkClick(e);
+                    dispatch(setClickedNav(false));
+                })}>
                     <div className={`
                     ${styles.title}
                     flex sm:hidden w-full sm:w-80 items-center bg-light-surface p-2 h-14 fixed top-0 left-0 right-0 z-50 
@@ -43,7 +48,7 @@ export default function Sidenav() {
             <div
                 className={`flex flex-col t-8 w-full z-0 bg-light-surface mt-14 sm:mt-0 h-screen fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}`}
                 style={{
-                    // transition: 'transform 1s ease'
+                    transition: 'transform 1s ease'
                 }}
             >
                 <Link href={`/`} onClick={((e) => handleLinkClick(e))}>
@@ -63,8 +68,11 @@ export default function Sidenav() {
                         <ArtReddits />
                     </Suspense>
                 </div>
-                <div className='flex sm:hidden h-4 w-full bg-gray-500 bg-opacity-5 justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center'>
-                    <div className={`flex`} onClick={(e) => dispatch(setClickedNav(true))}>
+                <div 
+                className='flex sm:hidden h-4 w-full bg-gray-500 bg-opacity-5 justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center'
+                onClick={(e) => dispatch(setClickedNav(true))}
+                >
+                    <div className={`flex`}>
                         <ChevronDownIcon className="size-4"/>
                     </div>
                 </div>

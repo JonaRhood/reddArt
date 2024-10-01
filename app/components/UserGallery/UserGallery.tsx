@@ -479,7 +479,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     </div>
                     <div className='flex items-center w-full'>
                         <Image
-                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmerIcon(700, 475))}`)}
+                            src={cleanUrl(iconUser ? iconUser : `data:image/svg+xml;base64,${toBase64(grayShimmerIcon())}`)}
                             alt="User Icon"
                             width={60}
                             height={60}

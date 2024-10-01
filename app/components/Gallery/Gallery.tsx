@@ -418,7 +418,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                             <div
                                 key={key}
                                 className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                                // onClick={(e) => handleImageZoom(e, key)}
+                            // onClick={(e) => handleImageZoom(e, key)}
                             >
                                 <div className='flex'>
                                     {/* <div
@@ -489,10 +489,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         onError={(e) => {
                                             e.currentTarget.className = 'hidden'
                                         }}
-                                    // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                    // style={{
-                                    //     backgroundColor: "lightgray"
-                                    // }}
+                                        // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                        style={{
+                                            maxHeight: "500px",
+                                        }}
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

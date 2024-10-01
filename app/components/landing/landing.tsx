@@ -16,7 +16,7 @@ export default function Landing() {
         <>
             <div className={`flex bg-light-background h-screen justify-center w-screen`}>
                 <div className="flex ml-0 sm:ml-80 w-full justify-center overflow-hidden mt-16 sm:mt-0 p-2 sm:p-8">
-                    <div className={`flex relative w-full bg-gray-300 rounded-3xl border-8 border-white shadow-xl ${styles.landingBackgroundBlur}`}>
+                    <div className={`flex relative w-full bg-gray-300 rounded-3xl border-8 border-white shadow-sm sm:shadow-xl ${styles.landingBackgroundBlur}`}>
                     <Image
                         ref={ref}
                         src={mockup}

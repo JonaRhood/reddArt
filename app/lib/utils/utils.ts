@@ -99,14 +99,17 @@ export const shimmer = (w: number, h: number) => {
     </svg>`;
 };
 
-export const grayShimmerIcon = (radius: number) => {
+
+export const grayShimmerIcon = (w: number, h: number) => {
   const color = '#d3d3d3'; // Color gris claro
   const color2 = '#ebebeb';
 
-  const diameter = radius * 2; // El diámetro del círculo
+  const radius = Math.min(w, h) / 2; // Calcula el radio como la mitad del lado más corto
+  const cx = w / 2; // Centro en el eje x
+  const cy = h / 2; // Centro en el eje y
 
   return `
-  <svg width="${diameter}" height="${diameter}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
       <linearGradient id="g">
         <stop stop-color="${color}" offset="0%" />
@@ -117,14 +120,14 @@ export const grayShimmerIcon = (radius: number) => {
     <animate
       xlink:href="#r"
       attributeName="x"
-      from="-${diameter}"
-      to="${diameter}"
+      from="-${w}"
+      to="${w}"
       dur="2s"
       repeatCount="indefinite"
       calcMode="linear"
     />
-    <rect width="${diameter}" height="${diameter}" fill="${color}" rx="${radius}" />
-    <circle cx="${radius}" cy="${radius}" r="${radius}" fill="url(#g)" />
+    <rect width="${w}" height="${h}" fill="${color}" rx="${radius}" />
+    <circle cx="${cx}" cy="${cy}" r="${radius}" fill="url(#g)" />
   </svg>`;
 };
 

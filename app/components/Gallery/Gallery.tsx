@@ -433,7 +433,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     height={preview?.images?.[0]?.source?.height}                                                  
                                                     priority={true}
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
                                                         // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -459,7 +458,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     height={preview?.images?.[0]?.source?.height}
                                                     loading="lazy"
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
-                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
                                                         // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -488,7 +486,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         height={preview?.images?.[0]?.source?.height}
                                         priority={true}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         onError={(e) => {
                                             e.currentTarget.className = 'hidden'
                                             // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.

@@ -485,17 +485,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     <Image
                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}
-                                        width={isMobile ? 500 : preview?.images?.[0]?.source?.width}
-                                        height={isMobile ? 350 : preview?.images?.[0]?.source?.height}
+                                        width={preview?.images?.[0]?.source?.width}
+                                        height={preview?.images?.[0]?.source?.height}
                                         priority={true}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                         onError={(e) => {
                                             e.currentTarget.className = 'hidden'
                                         }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                        style={{
-                                            maxHeight: "350px",
-                                        }}
                                     />
                                 </div>
                                 <div className={styles.gradientOverlay}></div>

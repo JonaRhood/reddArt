@@ -246,7 +246,7 @@
 }
 
 .userFixedLayout {
-    z-index: 9000;
+    z-index: 9000 !important;
     position: fixed;
     background-color: #FFFFFF;
     top: 0;

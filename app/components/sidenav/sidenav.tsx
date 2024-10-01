@@ -17,6 +17,7 @@ import { setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
 export default function Sidenav() {
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
     const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
+    const isUserClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
     const dispatch = useAppDispatch();
 
     const handleLinkClick = (e: any) => {
@@ -25,7 +26,7 @@ export default function Sidenav() {
     }
 
     return (
-        <div>
+        <div className={isUserClicked ? "hidden" : ""}>
             <div>
                 <div className={`
                     ${styles.title}

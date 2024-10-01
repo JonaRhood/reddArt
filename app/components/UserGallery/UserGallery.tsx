@@ -25,6 +25,7 @@ import {
     setPosts, setLoadMorePosts, setBackgroundPosts,
     setLoading, setScrollPosition, resetGallery, stopGalleryLoading,
 } from "@/app/lib/features/userGallery/userGallerySlice"
+import { setUserClicked } from '@/app/lib/features/mobileSlice/mobileSlice';
 import { setModalIsOpen } from '@/app/lib/features/gallery/gallerySlice';
 
 interface RedditResponse {
@@ -388,6 +389,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         router.back();
         setIsMounted(false);
         dispatch(setModalIsOpen(false));
+        dispatch(setUserClicked(false));
         dispatch(stopGalleryLoading());
         document.body.style.overflow = "visible"
     }
@@ -402,6 +404,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 console.log('No active Service Worker to send message to.');
             }
             setIsMounted(false);
+            dispatch(setUserClicked(false));
             dispatch(setModalIsOpen(false));
             dispatch(stopGalleryLoading());
             document.body.style.overflow = "visible";

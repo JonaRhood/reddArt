@@ -125,7 +125,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchSubReddit(subReddit, 50, '', '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 15, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -164,7 +164,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 15, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -231,7 +231,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, 15, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -386,7 +386,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 />
             </div>
 
-            {/* <Modal
+            <Modal
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
                 onRequestClose={closeModal}
@@ -396,7 +396,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             >
                 {authorSelected && <Suspense fallback={null}><UserGallery params={{ user: authorSelected }} /></Suspense>}
 
-            </Modal> */}
+            </Modal>
 
             <>
                 <Masonry

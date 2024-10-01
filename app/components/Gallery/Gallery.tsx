@@ -421,10 +421,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                             <div
                                 key={key}
                                 className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                            // onClick={(e) => handleImageZoom(e, key)}
+                                onClick={(e) => handleImageZoom(e, key)}
                             >
                                 <div className='flex'>
-                                    {/* <div
+                                    <div
                                         className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
                                     >
                                         <div className={styles.divImgClicked}>
@@ -481,7 +481,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                         </div>
-                                    </div> */}
+                                    </div>
                                     <Image
                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                         alt={key}

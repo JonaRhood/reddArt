@@ -193,6 +193,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (isSafari()) {
             document.body.classList.add('isSafari');
         }
+        if (isMobile) {
+            window.scrollTo(0, 0);
+        }
         if (user) {
             router.push(`/u/${user}`);
         }

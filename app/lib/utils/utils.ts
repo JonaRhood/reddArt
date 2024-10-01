@@ -105,23 +105,21 @@ export const grayShimmerIcon = () => {
   const color2 = '#ebebeb';
 
   return `
-  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs>
       <linearGradient id="g">
         <stop stop-color="${color}" offset="0%" />
         <stop stop-color="${color2}" offset="50%" />
         <stop stop-color="${color}" offset="100%" />
+        <animateTransform
+          attributeName="gradientTransform"
+          type="translate"
+          from="-1 0"
+          to="1 0"
+          dur="1.5s"
+          repeatCount="indefinite" />
       </linearGradient>
     </defs>
-    <animate
-      xlink:href="#r"
-      attributeName="x"
-      from="-100"
-      to="100"
-      dur="2s"
-      repeatCount="indefinite"
-      calcMode="linear"
-    />
     <rect width="100" height="100" fill="${color}" rx="50" />
     <circle cx="50" cy="50" r="50" fill="url(#g)" />
   </svg>`;

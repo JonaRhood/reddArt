@@ -70,3 +70,7 @@
 .navClicked {
     transform: translateY(-98.3%)
 }
+
+.navUnClicked {
+    transform: translateY(0%)
+}

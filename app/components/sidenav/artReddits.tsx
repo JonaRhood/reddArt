@@ -95,7 +95,7 @@ export default function ArtReddits() {
         }
         if (window.innerWidth < 640) {
             console.log("Pantalla menor de 640px");
-            dispatch(setClickedNav(true));
+            dispatch(setClickedNav(false));
         }
         dispatch(stopGalleryLoading());
         dispatch(setPastSubReddit(currentSubreddit));

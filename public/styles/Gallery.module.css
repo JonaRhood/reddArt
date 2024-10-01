@@ -124,28 +124,19 @@
 }
 
 .titleOverlayMobile {
-    position: absolute;
+    position: relative;
+    align-items: center;
     bottom: 0;
     left: 0;
     width: 100%;
-    align-items: center !important;
-    padding: 20px;
-    color: white;
-    transition: transform 0.3s ease-in-out;
-    -webkit-transition: transform 0.3s ease-in-out;
+    padding: 0px;
     display: flex;
-    border-radius: 0 !important;
-    align-items: flex-end;
-    overflow: hidden;
-    z-index: 0;
-    border-radius: 20px;
-    background-color: rgba(0,0,0,0.5);
+    margin-left: 10px;
 }
 
 .titleOverlayMobile:hover span,
 .titleOverlayMobile:hover i {
     cursor: pointer;
-    color: #a0e7ff;
 }
 
 .skeleton {

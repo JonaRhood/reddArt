@@ -26,6 +26,8 @@ import {
     setSelectedSubReddit, setModalIsOpen
 } from "@/app/lib/features/gallery/gallerySlice";
 import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
+import { current } from '@reduxjs/toolkit';
+import { setIsMobile } from '@/app/lib/features/mobileSlice/mobileSlice';
 
 Modal.setAppElement('#root');
 
@@ -54,6 +56,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [imageIsError, setImageIsError] = useState(false);
+    const [isMobileImageClicked, setIsMobileImageClicked] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
         left: '',
@@ -375,6 +378,30 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
+    //Effect to add an event listener to check the window size and detect mobile devices
+    useEffect(() => {
+        const handleResize = () => {
+            const currentWidth = window.innerWidth;
+            if (currentWidth <= 640) {
+                dispatch(setIsMobile(true));
+            } else {
+                dispatch(setIsMobile(false));
+                setIsMobileImageClicked(false);
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+    }, [])
+
+    const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);
+
+    const breakpointColumnsObj = isMobileImageClicked
+        ? { default: 1, 1600: 1, 1400: 1, 1000: 1 }
+        : { default: 5, 1600: 4, 1400: 3, 1000: 2 };
+
     return (
         // !isMounted ? "" : (
         <div className={`flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4`}>
@@ -403,7 +430,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
             <>
                 <Masonry
-                    breakpointCols={{ default: 5, 1600: 4, 1400: 3, 1000: 2 }}
+                    breakpointCols={breakpointColumnsObj}
                     className={styles.masonryGrid}
                     columnClassName={styles.masonryGridColumn}
                 >
@@ -418,107 +445,168 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                         }
 
                         return (
-                            <div
-                                key={key}
-                                className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
-                                onClick={(e) => handleImageZoom(e, key)}
-                            >
-                                <div className='flex'>
+                            <div key={key}>
+                                {isMobile ? (
                                     <div
-                                        className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
-                                    >
-                                        <div className={styles.divImgClicked}>
+                                        className={`${styles.imageContainer}`}
+                                        ref={(el) => (imageRefs.current[index] = el)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsMobileImageClicked(prev => !prev); // Establece el estado de la imagen clickeada
+                                            setClickedImageIndex(index); // Guarda el índice de la imagen clickeada
 
-                                            <Image
-                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key}
-                                                width={preview?.images?.[0]?.source?.width}
-                                                height={preview?.images?.[0]?.source?.height}
-                                                priority={true}
-                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                onError={(e) => {
-                                                    e.currentTarget.className = 'hidden'
-                                                    // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                }}
-                                                style={{
-                                                    top: `${imageStyles.top}`,
-                                                    left: `${imageStyles.left}`,
-                                                    width: `${imageStyles.width}`,
-                                                    height: "auto",
-                                                    transform: 'scale(1)',
-                                                    position: 'absolute',
-                                                    zIndex: 1000,
-                                                    transition: `${imageStyles.transition}`,
-                                                    padding: '0px',
-                                                    borderRadius: '20px',
-                                                }}
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                            />
-                                            <Image
-                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key}
-                                                width={preview?.images?.[0]?.source?.width}
-                                                height={preview?.images?.[0]?.source?.height}
-                                                loading="lazy"
-                                                className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
-                                                onError={(e) => {
-                                                    e.currentTarget.className = 'hidden'
-                                                    // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
-                                                }}
-                                                style={{
-                                                    top: `${imageStyles.top}`,
-                                                    left: `${imageStyles.left}`,
-                                                    width: `${imageStyles.width}`,
-                                                    height: "auto",
-                                                    transform: 'scale(1)',
-                                                    position: 'absolute',
-                                                    zIndex: 800,
-                                                    transition: `${imageStyles.transition}`,
-                                                    padding: '0px',
-                                                    borderRadius: '20px',
-                                                }}
-                                                quality={1}
-                                            // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                            />
-                                        </div>
-                                    </div>
-                                    <Image
-                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                        alt={key}
-                                        width={preview?.images?.[0]?.source?.width}
-                                        height={preview?.images?.[0]?.source?.height}
-                                        priority={true}
-                                        placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                        onError={(e) => {
-                                            e.currentTarget.className = 'hidden'
+                                            // Desplazamiento hacia la imagen clickeada
+                                            setTimeout(() => {
+                                                imageRefs.current[index]?.scrollIntoView({
+                                                    behavior: 'smooth',
+                                                    block: 'center',
+                                                });
+                                            }, 100);
                                         }}
+                                    >
+                                        <Image
+                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                            alt={key + "/1"}
+                                            width={preview?.images?.[0]?.source?.width}
+                                            height={preview?.images?.[0]?.source?.height}
+                                            priority={true}
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            onError={(e) => {
+                                                e.currentTarget.className = 'hidden'
+                                            }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                                    />
-                                </div>
-                                <div className={styles.gradientOverlay}></div>
-                                <div className={styles.titleOverlay}>
-                                    <i>
-                                        <UserIcon className="size-4" />
-                                    </i>
-                                    {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
+                                        />
+                                        <div className={styles.gradientOverlay}></div>
+                                        <div className={styles.titleOverlay}>
+                                            <i>
+                                                <UserIcon className="size-4" />
+                                            </i>
+                                            {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
                                         e.stopPropagation();
                                         setAuthorSelected(author);
                                         localStorage.setItem("USER_CLICKED", "true");
                                     }}> */}
-                                    <span
-                                        className="ml-3"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            openModal();
-                                            document.body.style.overflow = "hidden";
-                                            router.push(`?user=${author}`, { scroll: false })
-                                            setAuthorSelected(author);
-                                        }}
+                                            <span
+                                                className="ml-3"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    openModal();
+                                                    document.body.style.overflow = "hidden";
+                                                    router.push(`?user=${author}`, { scroll: false })
+                                                    setAuthorSelected(author);
+                                                }}
+                                            >
+                                                {"u/" + author}
+                                            </span>
+                                            {/* </Link> */}
+                                        </div>
+                                    </div>
+                                    
+                                ) : (
+                                    <div
+                                        key={key}
+                                        className={`${styles.imageContainer} ${zoomImg ? styles.imageContainerZoomIn : ""}`}
+                                        onClick={(e) => handleImageZoom(e, key)}
                                     >
-                                        {"u/" + author}
-                                    </span>
-                                    {/* </Link> */}
-                                </div>
+                                        <div className='flex'>
+                                            <div
+                                                className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
+                                            >
+                                                <div className={styles.divImgClicked}>
+
+                                                    <Image
+                                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                        alt={key + "/2"}
+                                                        width={preview?.images?.[0]?.source?.width}
+                                                        height={preview?.images?.[0]?.source?.height}
+                                                        priority={true}
+                                                        className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                        onError={(e) => {
+                                                            e.currentTarget.className = 'hidden'
+                                                            // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                        }}
+                                                        style={{
+                                                            top: `${imageStyles.top}`,
+                                                            left: `${imageStyles.left}`,
+                                                            width: `${imageStyles.width}`,
+                                                            height: "auto",
+                                                            transform: 'scale(1)',
+                                                            position: 'absolute',
+                                                            zIndex: 1000,
+                                                            transition: `${imageStyles.transition}`,
+                                                            padding: '0px',
+                                                            borderRadius: '20px',
+                                                        }}
+                                                        placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                    />
+                                                    <Image
+                                                        src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                        alt={key + "/3"}
+                                                        width={preview?.images?.[0]?.source?.width}
+                                                        height={preview?.images?.[0]?.source?.height}
+                                                        loading="lazy"
+                                                        className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
+                                                        onError={(e) => {
+                                                            e.currentTarget.className = 'hidden'
+                                                            // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
+                                                        }}
+                                                        style={{
+                                                            top: `${imageStyles.top}`,
+                                                            left: `${imageStyles.left}`,
+                                                            width: `${imageStyles.width}`,
+                                                            height: "auto",
+                                                            transform: 'scale(1)',
+                                                            position: 'absolute',
+                                                            zIndex: 800,
+                                                            transition: `${imageStyles.transition}`,
+                                                            padding: '0px',
+                                                            borderRadius: '20px',
+                                                        }}
+                                                        quality={1}
+                                                    // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Image
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                alt={key + "/4"}
+                                                width={preview?.images?.[0]?.source?.width}
+                                                height={preview?.images?.[0]?.source?.height}
+                                                priority={true}
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                onError={(e) => {
+                                                    e.currentTarget.className = 'hidden'
+                                                }}
+                                            // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                                            />
+                                        </div>
+                                        <div className={styles.gradientOverlay}></div>
+                                        <div className={styles.titleOverlay}>
+                                            <i>
+                                                <UserIcon className="size-4" />
+                                            </i>
+                                            {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
+                                        e.stopPropagation();
+                                        setAuthorSelected(author);
+                                        localStorage.setItem("USER_CLICKED", "true");
+                                    }}> */}
+                                            <span
+                                                className="ml-3"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    openModal();
+                                                    document.body.style.overflow = "hidden";
+                                                    router.push(`?user=${author}`, { scroll: false })
+                                                    setAuthorSelected(author);
+                                                }}
+                                            >
+                                                {"u/" + author}
+                                            </span>
+                                            {/* </Link> */}
+                                        </div>
+
+                                    </div>
+                                )}
                             </div>
 
                             // </Link>

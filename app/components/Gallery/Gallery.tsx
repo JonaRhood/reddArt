@@ -125,7 +125,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchSubReddit(subReddit, 15, '', '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 50, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -164,7 +164,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, 15, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -231,7 +231,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, 15, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -431,8 +431,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     alt={key}
                                                     width={preview?.images?.[0]?.source?.width}
                                                     height={preview?.images?.[0]?.source?.height}                                                  
-                                                    priority={true}
+                                                    // priority={true}
                                                     className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                    loading="lazy"
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
                                                         // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -484,8 +485,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         alt={key}
                                         width={preview?.images?.[0]?.source?.width}
                                         height={preview?.images?.[0]?.source?.height}
-                                        priority={true}
+                                        // priority={true}
                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                        loading="lazy"
                                         onError={(e) => {
                                             e.currentTarget.className = 'hidden'
                                             // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.

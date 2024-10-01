@@ -454,7 +454,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     return (
         !isMounted ? "" : (
-            <div className='flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4 mt-14' >
+            <div className='flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4 sm:pt-16' >
                 <div>
                     <LoadingBar
                         color="#00BFFF"
@@ -654,19 +654,12 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 <i>
                                                     <UserIcon className="size-4" />
                                                 </i>
-                                                {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
-                                        e.stopPropagation();
-                                        setAuthorSelected(author);
-                                        localStorage.setItem("USER_CLICKED", "true");
-                                    }}> */}
                                                 <span
                                                     className="ml-3"
                                                     onClick={(e) => {
                                                         e.stopPropagation()
-
                                                         document.body.style.overflow = "hidden";
                                                         router.push(`?user=${author}`, { scroll: false })
-
                                                     }}
                                                 >
                                                     {"u/" + author}

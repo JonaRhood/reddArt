@@ -429,24 +429,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         };
     }, []);
 
-    // Effect to control window resize
-    useEffect(() => {
-        const handleResize = () => {
-            const currentWidth = window.innerWidth;
-            if (currentWidth <= 640) {
-                dispatch(setIsMobile(true));
-                dispatch(setUserClicked(true));
-            } else {
-                dispatch(setIsMobile(false));
-                setIsMobileImageClicked(false);
-            }
-        }
-
-        window.addEventListener('resize', handleResize);
-
-        handleResize();
-    }, [])
-
     const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);
 
@@ -523,10 +505,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                             ref={(el) => (imageRefs.current[index] = el)}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setIsMobileImageClicked(prev => !prev); // Establece el estado de la imagen clickeada
-                                                setClickedImageIndex(index); // Guarda el índice de la imagen clickeada
+                                                setIsMobileImageClicked(prev => !prev); 
+                                                setClickedImageIndex(index); 
 
-                                                // Desplazamiento hacia la imagen clickeada
+
                                                 setTimeout(() => {
                                                     imageRefs.current[index]?.scrollIntoView({
                                                         behavior: 'instant',

@@ -304,10 +304,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             const rect = e.target.getBoundingClientRect();
             document.body.style.overflow = "hidden";
             document.body.style.marginRight = "15px";
-            
+
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
-            
+
             const rectBackground = childDiv.getBoundingClientRect();
             console.log(rectBackground);
 
@@ -381,29 +381,28 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }, 350);
         }
     };
-    
+
     // Effect to allow back and forward between Gallery and userGallery Modal
     const [previousHistoryLength, setPreviousHistoryLenght] = useState<number>(0);
     const [currentHistoryLength, setCurrentHistoryLenght] = useState<number>(0);
-    
+
     useEffect(() => {
 
         const handlePopState = () => {
-
+            const currentWidth = window.innerWidth;
             console.log(previousHistoryLength, currentHistoryLength);
 
-            if(previousHistoryLength < currentHistoryLength) {
-                console.log('El usuario ha hecho clic en el botón de alante');
+            if (previousHistoryLength < currentHistoryLength) {
+                if (currentWidth <= 640) {
+                    dispatch(setIsMobile(true));
+                }
                 // dispatch(setUserClicked(true));
                 dispatch(setModalIsOpen(true));
                 document.body.style.overflow = "hidden";
 
                 setCurrentHistoryLenght(currentHistoryLength - 1)
-            } else if (previousHistoryLength > currentHistoryLength) {
-                console.log('El usuario ha hecho clic en el botón de medio');
 
             } else if (previousHistoryLength === currentHistoryLength) {
-                console.log('El usuario ha hecho clic en el botón de atrás');
                 setCurrentHistoryLenght(currentHistoryLength + 1)
             }
         };
@@ -419,9 +418,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
-            if (currentWidth <= 640) {
+            if (!modalIsOpen && currentWidth <= 640) {
+                // console.log("MODAL CERRADO", modalIsOpen);
                 dispatch(setIsMobile(true));
+                dispatch(setUserClicked(false));
+            } else if (modalIsOpen && currentWidth <= 640) {
+                // console.log("MODAL ABIERTO", modalIsOpen);
+                dispatch(setIsMobile(true));
+                dispatch(setUserClicked(true));
             } else {
+                // console.log("DEMÁS");
                 dispatch(setIsMobile(false));
                 setIsMobileImageClicked(false);
                 dispatch(setUserClicked(false));
@@ -431,7 +437,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         window.addEventListener('resize', handleResize);
 
         handleResize();
-    }, [])
+    }, [modalIsOpen])
 
     const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);

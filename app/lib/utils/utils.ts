@@ -107,7 +107,7 @@ export const grayShimmerIcon = () => {
   return `
   <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <linearGradient id="g">
+      <linearGradient id="g" gradientTransform="translate(-1, 0)">
         <stop stop-color="${color}" offset="0%" />
         <stop stop-color="${color2}" offset="50%" />
         <stop stop-color="${color}" offset="100%" />
@@ -124,6 +124,7 @@ export const grayShimmerIcon = () => {
     <circle cx="50" cy="50" r="50" fill="url(#g)" />
   </svg>`;
 };
+
 
 export const grayShimmer = (w: number, h: number) => {
   const color = '#d3d3d3'; // Light gray color

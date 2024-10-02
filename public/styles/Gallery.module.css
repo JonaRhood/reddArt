@@ -188,8 +188,8 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.0);
     margin-left: 320px;
-    transition: background-color .3s ease-in-out;
-    -webkit-transition: background-color .3s ease-in-out;
+    /* transition: background-color .3s ease-in-out; */
+    /* -webkit-transition: background-color .3s ease-in-out; */
     justify-content: center;
     overflow-y: auto;
     overflow-x: hidden;

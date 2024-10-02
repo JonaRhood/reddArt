@@ -97,6 +97,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     }
 
+    function isFirefox() {
+        return /firefox|fxios/i.test(navigator.userAgent);
+    }
+
     const handleStartLoading = () => {
         if (loadingBarRef.current) {
             loadingBarRef.current.continuousStart();
@@ -195,7 +199,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
-        if (isSafari()) {
+        if (isSafari() || isFirefox()) {
             document.body.classList.add('isSafari');
         }
         if (isMobile) {
@@ -311,7 +315,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             const rectBackground = childDiv.getBoundingClientRect();
             console.log(rectBackground);
 
-            if (isSafari()) {
+            if (isSafari() || isFirefox()) {
                 setImageStyles({
                     top: '10%',
                     left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
@@ -354,7 +358,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         } else {
             document.body.style.overflow = "visible";
             document.body.style.marginRight = "";
-            if (isSafari()) {
+            if (isSafari() || isFirefox()) {
                 setImageStyles({
                     top: imageStylesMemory.top,
                     left: imageStylesMemory.left,

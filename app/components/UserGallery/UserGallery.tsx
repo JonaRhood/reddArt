@@ -98,6 +98,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     }
 
+    function isFirefox() {
+        return /firefox|fxios/i.test(navigator.userAgent);
+    }
+
     // Loading Bar
     //////////////////////////////////////////////////////////////////////////////
     const handleStartLoading = () => {
@@ -121,7 +125,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchUserReddit(redditUser, 50, '', '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, '', '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -156,7 +160,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -245,7 +249,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchUserReddit(redditUser, 50, after, '') as RedditResponse;
+                const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -314,7 +318,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
             const rectBackground = childDiv.getBoundingClientRect();
 
-            if (isSafari()) {
+            if (isSafari() || isFirefox()) {
                 setImageStyles({
                     top: '15%',
                     left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
@@ -357,7 +361,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         } else {
             // document.body.style.overflow = "visible";
             // document.body.style.marginRight = "";
-            if (isSafari()) {
+            if (isSafari() || isFirefox()) {
                 setImageStyles({
                     top: imageStylesMemory.top,
                     left: imageStylesMemory.left,
@@ -517,19 +521,20 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 }, 0);
                                             }}
                                         >
-                                            <Image
-                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key + "/1"}
-                                                width={preview?.images?.[0]?.source?.width}
-                                                height={preview?.images?.[0]?.source?.height}
-                                                loading='lazy'
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                                onError={(e) => {
-                                                    e.currentTarget.className = 'hidden'
-                                                }}
-                                                style={{
-                                                    borderRadius: "20px",
-                                                }}
+                                           <Image
+                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                            alt={key + "/1"}
+                                            width={preview?.images?.[0]?.source?.width}
+                                            height={preview?.images?.[0]?.source?.height}
+                                            priority={true}
+                                            sizes="(max-width: 640px) 100vw"
+                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            onError={(e) => {
+                                                e.currentTarget.className = 'hidden'
+                                            }}
+                                            style={{
+                                                borderRadius: "20px",
+                                            }}
                                             // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                             {isMobileImageClicked ? (

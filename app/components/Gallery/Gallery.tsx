@@ -130,7 +130,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchSubReddit(subReddit, 50, '', '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile ? 50 : 10, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -169,7 +169,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile ? 50 : 10, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -239,7 +239,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, isMobile ? 50 : 10, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {

@@ -1,7 +1,15 @@
 const reddits = [
     {
-        name: "Comics",
-        subreddit: "comics"
+        name: "Pixel art",
+        subreddit: "PixelArt"
+    },
+    {
+        name: "Fine Art",
+        subreddit: "FineArt"
+    },
+    {
+        name: "Drawing",
+        subreddit: "drawing"
     },
     {
         name: "Art",
@@ -16,12 +24,16 @@ const reddits = [
         subreddit: "VaporwaveArt"
     },
     {
+        name: "Accidental Art Gallery",
+        subreddit: "AccidentalArtGallery"
+    },
+    {
         name: "Digital art",
         subreddit: "DigitalArt"
     },
     {
-        name: "Pixel art",
-        subreddit: "PixelArt"
+        name: "Classic Canadian Art",
+        subreddit: "ClassicCanadianArt"
     },
     {
         name: "Abstract art",
@@ -38,6 +50,14 @@ const reddits = [
     {
         name: "Comic Books",
         subreddit: "comicbooks"
+    },
+    {
+        name: "Minimalist Art",
+        subreddit: "minimalist_art"
+    },
+    {
+        name: "Comics",
+        subreddit: "comics"
     },
 ];
 

@@ -36,9 +36,9 @@ const nextConfig = {
       },
     ], 
   },
-  experimental: {
-    scrollRestoration: true,
-  },
+  // experimental: {
+  //   scrollRestoration: false,
+  // },
 };
 
 if (process.env.NODE_ENV === 'development') {

@@ -68,7 +68,7 @@ export default function Sidenav() {
                         </div>
                     </Link>
                 </div>
-                <div className="pt-0 pb-10 sm:pt-24 overflow-hidden overflow-scroll overflow-x-hidden">
+                <div className="pt-0 pb-10 sm:pb-0 sm:pt-24 overflow-hidden overflow-scroll overflow-x-hidden">
                     <Suspense fallback={null}>
                         <ArtReddits />
                     </Suspense>

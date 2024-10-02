@@ -28,7 +28,7 @@ import {
 import { setUserClicked } from '@/app/lib/features/mobileSlice/mobileSlice';
 import { resetGallery } from '@/app/lib/features/userGallery/userGallerySlice';
 import { current } from '@reduxjs/toolkit';
-import { setIsMobile } from '@/app/lib/features/mobileSlice/mobileSlice';
+import { setIsMobile, setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
 
 Modal.setAppElement('#root');
 
@@ -379,21 +379,38 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             }, 350);
         }
     };
+    
+    const [previousHistoryLength, setPreviousHistoryLenght] = useState<number>(0);
+    const [currentHistoryLength, setCurrentHistoryLenght] = useState<number>(0);
+    
+    useEffect(() => {
 
-    // useEffect(() => {
-    //     const handlePopState = () => {
-    //         console.log('El usuario ha hecho clic en el botón de alante');
-    //         dispatch(setUserClicked(true));
-    //         dispatch(setModalIsOpen(true));
-    //         document.body.style.overflow = "hidden";
-    //     };
+        const handlePopState = () => {
 
-    //     window.addEventListener('popstate', handlePopState);
+            console.log(previousHistoryLength, currentHistoryLength);
 
-    //     return () => {
-    //         window.removeEventListener('popstate', handlePopState);
-    //     };
-    // }, []);
+            if(previousHistoryLength < currentHistoryLength) {
+                console.log('El usuario ha hecho clic en el botón de alante');
+                // dispatch(setUserClicked(true));
+                dispatch(setModalIsOpen(true));
+                document.body.style.overflow = "hidden";
+
+                setCurrentHistoryLenght(currentHistoryLength - 1)
+            } else if (previousHistoryLength > currentHistoryLength) {
+                console.log('El usuario ha hecho clic en el botón de medio');
+
+            } else if (previousHistoryLength === currentHistoryLength) {
+                console.log('El usuario ha hecho clic en el botón de atrás');
+                setCurrentHistoryLenght(currentHistoryLength + 1)
+            }
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [previousHistoryLength, currentHistoryLength]);
 
     //Effect to add an event listener to check the window size and detect mobile devices
     useEffect(() => {
@@ -511,6 +528,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         router.push(`?user=${author}`, { scroll: false })
                                                         setAuthorSelected(author);
                                                         dispatch(setUserClicked(true));
+                                                        setCurrentHistoryLenght(0);
                                                     }}
                                                 >
                                                     {"u/" + author}
@@ -613,6 +631,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     document.body.style.overflow = "hidden";
                                                     router.push(`?user=${author}`, { scroll: false })
                                                     setAuthorSelected(author);
+                                                    setCurrentHistoryLenght(0);
                                                 }}
                                             >
                                                 {"u/" + author}

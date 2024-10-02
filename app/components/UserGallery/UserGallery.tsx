@@ -27,7 +27,7 @@ import {
     setLoading, setScrollPosition, resetGallery, stopGalleryLoading,
 } from "@/app/lib/features/userGallery/userGallerySlice"
 import { setUserClicked } from '@/app/lib/features/mobileSlice/mobileSlice';
-import { setModalIsOpen } from '@/app/lib/features/gallery/gallerySlice';
+import { setModalIsOpen, setSelectedSubReddit } from '@/app/lib/features/gallery/gallerySlice';
 
 interface RedditResponse {
     data: {
@@ -88,11 +88,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     useEffect(() => {
         setIsMounted(true);
-        console.log(redditUser, "MONTADO")
 
         return () => {
             setIsMounted(false);
-            console.log(redditUser, "DESMONTADO")
         };
     }, []);
 
@@ -217,6 +215,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     //Starter Effect
     ////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
+        if (hasUPath) {
+            dispatch(setSelectedSubReddit(null));
+        }
         const zoomedIn = sessionStorage.getItem("ZOOMED_IN");
         if (zoomedIn !== "true" || posts.length === 0) {
             handleStartLoading();
@@ -652,7 +653,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 />
                                             </div>
                                             <div className={styles.gradientOverlay}></div>
-                                            <div className={styles.titleOverlay}>
+                                            {/* <div className={styles.titleOverlay}>
                                                 <i>
                                                     <UserIcon className="size-4" />
                                                 </i>
@@ -666,8 +667,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 >
                                                     {"u/" + author}
                                                 </span>
-                                                {/* </Link> */}
-                                            </div>
+                                            </div> */}
 
                                         </div>
                                     )}

@@ -47,7 +47,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const redditUser = params.user;
     const pathname = usePathname();
     const hasUPath = pathname.includes("/u");
-    console.log("PATHNAME:", hasUPath);
 
     const [isMounted, setIsMounted] = useState(false);
 
@@ -386,7 +385,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     const handleClickBack = (e: any) => {
         if (hasUPath && !clickedNav) {
-            dispatch(setClickedNav(true));
+            router.push("/");
         } else if (hasUPath && clickedNav) {
             dispatch(setClickedNav(false));
         } else {
@@ -405,6 +404,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         }
     }
 
+    // Effect to control backward button
     useEffect(() => {
         const handlePopState = () => {
             console.log('El usuario ha hecho clic en el botón de atrás');
@@ -428,11 +428,13 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         };
     }, []);
 
+    // Effect to control window resize
     useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
             if (currentWidth <= 640) {
                 dispatch(setIsMobile(true));
+                dispatch(setUserClicked(true));
             } else {
                 dispatch(setIsMobile(false));
                 setIsMobileImageClicked(false);
@@ -475,7 +477,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                             handleClickBack(e)
                         }}
                     >
-                        {hasUPath ? <ChevronDownIcon className='size-5' /> : <ChevronLeftIcon className='size-5' />}
+                        <ChevronLeftIcon className='size-5' />
                     </div>
                     <div className='flex items-center w-full'>
                         <Image

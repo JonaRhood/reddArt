@@ -84,6 +84,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const modalIsOpen = useAppSelector((state: RootState) => state.gallery.modalIsOpen);
     const after = useAppSelector((state: RootState) => state.gallery.after);
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
+    const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -379,6 +380,21 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
 
+    // useEffect(() => {
+    //     const handlePopState = () => {
+    //         console.log('El usuario ha hecho clic en el botón de alante');
+    //         dispatch(setUserClicked(true));
+    //         dispatch(setModalIsOpen(true));
+    //         document.body.style.overflow = "hidden";
+    //     };
+
+    //     window.addEventListener('popstate', handlePopState);
+
+    //     return () => {
+    //         window.removeEventListener('popstate', handlePopState);
+    //     };
+    // }, []);
+
     //Effect to add an event listener to check the window size and detect mobile devices
     useEffect(() => {
         const handleResize = () => {
@@ -388,6 +404,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             } else {
                 dispatch(setIsMobile(false));
                 setIsMobileImageClicked(false);
+                dispatch(setUserClicked(false));
             }
         }
 
@@ -588,11 +605,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             <i>
                                                 <UserIcon className="size-4" />
                                             </i>
-                                            {/* <Link href={`/u/${author}`} scroll={true} onClick={(e) => {
-                                        e.stopPropagation();
-                                        setAuthorSelected(author);
-                                        localStorage.setItem("USER_CLICKED", "true");
-                                    }}> */}
                                             <span
                                                 className="ml-3"
                                                 onClick={(e) => {
@@ -605,7 +617,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             >
                                                 {"u/" + author}
                                             </span>
-                                            {/* </Link> */}
                                         </div>
 
                                     </div>

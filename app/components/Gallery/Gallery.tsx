@@ -509,7 +509,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         }}
                                     >
                                         <Image
-                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                            src={cleanUrl(imgSource)}
                                             alt={key + "/1"}
                                             width={preview?.images?.[0]?.source?.width}
                                             height={preview?.images?.[0]?.source?.height}

@@ -40,6 +40,10 @@ const reddits = [
         subreddit: "AbstractArt"
     },
     {
+        name: "Telephoto Landscapes",
+        subreddit: "telephotolandscapes"
+    },
+    {
         name: "Art Deco",
         subreddit: "ArtDeco"
     },

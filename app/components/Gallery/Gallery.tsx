@@ -507,7 +507,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             alt={key + "/1"}
                                             width={preview?.images?.[0]?.source?.width}
                                             height={preview?.images?.[0]?.source?.height}
-                                            loading='lazy'
+                                            priority={true}
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {
                                                 e.currentTarget.className = 'hidden'
@@ -560,7 +560,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         alt={key + "/2"}
                                                         width={preview?.images?.[0]?.source?.width}
                                                         height={preview?.images?.[0]?.source?.height}
-                                                        loading='lazy'
+                                                        priority={true}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
@@ -613,7 +613,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 alt={key + "/4"}
                                                 width={preview?.images?.[0]?.source?.width}
                                                 height={preview?.images?.[0]?.source?.height}
-                                                loading='lazy'
+                                                priority={true}
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'

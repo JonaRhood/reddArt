@@ -65,8 +65,10 @@ The primary objective of this project was to create a React-based web applicatio
   - Ensure all art details and community interactions redirect seamlessly to Reddit, maintaining the connection with the original platform.
 - [x] **Immersive Art Experience:** 
   - Design the app to provide an immersive browsing experience, allowing users to access and appreciate Reddit art content within seconds.
-- [ ] **Responsive Design for Mobile:** 
+- [x] **Responsive Design for Mobile:** 
   - Ensure the application is fully responsive, providing an optimal viewing experience on mobile devices.
+- [x] **Service Workere:** 
+  - Implemented a Service Worker to intercept and cache network requests, optimizing the loading speed and performance of the galleries.
 - [ ] **Performance and Efficiency Improvements:** 
   - Enhance the performance and efficiency of the application to ensure fast loading times and a smooth user experience.
 - [ ] **Night Mode Implementation:** 

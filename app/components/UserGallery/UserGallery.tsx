@@ -473,7 +473,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     className={styles.userFixedLayout}
                 >
                     <div
-                        className={`flex border-r-2 border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
+                        className={`flex sm:border-r-2 sm:border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                         onClick={(e) => {
                             handleClickBack(e)
                         }}

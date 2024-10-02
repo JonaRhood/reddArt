@@ -4,6 +4,7 @@ import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    disableStaticImages: true,
     unoptimized: false,
     remotePatterns: [
       {

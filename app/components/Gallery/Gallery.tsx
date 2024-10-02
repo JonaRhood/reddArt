@@ -444,7 +444,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     const breakpointColumnsObj = isMobileImageClicked
         ? { default: 1, 1600: 1, 1400: 1, 1000: 1 }
-        : { default: 5, 1600: 4, 1400: 3, 1000: 1 };
+        : { default: 5, 1600: 4, 1400: 3, 1000: 2 };
 
     return (
         // !isMounted ? "" : (

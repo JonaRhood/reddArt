@@ -511,9 +511,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={key + "/1"}
-                                            width={preview?.images?.[0]?.source?.width}
-                                            height={preview?.images?.[0]?.source?.height}
-                                            priority={true}
+                                            width={50}
+                                            height={30}
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {

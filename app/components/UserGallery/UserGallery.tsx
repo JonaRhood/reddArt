@@ -317,7 +317,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (isSafari()) {
                 setImageStyles({
                     top: '15%',
-                    left: `${rectBackground.left / 100 * 9}%`,
+                    left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
                     transition: 'all 0s ease',
@@ -347,7 +347,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 setTimeout(() => {
                     setImageStyles({
                         top: '15%',
-                        left: `${rectBackground.left / 100 * 9}%`,
+                        left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
                         width: `${rect.width * 1.8}px `,
                         height: `${rect.height}px`,
                         transition: 'all .3s ease',

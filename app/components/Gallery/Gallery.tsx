@@ -300,19 +300,21 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             setZoomImg(true);
             setZoomImgId(key);
             dispatch(setZoomedIn(true));
+
             const rect = e.target.getBoundingClientRect();
             document.body.style.overflow = "hidden";
             document.body.style.marginRight = "15px";
-
+            
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
-
+            
             const rectBackground = childDiv.getBoundingClientRect();
+            console.log(rectBackground);
 
             if (isSafari()) {
                 setImageStyles({
                     top: '10%',
-                    left: `${rectBackground.left / 10}%`,
+                    left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
                     width: `${rect.width * 1.8}px `,
                     height: `${rect.height}px`,
                     transition: 'all 0s ease',
@@ -342,7 +344,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 setTimeout(() => {
                     setImageStyles({
                         top: '10%',
-                        left: `${rectBackground.left / 10}%`,
+                        left: `${(rectBackground.right - rectBackground.left) - (rectBackground.right / 1.78)}px`,
                         width: `${rect.width * 1.8}px `,
                         height: `${rect.height}px`,
                         transition: 'all .3s ease',
@@ -380,6 +382,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
     };
     
+    // Effect to allow back and forward between Gallery and userGallery Modal
     const [previousHistoryLength, setPreviousHistoryLenght] = useState<number>(0);
     const [currentHistoryLength, setCurrentHistoryLenght] = useState<number>(0);
     

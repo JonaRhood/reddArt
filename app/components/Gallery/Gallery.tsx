@@ -180,7 +180,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -252,7 +252,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -493,9 +493,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 >
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
-                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url ;
-                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.width : preview?.images?.[0]?.resolutions[4]?.width ;
-                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.height : preview?.images?.[0]?.resolutions[4]?.height ;
+                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.url : preview?.images?.[0]?.resolutions[4]?.url ;
+                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.width : preview?.images?.[0]?.resolutions[4]?.width ;
+                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.height : preview?.images?.[0]?.resolutions[4]?.height ;
                         const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;

@@ -493,9 +493,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 >
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
-                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.url : preview?.images?.[0]?.resolutions[4]?.url ;
-                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.width : preview?.images?.[0]?.resolutions[4]?.width ;
-                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.height : preview?.images?.[0]?.resolutions[4]?.height ;
+                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.width : preview?.images?.[0]?.resolutions[4]?.width;
+                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.height : preview?.images?.[0]?.resolutions[4]?.height;
                         const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
@@ -580,13 +580,13 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             >
                                                 <div className={styles.divImgClicked}>
 
-                                                <NextImage
+                                                    <NextImage
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
                                                         height={height}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                        loading="lazy"
+                                                        loading="eager"
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
                                                             // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -605,7 +605,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         }}
                                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     />
-                                                   <NextImage
+                                                    <NextImage
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
@@ -638,7 +638,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 alt={alt}
                                                 width={width}
                                                 height={height}
-                                                loading="lazy"
+                                                loading="eager"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'

@@ -485,6 +485,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
                         const imgSource = preview?.images?.[0]?.source?.url;
+                        const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
 
@@ -514,10 +515,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     >
                                         <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                            alt={key + "/1"}
+                                            alt={alt}
                                             width={preview?.images?.[0]?.source?.width}
                                             height={preview?.images?.[0]?.source?.height}
-                                            priority={true}
+                                            loading="eager"
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {
@@ -568,7 +569,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
                                                     <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                        alt={key + "/2"}
+                                                        alt={alt}
                                                         width={preview?.images?.[0]?.source?.width}
                                                         height={preview?.images?.[0]?.source?.height}
                                                         priority={true}
@@ -593,7 +594,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     />
                                                     <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                        alt={key + "/3"}
+                                                        alt={alt}
                                                         width={preview?.images?.[0]?.source?.width}
                                                         height={preview?.images?.[0]?.source?.height}
                                                         loading="lazy"
@@ -621,7 +622,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             </div>
                                             <Image
                                                 src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                alt={key + "/4"}
+                                                alt={alt}
                                                 width={preview?.images?.[0]?.source?.width}
                                                 height={preview?.images?.[0]?.source?.height}
                                                 priority={true}

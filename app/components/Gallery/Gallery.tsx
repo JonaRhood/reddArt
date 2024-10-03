@@ -63,7 +63,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [imageIsError, setImageIsError] = useState(false);
-    const [loadedImages,setLoadedImages] = useState<string[]>([]);
     const [isMobileImageClicked, setIsMobileImageClicked] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
@@ -135,16 +134,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setModalIsOpen(false));
     }
 
-    
-  const loadImage = (src: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        const img = new Image(); // Esto debería funcionar si TypeScript está configurado correctamente.
-        img.src = src;
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
-    });
-};
-
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
     const fetchData = async (afterParam = '') => {
@@ -164,15 +153,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     if (after) {
                         fetchDataAfterBackground(after);
                     }
-
-                    for (const item of data) {
-                        const preview = item.data.preview;
-                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
-                        
-                        // Aquí puedes cargar la imagen secuencialmente
-                        await loadImage(imgSource);
-                    }
-
                 } else {
                     console.error("Data received is not an array:", data);
                 }
@@ -209,15 +189,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             } else {
                 console.error("Data received is not an array:", data);
             }
-
-            for (const item of data) {
-                const preview = item.data.preview;
-                const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
-                
-                // Aquí puedes cargar la imagen secuencialmente
-                await loadImage(imgSource);
-            }
-
         } catch (error: unknown) {
             if (error instanceof TypeError) {
             } else if (error instanceof Error) {
@@ -290,15 +261,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 } else {
                     console.error("Data received is not an array:", data);
                 }
-
-                for (const item of data) {
-                    const preview = item.data.preview;
-                    const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
-                    
-                    // Aquí puedes cargar la imagen secuencialmente
-                    await loadImage(imgSource);
-                }
-                
             } catch (error: unknown) {
                 if (error instanceof TypeError) {
                 } else if (error instanceof Error) {

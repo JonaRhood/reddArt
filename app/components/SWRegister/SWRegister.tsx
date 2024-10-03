@@ -13,6 +13,7 @@ export const SWRegister = () => {
           if (!navigator.serviceWorker.controller) {
             console.log('No SW controlling the page yet, reloading...');
             window.location.reload();
+            console.log("Redirect SW")
           } else {
             console.log('Service Worker is already controlling the page');
           }

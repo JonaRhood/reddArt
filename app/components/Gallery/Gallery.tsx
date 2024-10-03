@@ -84,6 +84,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const modalIsOpen = useAppSelector((state: RootState) => state.gallery.modalIsOpen);
     const after = useAppSelector((state: RootState) => state.gallery.after);
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
+    const IsNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
     const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
     const dispatch = useAppDispatch();
 
@@ -134,7 +135,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile ? 15 : 50, '', '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -174,7 +175,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile ? 15 : 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -205,6 +206,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         }
         if (isMobile) {
             window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
         }
         if (user) {
             router.push(`/u/${user}`);
@@ -244,7 +247,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, isMobile ? 15 : 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {

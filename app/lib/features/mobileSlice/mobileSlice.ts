@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface GalleryState {
   isMobile: boolean,
+  isNotDesktop: boolean,
   clickedNav: boolean,
   userClicked: boolean,
 }
 
 const initialState: GalleryState = {
   isMobile: false,
+  isNotDesktop: false,
   clickedNav: false,
   userClicked: false,
 };
@@ -20,6 +22,9 @@ export const mobileSlice = createSlice({
     setIsMobile(state, action: PayloadAction<boolean>) {
       state.isMobile = action.payload;
     },
+    setIsNotDesktop(state, action: PayloadAction<boolean>) {
+      state.isNotDesktop = action.payload;
+    },
     setClickedNav(state, action: PayloadAction<boolean>) {
       state.clickedNav = action.payload;
     },
@@ -30,7 +35,7 @@ export const mobileSlice = createSlice({
 });
 
 export const { 
-  setIsMobile, setClickedNav, setUserClicked
+  setIsMobile,  setIsNotDesktop, setClickedNav, setUserClicked
 } = mobileSlice.actions;
 export default mobileSlice.reducer;
 

@@ -4,7 +4,7 @@ import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    unoptimized: false,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

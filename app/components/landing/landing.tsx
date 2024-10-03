@@ -23,6 +23,7 @@ export default function Landing() {
                         alt="Macbook Pro mockup with landing page"
                         className={`${styles.landingImage} rounded-2xl`}
                         priority={true}
+                        loading="eager"
                         placeholder="blur"
                         fill
                         style={{

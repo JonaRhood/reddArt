@@ -5,7 +5,7 @@ import styles from '@/public/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
-import Image from "next/image";
+import NextImage from "next/image";
 import Masonry from "react-masonry-css";
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,7 +40,13 @@ interface RedditResponse {
                 url: string;
                 author: string;
                 id: string;
-                // Add other fields as necessary
+                preview: {
+                    images: Array<{
+                        resolutions: Array<{
+                            url: string
+                        }>;
+                    }>;
+                }
             }
         }>;
         after: string | null;
@@ -57,6 +63,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [zoomImgId, setZoomImgId] = useState<string | null>(null);
     const [backgroundOpacity, setBackgroundOpacity] = useState(false);
     const [imageIsError, setImageIsError] = useState(false);
+    const [loadedImages,setLoadedImages] = useState<string[]>([]);
     const [isMobileImageClicked, setIsMobileImageClicked] = useState(false);
     const [imageStyles, setImageStyles] = useState({
         top: '',
@@ -128,6 +135,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setModalIsOpen(false));
     }
 
+    
+  const loadImage = (src: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        const img = new Image(); // Esto debería funcionar si TypeScript está configurado correctamente.
+        img.src = src;
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    });
+};
 
     //Function to Fetch Data
     ////////////////////////////////////////////////////////////////////////////
@@ -148,6 +164,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     if (after) {
                         fetchDataAfterBackground(after);
                     }
+
+                    for (const item of data) {
+                        const preview = item.data.preview;
+                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                        
+                        // Aquí puedes cargar la imagen secuencialmente
+                        await loadImage(imgSource);
+                    }
+
                 } else {
                     console.error("Data received is not an array:", data);
                 }
@@ -184,6 +209,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             } else {
                 console.error("Data received is not an array:", data);
             }
+
+            for (const item of data) {
+                const preview = item.data.preview;
+                const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                
+                // Aquí puedes cargar la imagen secuencialmente
+                await loadImage(imgSource);
+            }
+
         } catch (error: unknown) {
             if (error instanceof TypeError) {
             } else if (error instanceof Error) {
@@ -256,6 +290,15 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 } else {
                     console.error("Data received is not an array:", data);
                 }
+
+                for (const item of data) {
+                    const preview = item.data.preview;
+                    const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                    
+                    // Aquí puedes cargar la imagen secuencialmente
+                    await loadImage(imgSource);
+                }
+                
             } catch (error: unknown) {
                 if (error instanceof TypeError) {
                 } else if (error instanceof Error) {
@@ -519,7 +562,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             }, 0);
                                         }}
                                     >
-                                        <Image
+                                        <NextImage
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={alt}
                                             width={width}
@@ -575,7 +618,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             >
                                                 <div className={styles.divImgClicked}>
 
-                                                    <Image
+                                                <NextImage
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
@@ -600,7 +643,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         }}
                                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     />
-                                                    <Image
+                                                   <NextImage
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
@@ -628,7 +671,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <Image
+                                            <NextImage
                                                 src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={alt}
                                                 width={width}

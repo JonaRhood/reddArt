@@ -161,7 +161,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -250,7 +250,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
+                const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {

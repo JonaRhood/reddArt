@@ -586,7 +586,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         width={width}
                                                         height={height}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
-                                                        loading="eager"
+                                                        priority={true}
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
                                                             // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -638,7 +638,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 alt={alt}
                                                 width={width}
                                                 height={height}
-                                                loading="eager"
+                                                priority={true}
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'

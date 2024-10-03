@@ -143,6 +143,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     dispatch(setPosts(data));
                     dispatch(setAfter(result.data.after));
                     const after = result.data.after;
+                    console.log(data);
                     if (after) {
                         fetchDataAfterBackground(after);
                     }
@@ -484,7 +485,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 >
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
-                        const imgSource = preview?.images?.[0]?.source?.url;
+                        const imgSource = preview?.images?.[0]?.resolutions[3]?.url;
+                        const width = preview?.images?.[0]?.resolutions[3]?.width;
+                        const height = preview?.images?.[0]?.resolutions[3]?.height;
                         const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;
@@ -516,8 +519,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={alt}
-                                            width={preview?.images?.[0]?.source?.width / 3}
-                                            height={preview?.images?.[0]?.source?.height / 3}
+                                            width={width}
+                                            height={height}
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {
@@ -572,9 +575,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
-                                                        width={preview?.images?.[0]?.source?.width}
-                                                        height={preview?.images?.[0]?.source?.height}
-                                                        priority={true}
+                                                        width={width}
+                                                        height={height}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
@@ -597,8 +599,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
-                                                        width={preview?.images?.[0]?.source?.width}
-                                                        height={preview?.images?.[0]?.source?.height}
+                                                        width={width}
+                                                        height={height}
                                                         loading="lazy"
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                         onError={(e) => {
@@ -625,9 +627,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             <Image
                                                 src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={alt}
-                                                width={preview?.images?.[0]?.source?.width}
-                                                height={preview?.images?.[0]?.source?.height}
-                                                priority={true}
+                                                width={width}
+                                                height={height}
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'

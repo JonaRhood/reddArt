@@ -520,6 +520,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             height={preview?.images?.[0]?.source?.height / 3}
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            quality={1}
                                             onError={(e) => {
                                                 e.currentTarget.className = 'hidden'
                                             }}
@@ -575,6 +576,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         width={preview?.images?.[0]?.source?.width}
                                                         height={preview?.images?.[0]?.source?.height}
                                                         priority={true}
+                                                        quality={1}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
@@ -600,6 +602,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         width={preview?.images?.[0]?.source?.width}
                                                         height={preview?.images?.[0]?.source?.height}
                                                         loading="lazy"
+                                                        quality={1}
                                                         className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
@@ -617,7 +620,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                             padding: '0px',
                                                             borderRadius: '20px',
                                                         }}
-                                                        quality={1}
                                                     // placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                                     />
                                                 </div>
@@ -628,6 +630,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 width={preview?.images?.[0]?.source?.width}
                                                 height={preview?.images?.[0]?.source?.height}
                                                 priority={true}
+                                                quality={1}
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'

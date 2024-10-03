@@ -79,6 +79,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const loading = useAppSelector((state: RootState) => state.userGallery.loading);
     const selectedSubReddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
+    const isNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
     const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
     const dispatch = useAppDispatch();
 
@@ -125,7 +126,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, '', '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 15 : 50, '', '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -160,7 +161,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, after, '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -249,7 +250,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchUserReddit(redditUser, isMobile ? 15 : 50, after, '') as RedditResponse;
+                const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -493,7 +494,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     >
                         {Array.isArray(posts) && posts.map((item, index) => {
                             const preview = item.data.preview;
-                            const imgSource = preview?.images?.[0]?.source?.url;
+                            const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.url : preview?.images?.[0]?.resolutions[5]?.url ;
+                            const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.width : preview?.images?.[0]?.resolutions[5]?.width ;
+                            const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.height : preview?.images?.[0]?.resolutions[5]?.height ;
+                            const alt = item.data.title
                             const key = item.data.id + index
                             const author = item.data.author;
 
@@ -522,19 +526,21 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                             }}
                                         >
                                            <Image
-                                            src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                            alt={key + "/1"}
-                                            width={preview?.images?.[0]?.source?.width}
-                                            height={preview?.images?.[0]?.source?.height}
-                                            priority={true}
-                                            sizes="(max-width: 640px) 100vw"
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                            onError={(e) => {
-                                                e.currentTarget.className = 'hidden'
-                                            }}
-                                            style={{
-                                                borderRadius: "20px",
-                                            }}
+                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                             alt={alt}
+                                             width={width}
+                                             height={height}
+                                             sizes="(max-width: 640px) 100vw"
+                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                             onError={(e) => {
+                                                 e.currentTarget.className = 'hidden'
+                                             }}
+                                             style={{
+                                                 borderRadius: "20px",
+                                                 width: "100%",
+                                                 height: "auto",
+                                                 objectFit: "cover",
+                                             }}
                                             // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                             {isMobileImageClicked ? (
@@ -575,9 +581,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
                                                         <Image
                                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                            alt={key + "/2"}
-                                                            width={preview?.images?.[0]?.source?.width}
-                                                            height={preview?.images?.[0]?.source?.height}
+                                                            alt={alt}
+                                                            width={width}
+                                                            height={height}
                                                             priority={true}
                                                             className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
                                                             onError={(e) => {
@@ -600,9 +606,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                         />
                                                         <Image
                                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                            alt={key + "/3"}
-                                                            width={preview?.images?.[0]?.source?.width}
-                                                            height={preview?.images?.[0]?.source?.height}
+                                                            alt={alt}
+                                                            width={width}
+                                                            height={height}
                                                             loading="lazy"
                                                             className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClickedBackground : styles.imageUnClicked}`}
                                                             onError={(e) => {
@@ -628,9 +634,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 </div>
                                                 <Image
                                                     src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                                    alt={key + "/4"}
-                                                    width={preview?.images?.[0]?.source?.width}
-                                                    height={preview?.images?.[0]?.source?.height}
+                                                    alt={alt}
+                                                    width={width}
+                                                    height={height}
                                                     priority={true}
                                                     placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     onError={(e) => {

@@ -84,7 +84,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const modalIsOpen = useAppSelector((state: RootState) => state.gallery.modalIsOpen);
     const after = useAppSelector((state: RootState) => state.gallery.after);
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
-    const IsNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
+    const isNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
     const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
     const dispatch = useAppDispatch();
 
@@ -135,7 +135,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         dispatch(setLoading(true));
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, '', '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 15 : 50, '', '') as RedditResponse;
 
             if (result && result.data) {
                 const data = result.data.children;
@@ -175,7 +175,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -247,7 +247,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, isMobile || IsNotDesktop ? 15 : 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 15 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -488,9 +488,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 >
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
-                        const imgSource = preview?.images?.[0]?.resolutions[3]?.url;
-                        const width = preview?.images?.[0]?.resolutions[3]?.width;
-                        const height = preview?.images?.[0]?.resolutions[3]?.height;
+                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.url : preview?.images?.[0]?.resolutions[5]?.url ;
+                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.width : preview?.images?.[0]?.resolutions[5]?.width ;
+                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.height : preview?.images?.[0]?.resolutions[5]?.height ;
                         const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;

@@ -516,9 +516,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={alt}
-                                            width={preview?.images?.[0]?.source?.width}
-                                            height={preview?.images?.[0]?.source?.height}
-                                            loading="eager"
+                                            width={preview?.images?.[0]?.source?.width / 3}
+                                            height={preview?.images?.[0]?.source?.height / 3}
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {
@@ -526,6 +525,9 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             }}
                                             style={{
                                                 borderRadius: "20px",
+                                                width: "100%",
+                                                height: "auto",
+                                                objectFit: "cover",
                                             }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />

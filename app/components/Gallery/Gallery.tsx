@@ -5,7 +5,7 @@ import styles from '@/public/styles/Gallery.module.css';
 
 import { useState, useEffect, useRef } from "react";
 import { fetchSubReddit } from "@/app/lib/features/artLibrary/fetchData";
-import NextImage from "next/image";
+import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
@@ -524,7 +524,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             }, 0);
                                         }}
                                     >
-                                        <NextImage
+                                        <Image
                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                             alt={alt}
                                             width={width}
@@ -580,7 +580,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             >
                                                 <div className={styles.divImgClicked}>
 
-                                                    <NextImage
+                                                    <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
@@ -605,7 +605,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         }}
                                                         placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     />
-                                                    <NextImage
+                                                    <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                         alt={alt}
                                                         width={width}
@@ -633,7 +633,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <NextImage
+                                            <Image
                                                 src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
                                                 alt={alt}
                                                 width={width}

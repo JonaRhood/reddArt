@@ -431,14 +431,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
-            if (!modalIsOpen && currentWidth <= 640) {
+            if (!modalIsOpen && currentWidth <= 640 || !modalIsOpen && isNotDesktop) {
                 // console.log("MODAL CERRADO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(false));
-            } else if (modalIsOpen && currentWidth <= 640) {
+            } else if (modalIsOpen && currentWidth <= 640 || modalIsOpen && isNotDesktop) {
                 // console.log("MODAL ABIERTO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(true));
+                if (modalIsOpen && currentWidth > 640) {
+                    dispatch(setUserClicked(false));
+                }
             } else {
                 // console.log("DEMÁS");
                 dispatch(setIsMobile(false));
@@ -456,7 +459,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);
 
     const breakpointColumnsObj = isMobileImageClicked
-        ? { default: 1, 1600: 1, 1400: 1, 1000: 1 }
+        ? { default: 1, 1600: 1, 1400: 2, 1000: 1 }
         : { default: 5, 1600: 4, 1400: 3, 1000: 2 };
 
     return (
@@ -520,7 +523,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 imageRefs.current[index]?.scrollIntoView({
                                                     behavior: 'instant',
                                                     inline: 'center',
-                                                    block: `${isMobile ? 'center' : 'start'}`,
+                                                    block: 'center'
                                                 });
                                             }, 0);
                                         }}

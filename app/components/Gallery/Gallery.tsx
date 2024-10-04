@@ -529,6 +529,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             alt={alt}
                                             width={width}
                                             height={height}
+                                            priority={true}
                                             sizes="(max-width: 640px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {

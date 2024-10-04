@@ -431,11 +431,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
-            if (!modalIsOpen && currentWidth <= 640 || isNotDesktop) {
+            if (!modalIsOpen && currentWidth <= 640) {
                 // console.log("MODAL CERRADO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(false));
-            } else if (modalIsOpen && currentWidth <= 640 || isNotDesktop) {
+            } else if (modalIsOpen && currentWidth <= 640) {
                 // console.log("MODAL ABIERTO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(true));

@@ -543,7 +543,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             }}
                                             style={{
                                                 borderRadius: "20px",
-                                                width: "100vw",
+                                                // width: "100vw",
                                                 height: "auto",
                                                 objectFit: "cover",
                                             }}

@@ -532,14 +532,14 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 width={width}
                                                 height={height}
                                                 priority={true}
-                                                sizes="(max-width: 640px) 100vw"
+                                                sizes="(max-width: 12800px) 100vw"
                                                 placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'
                                                 }}
                                                 style={{
                                                     borderRadius: "20px",
-                                                    width: "100%",
+                                                    // width: "100%",
                                                     height: "auto",
                                                     objectFit: "cover",
                                                 }}

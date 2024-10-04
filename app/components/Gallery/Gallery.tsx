@@ -315,8 +315,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             dispatch(setZoomedIn(true));
 
             const rect = e.target.getBoundingClientRect();
-            document.body.style.overflow = "hidden";
-            document.body.style.marginRight = "15px";
+            isNotDesktop ? null : document.body.style.overflow = "hidden";
+            isNotDesktop ? null : document.body.style.marginRight = "15px";
 
             const target = e.currentTarget;
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
@@ -365,8 +365,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 }, 100);
             }
         } else {
-            document.body.style.overflow = "visible";
-            document.body.style.marginRight = "";
+            isNotDesktop ? null : document.body.style.overflow = "visible";
+            isNotDesktop ? null : document.body.style.marginRight = "";
             if (isSafari() || isFirefox()) {
                 setImageStyles({
                     top: imageStylesMemory.top,

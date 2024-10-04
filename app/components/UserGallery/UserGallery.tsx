@@ -8,7 +8,7 @@ import { fetchUserIcon } from '@/app/lib/features/artLibrary/fetchData';
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { useRouter } from "next/navigation";
-import { shimmer, toBase64 } from "@/app/lib/utils/utils";
+import { shimmer, darkShimmer, toBase64 } from "@/app/lib/utils/utils";
 import { ChevronUpDownIcon, UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import { grayShimmer } from '@/app/lib/utils/utils';
@@ -81,6 +81,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
     const isNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
     const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
+    const isDarkTheme= useAppSelector((state: RootState) => state.theme.isDarkTheme);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -444,10 +445,13 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
     return (
         !isMounted ? "" : (
-            <div className='flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4 sm:pt-16' >
+            <div className={`
+            flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 h-screen p-4 sm:pt-16
+            ${isDarkTheme ? "bg-dark-background text-white" : "bg-light-background"}
+            `} >
                 <div>
                     <LoadingBar
-                        color="#00BFFF"
+                        color={`${isDarkTheme ? "#a855f7" : "#00BFFF"}`}
                         ref={loadingBarRef}
                         height={4}
                         className={styles.loadingBar}
@@ -457,10 +461,13 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                 </div>
 
                 <div
-                    className={styles.userFixedLayout}
+                    className={isDarkTheme ? styles.userFixedLayoutDark : styles.userFixedLayout}
                 >
                     <div
-                        className={`flex items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
+                        className={`
+                            flex items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}
+                            ${isDarkTheme ? "hover:bg-purple-500/50" : "hover:bg-light-primary/20"}
+                        `}
                         onClick={(e) => {
                             handleClickBack(e)
                         }}
@@ -474,7 +481,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                             width={60}
                             height={60}
                             priority={true}
-                            className='border-2 border-light-primary/70'
+                            className={isDarkTheme ? styles.iconUserBorderDark : styles.iconUserBorder}
                             style={{
                                 borderRadius: "50%",
                                 marginLeft: "5px",
@@ -533,7 +540,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                 height={height}
                                                 priority={true}
                                                 sizes="(max-width: 12800px) 100vw"
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                placeholder={isDarkTheme 
+                                                    ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                    : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                                }
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'
                                                 }}
@@ -587,7 +597,11 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                             width={width}
                                                             height={height}
                                                             priority={true}
-                                                            className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                            className={`${styles.imageUnClicked} ${zoomImg ? isDarkTheme ? styles.imageClickedDark : styles.imageClicked : styles.imageUnClicked}`}
+                                                            placeholder={isDarkTheme 
+                                                                ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                                : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                                            }
                                                             onError={(e) => {
                                                                 e.currentTarget.className = 'hidden'
                                                                 // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -604,7 +618,6 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                                 padding: '0px',
                                                                 borderRadius: '20px',
                                                             }}
-                                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                         />
                                                         <Image
                                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
@@ -640,7 +653,10 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                                     width={width}
                                                     height={height}
                                                     priority={true}
-                                                    placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                    placeholder={isDarkTheme 
+                                                        ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                        : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                                    }
                                                     onError={(e) => {
                                                         e.currentTarget.className = 'hidden'
                                                     }}

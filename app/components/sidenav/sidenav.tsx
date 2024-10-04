@@ -18,6 +18,7 @@ export default function Sidenav() {
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
     const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
     const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
+    const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
     const dispatch = useAppDispatch();
 
     const handleLinkClick = (e: any) => {
@@ -30,7 +31,8 @@ export default function Sidenav() {
             <div>
                 <div className={`
                     ${styles.title}
-                    flex sm:hidden w-full sm:w-80 items-center bg-light-surface p-2 h-14 fixed top-0 left-0 right-0 z-50 shadow-sm
+                    flex sm:hidden w-full sm:w-80 items-center p-2 h-14 fixed top-0 left-0 right-0 z-50 shadow-sm
+                    ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                     `}>
                     <Link
                         href={`/`}
@@ -39,9 +41,9 @@ export default function Sidenav() {
                             dispatch(setClickedNav(false));
                         })}>
                         <div className='flex items-center'>
-                            <CustomIcon className="w-12 h-12 text-[#ff4500]" />
+                            <CustomIcon className={`w-12 h-12 transition-colors duration-500 ${isDarkTheme ? "text-white" : "text-[#ff4500]"}`} />
                             <h1 className={`${styles.hache}text-center font-bold text-3xl`}>
-                                <span className="text-[#ff4500]">redd</span>
+                                <span className={`transition-colors duration-500 ${isDarkTheme ? "text-white" : "text-[#ff4500]"}`}>redd</span>
                                 <span className={styles.gradientText}>Art</span>
                             </h1>
                         </div>
@@ -56,25 +58,29 @@ export default function Sidenav() {
             >
                 <div className={`
                     ${styles.title}
-                    hidden sm:flex w-full sm:w-80 items-center justify-center bg-light-surface p-2 h-24 fixed top-0 left-0 right-0 z-50
+                    hidden sm:flex w-full sm:w-80 items-center justify-center p-2 h-44 top-0 left-0 right-0 z-50
+                    ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                     `}>
                     <Link href={`/`} onClick={((e) => handleLinkClick(e))}>
                         <div className='flex items-center'>
-                            <CustomIcon className="w-12 h-12 text-[#ff4500]" />
+                            <CustomIcon className={`w-12 h-12 transition-colors duration-500 ${isDarkTheme ? "text-white" : "text-[#ff4500]"}`} />
                             <h1 className={`${styles.hache} text-center font-bold text-3xl`}>
-                                <span className="text-[#ff4500]">redd</span>
+                                <span className={`transition-colors duration-500 ${isDarkTheme ? "text-white" : "text-[#ff4500]"}`}>redd</span>
                                 <span className={styles.gradientText}>Art</span>
                             </h1>
                         </div>
                     </Link>
                 </div>
-                <div className="pt-0 pb-10 sm:pb-0 sm:pt-24 overflow-hidden overflow-scroll overflow-x-hidden">
+                <div className={`pt-0 pb-10 sm:pb-0 overflow-hidden overflow-scroll overflow-x-hidden ${isDarkTheme ? styles.darkScroll : styles.scroll}`}>
                     <Suspense fallback={null}>
                         <ArtReddits />
                     </Suspense>
                 </div>
                 <div
-                    className='flex sm:hidden h-4 w-full bg-gray-500 bg-opacity-5 justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center'
+                    className={`
+                        flex sm:hidden h-4 w-full justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center
+                        ${isDarkTheme ? styles.mobileDownDark : styles.mobileDown}
+                    `}
                     onClick={(e) => dispatch(setClickedNav(true))}
                 >
                     <div className={`flex`}>

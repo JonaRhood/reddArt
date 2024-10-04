@@ -1,0 +1,13 @@
+.border {
+    border-radius: 9999px; 
+    background: linear-gradient(70deg, #0f31b8, #00ffe1);
+    background-clip: border-box;
+    transition: all ease .5s
+}
+
+.darkBorder {
+    border-radius: 9999px; 
+    background: linear-gradient(70deg, #c33cb7, #0051ff);
+    background-clip: border-box;
+    transition: all ease .5s
+}

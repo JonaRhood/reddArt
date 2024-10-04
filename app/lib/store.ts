@@ -3,10 +3,11 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { gallerySlice } from "./features/gallery/gallerySlice";
 import { userGallerySlice } from "./features/userGallery/userGallerySlice";
 import { mobileSlice } from "./features/mobileSlice/mobileSlice";
+import { themeSlice } from "./features/theme/themeSlice";
 
 // `combineSlices` automáticamente combina los reductores usando
 // sus `reducerPath`, por lo que ya no necesitamos llamar a `combineReducers`.
-const rootReducer = combineSlices( gallerySlice, userGallerySlice, mobileSlice);
+const rootReducer = combineSlices( gallerySlice, userGallerySlice, mobileSlice, themeSlice);
 
 // Inferimos el tipo `RootState` a partir del `rootReducer`
 export type RootState = ReturnType<typeof rootReducer>;

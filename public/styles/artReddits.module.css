@@ -6,8 +6,10 @@
     justify-content: space-around;
     width: 100%;
     background-color: var(--light-surface);
-    padding: 0rem; /* equivalent to p-3 */
-    height: 6rem; /* equivalent to h-24 */
+    padding: 0rem;
+    /* equivalent to p-3 */
+    height: 6rem;
+    /* equivalent to h-24 */
     overflow: hidden;
     border-bottom: 1px rgb(236, 236, 236) solid;
     /* transition: background-color 0.3s, background-opacity 0.3s; */
@@ -19,10 +21,53 @@
 }
 
 .selectedReddit {
-    background-color: rgba(0, 191, 255, 0.2);
+    background-color: rgba(0, 191, 255, 0.2) !important;
+    transition: all ease .3s;
+}
+
+.selectedRedditDark {
+    background-color: rgb(43, 43, 43) !important;
+    transition: all ease .3s;
 }
 
 .selectedReddit:hover {
     background-color: rgba(0, 191, 255, 0.2);
 }
 
+.darkContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    background-color: var(--dark-surface);
+    padding: 0rem;
+    /* equivalent to p-3 */
+    height: 6rem;
+    /* equivalent to h-24 */
+    overflow: hidden;
+    border-bottom: 1px rgb(49, 49, 49) solid;
+    color: white;
+    /* transition: background-color 0.3s, background-opacity 0.3s; */
+}
+
+.darkContainer:hover {
+    background-color: rgb(39, 39, 39);
+    cursor: pointer;
+}
+
+.icon {
+    border-radius: 9999px; 
+    background: linear-gradient(70deg, #0f31b8, #00ffe1);
+    background-clip: border-box;
+    padding: 2.5px;
+    transition: all ease .5s
+}
+
+.iconDark {
+    border-radius: 9999px; 
+    background: linear-gradient(70deg, #c33cb7, #0051ff);
+    background-clip: border-box;
+    padding: 2.5px;
+    transition: all ease .5s
+}

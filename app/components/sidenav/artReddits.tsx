@@ -37,6 +37,7 @@ export default function ArtReddits() {
 
     const selectedSubreddit = useAppSelector((state: RootState) => state.gallery.selectedSubReddit);
     const pastSubReddit = useAppSelector((state: RootState) => state.gallery.pastSubReddit);
+    const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
 
     const router = useRouter();
 
@@ -103,7 +104,7 @@ export default function ArtReddits() {
             dispatch(stopGalleryLoading());
             dispatch(setPastSubReddit(currentSubreddit));
             dispatch(setSelectedSubReddit(subReddit));
-    
+
             document.body.style.overflow = "visible";
             document.body.style.marginRight = "";
         }
@@ -124,10 +125,11 @@ export default function ArtReddits() {
                         <div
                             key={subReddit}
                             className={`
-                            ${styles.container}
-                            ${selectedSubreddit === subReddit ? styles.selectedReddit : ""}
+                            ${isDarkTheme ? styles.darkContainer : styles.container}
+                            ${selectedSubreddit === subReddit ? isDarkTheme ? styles.selectedRedditDark : styles.selectedReddit : ""}
                             ${selectedSubreddit === subReddit ? "sm:pointer-events-none cursor-pointer" : ""}
                             ${areLinksDisabled && selectedSubreddit !== subReddit ? "pointer-events-none transition duration-500 ease-in-out opacity-70" : ""}
+                            ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                             
                         `}
                         >
@@ -136,14 +138,15 @@ export default function ArtReddits() {
                             }} scroll={false}>
                                 {/* Blue pseudo-element */}
                                 <div className={`
-                                absolute top-0 left-0 w-1.5 h-full bg-blue-500 transition-transform ease duration-300 -translate-x-2
+                                absolute top-0 left-0 w-1.5 h-full  transition-transform ease duration-300 -translate-x-2
+                                ${isDarkTheme ? "bg-purple-500" : "bg-blue-500"}
                                 ${selectedSubreddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
 
                                 <div className='relative flex-column items-center p-3'>
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}
-                                            className="rounded-full border border-2 border-light-primary"
+                                            className={isDarkTheme ? styles.iconDark : styles.icon}
                                         />
                                         <div className="flex-inline ml-3">
                                             <h4>{subReddit}</h4>

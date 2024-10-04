@@ -7,6 +7,7 @@ import "/public/styles/globals.css";
 import { IBM_Plex_Sans } from 'next/font/google';
 import { SWRegister } from "./components/SWRegister/SWRegister";
 import MobileChecker from "./components/mobileChecker/MobileChecker";
+import DarkTheme from "./components/DarkTheme/DarkTheme";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
 import { Suspense } from "react";
@@ -33,16 +34,15 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <Head>
-          <link rel="stylesheet" href="/app/styles/global.css" />
-          <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
-          <link rel="stylesheet" href="/app/styles/artReddits.module.css" />
-          <link rel="stylesheet" href="/app/styles/Gallery.module.css" />
-          <link rel="stylesheet" href="/app/styles/sidenav.module.css" />
-          <link rel="stylesheet" href="/app/styles/layout.module.css" />
+          <link rel="stylesheet" href="/public/styles/global.css" />
+          <link rel="stylesheet" href="/public/styles/artReddits.module.css" />
+          <link rel="stylesheet" href="/public/styles/artReddits.module.css" />
+          <link rel="stylesheet" href="/public/styles/Gallery.module.css" />
+          <link rel="stylesheet" href="/public/styles/sidenav.module.css" />
+          <link rel="stylesheet" href="/public/styles/layout.module.css" />
         </Head>
         <body className={`
-
-            bg-light-background text-light-text
+            text-light-text bg-light-background
         `}>
           <Suspense fallback={null}>
             <SWRegister />
@@ -54,9 +54,10 @@ export default function RootLayout({
             <MobileChecker />
           </Suspense>
           <section className="flex">
-            <div className="fixed bg-light-surface h-screen z-50">
+            <div className="fixed h-screen z-50">
               <Suspense fallback={null}>
                 <Sidenav />
+                <DarkTheme />
               </Suspense>
             </div>
             <div id="root">

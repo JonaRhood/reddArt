@@ -9,7 +9,7 @@ import Image from "next/image";
 import Masonry from "react-masonry-css";
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
-import { shimmer, grayShimmer, toBase64 } from "@/app/lib/utils/utils";
+import { shimmer, grayShimmer, darkShimmer, toBase64 } from "@/app/lib/utils/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { cleanUrl } from "@/app/lib/utils/utils";
 import Link from 'next/link';
@@ -92,6 +92,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const isMobile = useAppSelector((state: RootState) => state.mobile.isMobile);
     const isNotDesktop = useAppSelector((state: RootState) => state.mobile.isNotDesktop);
     const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
+    const isDarkTheme= useAppSelector((state: RootState) => state.theme.isDarkTheme);
     const dispatch = useAppDispatch();
 
     const sentinelRef = useRef(null);
@@ -466,10 +467,14 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
     return (
         // !isMounted ? "" : (
-        <div className={`flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 bg-light-background h-screen p-4`}>
+        <div className={`
+        flex-1 ml-0 sm:ml-80 mt-14 sm:mt-0 h-screen p-4
+        ${isDarkTheme ? "text-white" : ""}
+        ${isDarkTheme ? styles.scrollDark : styles.scroll}
+        `}>
             <div>
                 <LoadingBar
-                    color="#00BFFF"
+                    color={`${isDarkTheme ? "#a855f7" : "#00BFFF"}`}
                     ref={loadingBarRef}
                     height={4}
                     className={styles.loadingBar}
@@ -482,7 +487,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
                 onRequestClose={closeModal}
-                className={styles.modal}
+                className={isDarkTheme ? styles.modalDark : styles.modal}
                 shouldCloseOnEsc={true}
                 preventScroll={true}
             >
@@ -537,7 +542,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             height={height}
                                             priority={true}
                                             sizes="(max-width: 12800px) 100vw"
-                                            placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                            placeholder={isDarkTheme 
+                                                ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                            }
                                             onError={(e) => {
                                                 e.currentTarget.className = 'hidden'
                                             }}
@@ -592,8 +600,12 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                         alt={alt}
                                                         width={width}
                                                         height={height}
-                                                        className={`${styles.imageUnClicked} ${zoomImg ? styles.imageClicked : styles.imageUnClicked}`}
+                                                        className={`${styles.imageUnClicked} ${zoomImg ? isDarkTheme ? styles.imageClickedDark : styles.imageClicked : styles.imageUnClicked}`}
                                                         priority={true}
+                                                        placeholder={isDarkTheme 
+                                                            ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                            : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                                        }
                                                         onError={(e) => {
                                                             e.currentTarget.className = 'hidden'
                                                             // e.currentTarget.src = '/path/to/placeholder.jpg' // line to replace the src.
@@ -610,7 +622,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                             padding: '0px',
                                                             borderRadius: '20px',
                                                         }}
-                                                        placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                                     />
                                                     <Image
                                                         src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
@@ -646,7 +657,10 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                 width={width}
                                                 height={height}
                                                 priority={true}
-                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                placeholder={isDarkTheme 
+                                                    ? `data:image/svg+xml;base64,${toBase64(darkShimmer(700, 475))}` 
+                                                    : `data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`
+                                                }
                                                 onError={(e) => {
                                                     e.currentTarget.className = 'hidden'
                                                 }}

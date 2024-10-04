@@ -209,7 +209,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (isSafari() || isFirefox()) {
             document.body.classList.add('isSafari');
         }
-        if (isMobile) {
+        if (isMobile || isNotDesktop) {
             window.scrollTo(0, 0);
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
@@ -406,7 +406,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             console.log(previousHistoryLength, currentHistoryLength);
 
             if (previousHistoryLength < currentHistoryLength) {
-                if (currentWidth <= 640) {
+                if (currentWidth <= 640 || isNotDesktop) {
                     dispatch(setIsMobile(true));
                 }
                 // dispatch(setUserClicked(true));
@@ -431,11 +431,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
-            if (!modalIsOpen && currentWidth <= 640) {
+            if (!modalIsOpen && currentWidth <= 640 || isNotDesktop) {
                 // console.log("MODAL CERRADO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(false));
-            } else if (modalIsOpen && currentWidth <= 640) {
+            } else if (modalIsOpen && currentWidth <= 640 || isNotDesktop) {
                 // console.log("MODAL ABIERTO", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(true));
@@ -519,7 +519,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             setTimeout(() => {
                                                 imageRefs.current[index]?.scrollIntoView({
                                                     behavior: 'instant',
-                                                    block: 'center',
+                                                    inline: 'center',
+                                                    block: `${isMobile ? 'center' : 'start'}`,
                                                 });
                                             }, 0);
                                         }}

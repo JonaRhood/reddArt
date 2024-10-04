@@ -507,7 +507,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
 
                             return (
                                 <div key={key}>
-                                    {isMobile ? (
+                                    {isMobile || isNotDesktop ? (
                                         <div
                                             className={`${styles.imageContainer}`}
                                             ref={(el) => (imageRefs.current[index] = el)}

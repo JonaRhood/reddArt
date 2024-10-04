@@ -456,8 +456,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);
 
     const breakpointColumnsObj = isMobileImageClicked
-        ? { default: 1, 1600: 1, 1400: 1, 1200: 1 }
-        : { default: 5, 1600: 4, 1400: 3, 1200: 2 };
+        ? { default: 1, 1600: 1, 1400: 1, 1000: 1 }
+        : { default: 5, 1600: 4, 1400: 3, 1000: 2 };
 
     return (
         // !isMounted ? "" : (

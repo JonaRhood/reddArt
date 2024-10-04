@@ -456,8 +456,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
     const [clickedImageIndex, setClickedImageIndex] = useState<number | null>(null);
 
     const breakpointColumnsObj = isMobileImageClicked
-        ? { default: 1, 1600: 1, 1400: 1, 1000: 1 }
-        : { default: 5, 1600: 4, 1400: 3, 1000: 2 };
+        ? { default: 1, 1600: 1, 1400: 1, 1200: 1 }
+        : { default: 5, 1600: 4, 1400: 3, 1200: 2 };
 
     return (
         // !isMounted ? "" : (
@@ -494,8 +494,8 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
                         const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
-                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[1]?.width : preview?.images?.[0]?.resolutions[4]?.width;
-                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[1]?.height : preview?.images?.[0]?.resolutions[4]?.height;
+                        const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.width : preview?.images?.[0]?.resolutions[4]?.width;
+                        const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.height : preview?.images?.[0]?.resolutions[4]?.height;
                         const alt = item.data.title
                         const key = item.data.id + index
                         const author = item.data.author === "[deleted]" ? "deleted" : item.data.author;

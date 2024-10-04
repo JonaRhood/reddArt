@@ -180,7 +180,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 10 : 50, after, '') as RedditResponse;
+            const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 7 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -252,7 +252,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 10 : 50, after, '') as RedditResponse;
+                const result = await fetchSubReddit(subReddit, isMobile || isNotDesktop ? 7 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -506,7 +506,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
                         return (
                             <div key={key}>
-                                {isMobile ? (
+                                {isMobile || isNotDesktop  ? (
                                     <div
                                         className={`${styles.imageContainer}`}
                                         ref={(el) => (imageRefs.current[index] = el)}

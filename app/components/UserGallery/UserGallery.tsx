@@ -460,7 +460,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     className={styles.userFixedLayout}
                 >
                     <div
-                        className={`flex sm:border-r-2 sm:border-gray-200 items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
+                        className={`flex items-center justify-center hover:bg-light-primary/20 hover:cursor-pointer ${styles.divIconBack}`}
                         onClick={(e) => {
                             handleClickBack(e)
                         }}
@@ -477,7 +477,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                             className='border-2 border-light-primary/70'
                             style={{
                                 borderRadius: "50%",
-                                marginLeft: "2%",
+                                marginLeft: "5px",
                                 width: "40px",
                                 height: "40px",
                             }}

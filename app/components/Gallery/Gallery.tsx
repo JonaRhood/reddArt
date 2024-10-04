@@ -209,11 +209,13 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         if (isSafari() || isFirefox()) {
             document.body.classList.add('isSafari');
         }
-        if (isMobile || isNotDesktop) {
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }
+        setTimeout(() => {
+            if (isMobile || isNotDesktop) {
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        }, 50)
         if (user) {
             router.push(`/u/${user}`);
         }

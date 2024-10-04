@@ -84,7 +84,7 @@ export default function Sidenav() {
                     onClick={(e) => dispatch(setClickedNav(true))}
                 >
                     <div className={`flex`}>
-                        <ChevronDownIcon className="size-4" />
+                        <ChevronDownIcon className={`size-4 ${isDarkTheme ? "text-white" : ""}`} />
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@ export default function Landing() {
                 <div className="flex ml-0 sm:ml-80 w-full justify-center overflow-hidden mt-16 sm:mt-0 p-2 sm:p-8">
                     <div className={`
                         flex relative w-full bg-gray-300 rounded-3xl border-8 shadow-sm sm:shadow-xl ${styles.landingBackgroundBlur}
-                        ${isDarkTheme ? "border-gray-700 transition-colors duration-1000" : "border-white transition-colors duration-1000"}
+                        ${isDarkTheme ? "border-gray-700 transition-colors duration-500" : "border-white transition-colors duration-500"}
                         `}>
 
                         <Image

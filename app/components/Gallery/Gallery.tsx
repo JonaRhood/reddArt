@@ -493,7 +493,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                 >
                     {Array.isArray(posts) && posts.map((item, index) => {
                         const preview = item.data.preview;
-                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                        const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.url : preview?.images?.[0]?.resolutions[4]?.url;
                         const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.width : preview?.images?.[0]?.resolutions[4]?.width;
                         const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[2]?.height : preview?.images?.[0]?.resolutions[4]?.height;
                         const alt = item.data.title

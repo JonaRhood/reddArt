@@ -506,7 +506,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
                         return (
                             <div key={key}>
-                                {isMobile || isNotDesktop  ? (
+                                {isMobile || isNotDesktop ? (
                                     <div
                                         className={`${styles.imageContainer}`}
                                         ref={(el) => (imageRefs.current[index] = el)}
@@ -531,13 +531,16 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                             width={width}
                                             height={height}
                                             priority={true}
-                                            sizes="(max-width: 640px) 100vw"
+                                            sizes="(max-width: 12800px) 100vw"
                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
                                             onError={(e) => {
                                                 e.currentTarget.className = 'hidden'
                                             }}
                                             style={{
                                                 borderRadius: "20px",
+                                                // width: "100%",
+                                                height: "auto",
+                                                objectFit: "cover",
                                             }}
                                         // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                         />

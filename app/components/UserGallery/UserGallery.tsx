@@ -161,7 +161,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         if (!after) return;
 
         try {
-            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
+            const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 7 : 50, after, '') as RedditResponse;
             const data = result.data.children;
 
             if (Array.isArray(data)) {
@@ -250,7 +250,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
             if (!after) return;
 
             try {
-                const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 5 : 50, after, '') as RedditResponse;
+                const result = await fetchUserReddit(redditUser, isMobile || isNotDesktop ? 7 : 50, after, '') as RedditResponse;
                 const data = result.data.children;
 
                 if (Array.isArray(data)) {
@@ -494,9 +494,9 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                     >
                         {Array.isArray(posts) && posts.map((item, index) => {
                             const preview = item.data.preview;
-                            const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url ;
-                            const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.width : preview?.images?.[0]?.resolutions[4]?.width ;
-                            const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.height : preview?.images?.[0]?.resolutions[4]?.height ;
+                            const imgSource = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.url : preview?.images?.[0]?.resolutions[4]?.url;
+                            const width = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.width : preview?.images?.[0]?.resolutions[4]?.width;
+                            const height = isMobile || isNotDesktop ? preview?.images?.[0]?.resolutions[3]?.height : preview?.images?.[0]?.resolutions[4]?.height;
                             const alt = item.data.title
                             const key = item.data.id + index
                             const author = item.data.author;
@@ -513,34 +513,36 @@ export default function UserGallery({ params }: { params: { user: string } }) {
                                             ref={(el) => (imageRefs.current[index] = el)}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setIsMobileImageClicked(prev => !prev); 
-                                                setClickedImageIndex(index); 
+                                                setIsMobileImageClicked(prev => !prev);
+                                                setClickedImageIndex(index);
 
 
                                                 setTimeout(() => {
                                                     imageRefs.current[index]?.scrollIntoView({
                                                         behavior: 'instant',
-                                                        block: 'center',
+                                                        inline: 'center',
+                                                        block: `${isNotDesktop ? 'center' : 'start'}`,
                                                     });
                                                 }, 0);
                                             }}
                                         >
-                                           <Image
-                                             src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
-                                             alt={alt}
-                                             width={width}
-                                             height={height}
-                                             sizes="(max-width: 640px) 100vw"
-                                             placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
-                                             onError={(e) => {
-                                                 e.currentTarget.className = 'hidden'
-                                             }}
-                                             style={{
-                                                 borderRadius: "20px",
-                                                 width: "100%",
-                                                 height: "auto",
-                                                 objectFit: "cover",
-                                             }}
+                                            <Image
+                                                src={cleanUrl(imgSource).replace(/\.(png|jpg|jpeg)$/, ".webp")}
+                                                alt={alt}
+                                                width={width}
+                                                height={height}
+                                                priority={true}
+                                                sizes="(max-width: 640px) 100vw"
+                                                placeholder={`data:image/svg+xml;base64,${toBase64(grayShimmer(700, 475))}`}
+                                                onError={(e) => {
+                                                    e.currentTarget.className = 'hidden'
+                                                }}
+                                                style={{
+                                                    borderRadius: "20px",
+                                                    width: "100%",
+                                                    height: "auto",
+                                                    objectFit: "cover",
+                                                }}
                                             // blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                                             />
                                             {isMobileImageClicked ? (

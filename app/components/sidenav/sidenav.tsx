@@ -51,14 +51,17 @@ export default function Sidenav() {
                 </div>
             </div>
             <div
-                className={`flex flex-col t-8 w-full z-0 bg-light-surface mt-14 sm:mt-0 h-screen fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}`}
+                className={`
+                    flex flex-col t-8 w-full z-0 mt-14 sm:mt-0 h-screen fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}
+                    ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
+                `}
                 style={{
                     transition: 'transform .5s ease'
                 }}
             >
                 <div className={`
                     ${styles.title}
-                    hidden sm:flex w-full sm:w-80 items-center justify-center p-2 h-44 top-0 left-0 right-0 z-50
+                    hidden sm:flex w-full sm:w-80 items-center justify-center p-6 top-0 left-0 right-0 z-50
                     ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                     `}>
                     <Link href={`/`} onClick={((e) => handleLinkClick(e))}>

@@ -138,7 +138,7 @@ export default function ArtReddits() {
                             }} scroll={false}>
                                 {/* Blue pseudo-element */}
                                 <div className={`
-                                absolute top-0 left-0 w-1.5 h-full  transition-transform ease duration-300 -translate-x-2
+                                absolute top-0 left-0 w-1.5 h-full transition-color ease duration-1000 -translate-x-2
                                 ${isDarkTheme ? "bg-purple-500" : "bg-blue-500"}
                                 ${selectedSubreddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>

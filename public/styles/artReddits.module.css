@@ -22,12 +22,11 @@
 
 .selectedReddit {
     background-color: rgba(0, 191, 255, 0.2) !important;
-    transition: all ease .3s;
 }
 
 .selectedRedditDark {
     background-color: rgb(43, 43, 43) !important;
-    transition: all ease .3s;
+    transition: background-color 0.8s ease-in-out;
 }
 
 .selectedReddit:hover {

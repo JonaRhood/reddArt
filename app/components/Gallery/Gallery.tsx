@@ -591,7 +591,11 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                     >
                                         <div className='flex'>
                                             <div
-                                                className={`${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}`}
+                                                className={`
+                                                    ${styles.divContainerImgClicked} ${zoomImgId === key ? styles.divContainerImgClickedActive : styles.divContainerImgClicked} 
+                                                    ${backgroundOpacity ? styles.divContainerImgClickedOpacity : ""}
+                                                    ${isDarkTheme ? styles.divContainerImgClickedDark : styles.divContainerImgClicked}
+                                                    `}
                                             >
                                                 <div className={styles.divImgClicked}>
 

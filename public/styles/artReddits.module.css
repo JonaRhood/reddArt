@@ -15,11 +15,6 @@
     /* transition: background-color 0.3s, background-opacity 0.3s; */
 }
 
-.container:hover {
-    background-color: rgba(0, 191, 255, 0.1);
-    cursor: pointer;
-}
-
 .selectedReddit {
     background-color: rgba(0, 191, 255, 0.2) !important;
 }
@@ -27,10 +22,6 @@
 .selectedRedditDark {
     background-color: rgb(43, 43, 43) !important;
     transition: background-color 0.8s ease-in-out;
-}
-
-.selectedReddit:hover {
-    background-color: rgba(0, 191, 255, 0.2);
 }
 
 .darkContainer {
@@ -50,13 +41,8 @@
     /* transition: background-color 0.3s, background-opacity 0.3s; */
 }
 
-.darkContainer:hover {
-    background-color: rgb(39, 39, 39);
-    cursor: pointer;
-}
-
 .icon {
-    border-radius: 9999px; 
+    border-radius: 9999px;
     background: linear-gradient(70deg, #0f31b8, #00ffe1);
     background-clip: border-box;
     padding: 2.5px;
@@ -64,9 +50,39 @@
 }
 
 .iconDark {
-    border-radius: 9999px; 
+    border-radius: 9999px;
     background: linear-gradient(70deg, #c33cb7, #0051ff);
     background-clip: border-box;
     padding: 2.5px;
     transition: all ease .5s
+}
+
+.container:focus {
+    background-color: rgba(0, 191, 255, 0.1);
+    cursor: pointer;
+}
+
+.selectedReddit:focus {
+    background-color: rgba(0, 191, 255, 0.2);
+}
+
+.darkContainer:focus {
+    background-color: rgb(39, 39, 39);
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .container:hover {
+        background-color: rgba(0, 191, 255, 0.1);
+        cursor: pointer;
+    }
+
+    .selectedReddit:hover {
+        background-color: rgba(0, 191, 255, 0.2);
+    }
+
+    .darkContainer:hover {
+        background-color: rgb(39, 39, 39);
+        cursor: pointer;
+    }
 }

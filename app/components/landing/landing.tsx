@@ -22,7 +22,7 @@ export default function Landing() {
 
     return (
         <>
-            <div className={`flex  h-screen justify-center w-screen`}>
+            <div className={`flex justify-center w-screen`} style={{ height: "100dvh" }}>
                 <div className="flex ml-0 sm:ml-80 w-full justify-center overflow-hidden mt-16 sm:mt-0 p-2 sm:p-8">
                     <div className={`
                         flex relative w-full bg-gray-300 rounded-3xl border-8 shadow-sm sm:shadow-xl ${styles.landingBackgroundBlur}

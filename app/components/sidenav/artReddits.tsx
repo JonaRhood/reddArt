@@ -124,6 +124,7 @@ export default function ArtReddits() {
                     return (
                         <div
                             key={subReddit}
+                            tabIndex={0}
                             className={`
                             ${isDarkTheme ? styles.darkContainer : styles.container}
                             ${selectedSubreddit === subReddit ? isDarkTheme ? styles.selectedRedditDark : styles.selectedReddit : ""}

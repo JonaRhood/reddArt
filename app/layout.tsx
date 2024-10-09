@@ -56,7 +56,7 @@ export default function RootLayout({
             <MobileChecker />
           </Suspense>
           <section className="flex">
-            <div className="fixed h-screen z-50">
+            <div className="fixed z-50">
               <Suspense fallback={null}>
                 <Sidenav />
                 <DarkTheme />

@@ -52,11 +52,12 @@ export default function Sidenav() {
             </div>
             <div
                 className={`
-                    flex flex-col t-8 w-full z-0 mt-14 sm:mt-0 h-screen fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}
+                    flex flex-col t-8 w-full z-0 mt-14 sm:mt-0 fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}
                     ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                 `}
                 style={{
-                    transition: 'transform .5s ease'
+                    transition: 'transform .5s ease',
+                    height: "100dvh",
                 }}
             >
                 <div className={`

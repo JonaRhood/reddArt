@@ -55,25 +55,24 @@ The primary objective of this project was to create a React-based web applicatio
 
 ## 💿 &nbsp; <a id="features">Features and Enhancements</a>
 
-- [x] **Art Community Selection:** 
-  - Provide a list of different art communities on Reddit, allowing users to choose and explore content from their favorite groups.
-- [x] **Community and Art Display:** 
-  - Show the official community page along with a picture list of artworks when a community is selected, making it easy to browse through art content.
-- [x] **Artist and Art Details:** 
-  - Display details of each artwork, including the artist's name, comments, and more, with direct links to the artist’s Reddit profile for further interaction.
-- [x] **Seamless Reddit Integration:** 
-  - Ensure all art details and community interactions redirect seamlessly to Reddit, maintaining the connection with the original platform.
-- [x] **Immersive Art Experience:** 
-  - Design the app to provide an immersive browsing experience, allowing users to access and appreciate Reddit art content within seconds.
-- [x] **Responsive Design for Mobile:** 
-  - Ensure the application is fully responsive, providing an optimal viewing experience on mobile devices.
-- [x] **Service Workere:** 
-  - Implemented a Service Worker to intercept and cache network requests, optimizing the loading speed and performance of the galleries.
-- [ ] **Performance and Efficiency Improvements:** 
-  - Enhance the performance and efficiency of the application to ensure fast loading times and a smooth user experience.
-- [ ] **Night Mode Implementation:** 
-  - Add a night mode feature to allow users to switch to a darker theme for a comfortable viewing experience in low-light conditions.
-  
+- **Art Community Selection:**  
+  - The app provides a list of various art communities on Reddit, allowing users to choose and explore content from their favorite subreddits.
+- **Art Display:**  
+  - The app displays the official community page along with a gallery of artworks when a community is selected, making it easy to browse art content.
+- **Artists and Art Details:**  
+  - Users can view detailed information about each artwork, with direct access to the artist’s Reddit profile for further interaction.
+- **Seamless Reddit Integration:**  
+  - All art details and community interactions are seamlessly redirected to Reddit, maintaining a strong connection with the original platform.
+- **Immersive Art Experience:**  
+  - The app is designed to provide an immersive browsing experience, allowing users to access and appreciate Reddit art content quickly and effortlessly.
+- **Responsive Design for Mobile:**  
+  - The application is fully responsive, ensuring an optimal viewing experience on mobile devices.
+- **Service Worker:**  
+  - A Service Worker is implemented to intercept and cache network requests, optimizing gallery loading speeds and overall app performance.
+- **Performance and Efficiency Improvements:**  
+  - The app's performance is optimized to ensure fast loading times and a smooth user experience.
+- **Night Mode Implementation:**  
+  - The app includes a night mode feature, allowing users to switch to a darker theme for a comfortable viewing experience in low-light conditions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

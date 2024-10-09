@@ -29,11 +29,3 @@ export const StoreProvider = ({ children }: Props) => {
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 };
-
-export const metadata = {
-  title: 'reddArt',
-  description: 'Your site description here',
-  icons: {
-    icon: '/favicon.svg',
-  },
-};

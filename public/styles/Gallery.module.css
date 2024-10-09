@@ -113,8 +113,7 @@
     -webkit-transition: transform 0.5s;
 }
 
-.titleOverlay:hover span,
-.titleOverlay:hover i {
+.titleOverlay span p:hover {
     cursor: pointer;
     color: #a0e7ff;
 }

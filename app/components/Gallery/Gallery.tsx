@@ -668,7 +668,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                         </div>
                                         <div className={styles.gradientOverlay}></div>
                                         <div className={styles.titleOverlay}>
-                                            <i>
+                                            <i onClick={(e) => e.stopPropagation()}>
                                                 <UserIcon className="size-4" />
                                             </i>
                                             <span
@@ -682,7 +682,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                                                     setCurrentHistoryLenght(0);
                                                 }}
                                             >
-                                                {"u/" + author}
+                                                <p>{"u/" + author}</p>
                                             </span>
                                         </div>
 

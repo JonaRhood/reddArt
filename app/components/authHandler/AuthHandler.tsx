@@ -87,7 +87,6 @@ export const AuthHandler = () => {
               console.log('%cToken received', 'color: green; font-weight: bold;');
 
               window.location.href = redirectUri //Added line to fix the problem with getting stock in the beggining?
-              console.log("Redirect 1")
 
             } 
             // When State is alone, delete and refresh website.
@@ -97,7 +96,6 @@ export const AuthHandler = () => {
                 localStorage.removeItem("REDDART_AUTH_STATE");
                 localStorage.removeItem("REDDART_CODE");
                 window.location.reload();
-                console.log("Redirect 2")
               }, 1000)
             } else {
               console.error('Failed to get access token:', parsedData.error);
@@ -108,14 +106,13 @@ export const AuthHandler = () => {
           });
         //Token defined and working
       } else if (localToken) {
-        console.log('%cAll set', 'color: green; font-weight: bold;');
+        // console.log('%cReddit API Access Granted', 'color: green; font-weight: bold;');
       } else {
         console.error('No code or state provided, reloading...');
         setTimeout(() => {
           localStorage.removeItem("REDDART_AUTH_STATE");
           localStorage.removeItem("REDDART_CODE");
           window.location.reload();
-          console.log("Redirect 3")
         }, 1000)
       }
     }

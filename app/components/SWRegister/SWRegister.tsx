@@ -8,14 +8,14 @@ export const SWRegister = () => {
       navigator.serviceWorker
         .register('/sw.js', { scope: '/' })
         .then(serviceWorker => {
-          console.log('Service Worker registered: ', serviceWorker);
+          // console.log('Service Worker registered: ', serviceWorker);
 
           if (!navigator.serviceWorker.controller) {
             console.log('No SW controlling the page yet, reloading...');
             window.location.reload();
             console.log("Redirect SW")
           } else {
-            console.log('Service Worker is already controlling the page');
+            // console.log('Service Worker is already controlling the page');
           }
         })
         .catch(error => {

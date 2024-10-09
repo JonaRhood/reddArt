@@ -31,18 +31,16 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Escuchar mensajes desde el frontend
+// Message Listener
 self.addEventListener('message', (event) => {
     if (event.data.action === 'cancelPendingRequests') {
-        console.log("Message received to cancel pending requests");
+        // console.log("Message received to cancel pending requests");
         
-        // Cancelar todas las solicitudes pendientes
         abortControllers.forEach((controller, url) => {
-            controller.abort(); // Cancelar la solicitud
-            console.log('Aborted request for:', url);
+            controller.abort(); 
+            // console.log('Aborted request for:', url);
         });
 
-        // Limpiar el mapa después de abortar todas las solicitudes
         abortControllers.clear();
     }
 });

@@ -150,7 +150,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
                     dispatch(setPosts(data));
                     dispatch(setAfter(result.data.after));
                     const after = result.data.after;
-                    console.log(data);
                     if (after) {
                         fetchDataAfterBackground(after);
                     }
@@ -229,7 +228,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             debounceRef.current = setTimeout(() => {
                 if (localStorage.getItem("USER_CLICKED") === "true") {
                     localStorage.removeItem("USER_CLICKED");
-                    console.log("LLEGADO AQUI")
                     setSentinel(true);
                     return;
                 } else {
@@ -287,7 +285,7 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    console.log('Sentinel is in view');
+                    // console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
                     fetchDataAfterBackgroundEffect();
                     setSentinel(false);
@@ -325,7 +323,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
             const childDiv = target.querySelector(`.${styles.divContainerImgClicked}`);
 
             const rectBackground = childDiv.getBoundingClientRect();
-            console.log(rectBackground);
 
             if (isSafari() || isFirefox()) {
                 setImageStyles({
@@ -406,7 +403,6 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
 
         const handlePopState = () => {
             const currentWidth = window.innerWidth;
-            console.log(previousHistoryLength, currentHistoryLength);
 
             if (previousHistoryLength < currentHistoryLength) {
                 if (currentWidth <= 640 || isNotDesktop) {
@@ -435,18 +431,17 @@ export default function Gallery({ params }: { params: { reddit: string } }) {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
             if (!modalIsOpen && currentWidth <= 640 || !modalIsOpen && isNotDesktop) {
-                // console.log("MODAL CERRADO", modalIsOpen);
+                // console.log("MODAL OPEN", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(false));
             } else if (modalIsOpen && currentWidth <= 640 || modalIsOpen && isNotDesktop) {
-                // console.log("MODAL ABIERTO", modalIsOpen);
+                // console.log("MODAL CLOSED", modalIsOpen);
                 dispatch(setIsMobile(true));
                 dispatch(setUserClicked(true));
                 if (modalIsOpen && currentWidth > 640) {
                     dispatch(setUserClicked(false));
                 }
             } else {
-                // console.log("DEMÁS");
                 dispatch(setIsMobile(false));
                 setIsMobileImageClicked(false);
                 dispatch(setUserClicked(false));

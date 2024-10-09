@@ -284,7 +284,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    console.log('Sentinel is in view');
+                    // console.log('Sentinel is in view');
                     dispatch(setLoadMorePosts())
                     fetchDataAfterBackgroundEffect();
                     setSentinel(false);
@@ -398,7 +398,7 @@ export default function UserGallery({ params }: { params: { user: string } }) {
         } else {
             if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-                console.log("ABORT")
+                // console.log("ABORT")
             } else {
                 console.log('No active Service Worker to send message to.');
             }
@@ -414,10 +414,8 @@ export default function UserGallery({ params }: { params: { user: string } }) {
     // Effect to control backward button
     useEffect(() => {
         const handlePopState = () => {
-            console.log('El usuario ha hecho clic en el botón de atrás');
             if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-                console.log("ABORT")
             } else {
                 console.log('No active Service Worker to send message to.');
             }

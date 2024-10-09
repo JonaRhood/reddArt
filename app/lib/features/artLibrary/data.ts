@@ -1,5 +1,9 @@
 const reddits = [
     {
+        name: "Imaginary Battlefields",
+        subreddit: "ImaginaryBattlefields"
+    },
+    {
         name: "Pixel art",
         subreddit: "PixelArt"
     },
@@ -12,8 +16,8 @@ const reddits = [
         subreddit: "drawing"
     },
     {
-        name: "Art",
-        subreddit: "Art"
+        name: "Imaginary Starships",
+        subreddit: "ImaginaryStarships"
     },
     {
         name: "Wholesome Fantasy Art",
@@ -28,8 +32,8 @@ const reddits = [
         subreddit: "AccidentalArtGallery"
     },
     {
-        name: "Digital art",
-        subreddit: "DigitalArt"
+        name: "Pour Painting",
+        subreddit: "PourPainting"
     },
     {
         name: "Classic Canadian Art",

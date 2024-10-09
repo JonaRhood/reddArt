@@ -74,7 +74,7 @@ export default function ArtReddits() {
                 const results = await Promise.all(dataPromises) as RedditData[]; // Explicitly type the results as RedditData[]
                 setRedditData(results.filter(result => result && result.data));
 
-                console.log("Fetched SubReddit Results:", results);
+                // console.log("Fetched SubReddit Results:", results);
 
             } catch (error) {
                 console.error("Error fetching Reddit data:", error);
@@ -93,12 +93,12 @@ export default function ArtReddits() {
         } else {
             if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({ action: 'cancelPendingRequests' });
-                console.log("ABORT")
+                // console.log("ABORT")
             } else {
                 console.log('No active Service Worker to send message to.');
             }
             if (window.innerWidth < 640) {
-                console.log("Pantalla menor de 640px");
+                // console.log("Screen: 640px");
                 dispatch(setClickedNav(false));
             }
             dispatch(stopGalleryLoading());
@@ -147,6 +147,9 @@ export default function ArtReddits() {
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}
                                             className={isDarkTheme ? styles.iconDark : styles.icon}
+                                            onError={(e) => {
+                                                e.currentTarget.className = 'hidden'
+                                            }}
                                         />
                                         <div className="flex-inline ml-3">
                                             <h4>{subReddit}</h4>

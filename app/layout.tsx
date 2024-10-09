@@ -90,9 +90,7 @@ export const metadata: Metadata = {
     url: 'https://reddit-client-49g.pages.dev/',
     images: [
       {
-        url: 'https://reddit-client-49g.pages.dev/mockup3.jpg',
-        width: 1200,
-        height: 630,
+        url: 'https://reddit-client-49g.pages.dev/mockup3-metadata.jpg',
         alt: 'A vibrant art gallery showcasing various artworks from Reddit',
       },
     ],
@@ -104,7 +102,7 @@ export const metadata: Metadata = {
     description: 'Discover a vibrant collection of curated art galleries from various Reddit communities. Explore stunning artworks, connect with talented artists, and immerse yourself in the creative world of Reddit, all in one place!',
     images: [
       {
-        url: 'https://reddit-client-49g.pages.dev/mockup3.jpg',
+        url: 'https://reddit-client-49g.pages.dev/mockup3-metadata.jpg',
       },
     ],
   },

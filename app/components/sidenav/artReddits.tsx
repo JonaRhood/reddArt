@@ -150,13 +150,18 @@ export default function ArtReddits() {
                                             onError={(e) => {
                                                 e.currentTarget.className = 'hidden'
                                             }}
+                                            priority={true}
+                                            loading="eager"
                                         />
                                         <div className="flex-inline ml-3">
                                             <h4>{subReddit}</h4>
                                         </div>
                                     </div>
                                     <div className="flex items-center">
-                                        <div className="flex text-light-secondaryText text-xs items-center my-1">
+                                        <div className={`
+                                            flex text-xs items-center my-1
+                                            ${isDarkTheme ? "text-gray-400" : "text-light-secondaryText"}
+                                        `}>
                                             <UserIcon className="size-3" />
                                             <p>{subscribers}</p>
                                         </div>

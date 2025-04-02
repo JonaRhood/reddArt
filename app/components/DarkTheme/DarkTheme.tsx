@@ -15,7 +15,7 @@ export default function DarkTheme() {
     return (
         <div
             className={`
-        ${isDarkTheme
+                ${isDarkTheme
                     ? `z-50 fixed right-0 bottom-0  m-6 p-1 rounded-full transition-all hover:bg-dark-surface hover:cursor-pointer ${styles.darkBorder}`
                     : `z-50 fixed right-0 bottom-0  m-6 p-1 rounded-full transition-all hover:bg-light-surface hover:cursor-pointer ${styles.border}`}`}
             onClick={((e) => {

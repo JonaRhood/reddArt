@@ -11,6 +11,7 @@ import MobileChecker from "./components/mobileChecker/MobileChecker";
 import DarkTheme from "./components/DarkTheme/DarkTheme";
 
 import { AuthHandler } from "./components/authHandler/AuthHandler";
+import AuthHandlerTrial from "./components/authHandler/AuthHandlerTrial";
 import { Suspense } from "react";
 
 
@@ -50,7 +51,7 @@ export default function RootLayout({
             <SWRegister />
           </Suspense>
           <Suspense fallback={null}>
-            <AuthHandler />
+            <AuthHandlerTrial />
           </Suspense>
           <Suspense fallback={null}>
             <MobileChecker />

@@ -3,6 +3,7 @@
 import styles from '@/public/styles/sidenav.module.css'
 
 import ArtReddits from "./artReddits";
+import RedditLogin from './RedditLogin';
 import CustomIcon from '@/app/lib/resources/CustomIcon'
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import Link from "next/link";
@@ -19,6 +20,7 @@ export default function Sidenav() {
     const clickedNav = useAppSelector((state: RootState) => state.mobile.clickedNav);
     const userClicked = useAppSelector((state: RootState) => state.mobile.userClicked);
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
+    const isAuthorized = useAppSelector((state: RootState) => state.general.isAuthorized);
     const dispatch = useAppDispatch();
 
     const handleLinkClick = (e: any) => {
@@ -76,9 +78,16 @@ export default function Sidenav() {
                     </Link>
                 </div>
                 <div className={`pt-0 pb-10 sm:pb-0 overflow-hidden overflow-scroll overflow-x-hidden ${isDarkTheme ? styles.darkScroll : styles.scroll}`}>
-                    <Suspense fallback={null}>
-                        <ArtReddits />
-                    </Suspense>
+                    {isAuthorized
+                        ? (
+                            <Suspense fallback={null}>
+                                <ArtReddits />
+                            </Suspense>
+                        ) :
+                            <Suspense fallback={null}>
+                                <RedditLogin />
+                            </Suspense>
+                    }
                 </div>
                 <div
                     className={`

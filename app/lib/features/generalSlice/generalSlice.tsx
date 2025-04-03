@@ -6,7 +6,7 @@ interface GalleryState {
 }
 
 const initialState: GalleryState = {
-  isAuthorized: false,
+  isAuthorized: false
 };
 
 export const generalSlice = createSlice({

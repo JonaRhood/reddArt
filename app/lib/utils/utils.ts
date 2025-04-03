@@ -1,4 +1,7 @@
 // Number Formatter
+
+import { NextRequest } from "next/server";
+
 ////////////////////////////////////////////////////////////////////
 export function nFormatter(num: number, digits: number) {
   const lookup = [
@@ -186,3 +189,13 @@ export const cleanUrl = (url: string) => {
     return url;
   }
 };
+
+export const getCookie = (name: string) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+
+  if (parts.length === 2) {
+    return parts[1].split(';')[0];
+  }
+  return null;
+}

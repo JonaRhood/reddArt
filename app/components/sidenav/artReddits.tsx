@@ -11,12 +11,10 @@ import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { UserIcon } from '@heroicons/react/24/solid';
 import { nFormatter } from "@/app/lib/utils/utils";
-import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useAppSelector, useAppDispatch } from '@/app/lib/hooks';
-import { resetGallery, setSelectedSubReddit, setPastSubReddit, setScrollPosition, stopGalleryLoading } from "@/app/lib/features/gallery/gallerySlice";
+import { setSelectedSubReddit, setPastSubReddit, stopGalleryLoading } from "@/app/lib/features/gallery/gallerySlice";
 import { setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
 import { RootState } from '@/app/lib/store';
 
@@ -48,27 +46,10 @@ export default function ArtReddits() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const waitForToken = () => {
-            return new Promise((resolve) => {
-                dispatch(setSelectedSubReddit(currentSubreddit));  // Used for the CSS Selector of the Subreddit
-                const checkToken = () => {
-                    const localToken = localStorage.getItem("REDDART_ACCESS_TOKEN")
-                    const localTokenTime = localStorage.getItem('REDDART_TOKEN_TIME');
-                    const oneHour = 60 * 60 * 1000;
-                    if (localToken && localTokenTime && Date.now() - parseInt(localTokenTime, 10) > oneHour) {
-                        setTimeout(checkToken, 1000);
-                    } else {
-                        resolve(localToken);
-                    }
-                };
-                checkToken();
-            });
-        };
-
         const fetchData = async () => {
             setLoading(true);
             try {
-                await waitForToken();
+                dispatch(setSelectedSubReddit(currentSubreddit)); 
 
                 const dataPromises = reddits.map((reddit) => fetchToNavBar(reddit.subreddit));
                 const results = await Promise.all(dataPromises) as RedditData[]; // Explicitly type the results as RedditData[]

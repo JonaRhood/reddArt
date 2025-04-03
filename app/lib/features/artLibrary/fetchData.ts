@@ -1,11 +1,14 @@
 // fetchData.ts
+import { getCookie } from "../../utils/utils";
+
 const BASE_URL = 'https://oauth.reddit.com';
 
 async function fetchRedditData(url: string) {
-    const token = localStorage.getItem('REDDART_ACCESS_TOKEN');
+    const token = getCookie("reddit-token");
+    console.log
     if (!token) {
         console.error('Token is missing');
-        return null; // O lanza un error
+        return null; 
     }
 
     try {
@@ -25,7 +28,7 @@ async function fetchRedditData(url: string) {
     } catch (error: unknown) {
         if (error instanceof Error) {
             if (error.name === 'AbortError') {
-                console.log('Fetch aborted'); // O simplemente no registres nada
+                console.log('Fetch aborted'); 
             } else {
                 // console.error('Fetch Error:', error);
             }

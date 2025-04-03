@@ -8,11 +8,12 @@ import CustomIcon from '@/app/lib/resources/CustomIcon'
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import Link from "next/link";
 import { useAppDispatch } from "@/app/lib/hooks";
-import { setSelectedSubReddit, resetGallery } from "@/app/lib/features/gallery/gallerySlice";
+import { resetGallery } from "@/app/lib/features/gallery/gallerySlice";
 import { Suspense } from 'react';
 import { useAppSelector } from '@/app/lib/hooks';
 import { RootState } from '@/app/lib/store';
 import { setClickedNav } from '@/app/lib/features/mobileSlice/mobileSlice';
+import { useState, useEffect } from 'react';
 
 
 export default function Sidenav() {

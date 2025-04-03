@@ -4,6 +4,7 @@ import { MoonIcon } from "@heroicons/react/24/solid"
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks"
 import { RootState } from "@/app/lib/store";
 import { setDarkTheme } from "@/app/lib/features/theme/themeSlice";
+import { createCookie } from "@/app/lib/utils/utils";
 import { useEffect } from "react";
 
 import styles from '@/public/styles/DarkTheme.module.css'
@@ -11,6 +12,14 @@ import styles from '@/public/styles/DarkTheme.module.css'
 export default function DarkTheme() {
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
     const dispatch = useAppDispatch();
+    
+    useEffect(() => {
+        if (isDarkTheme) {
+            document.body.className = "bg-dark-background"
+        } else {
+            document.body.className = "bg-light-background"
+        }
+    }, [])
 
     return (
         <div
@@ -20,6 +29,7 @@ export default function DarkTheme() {
                     : `z-50 fixed right-0 bottom-0  m-6 p-1 rounded-full transition-all hover:bg-light-surface hover:cursor-pointer ${styles.border}`}`}
             onClick={((e) => {
                 isDarkTheme ? dispatch(setDarkTheme(false)) : dispatch(setDarkTheme(true));
+                isDarkTheme ? createCookie("dark-theme", "true", 0, "/") : createCookie("dark-theme", "true", null, "/")
                 isDarkTheme ? document.body.className = "bg-light-background" : document.body.className = "bg-dark-background";
                 isDarkTheme ? localStorage.setItem("DARK_THEME", "false") : localStorage.setItem("DARK_THEME", "true");
 

@@ -5,16 +5,12 @@ import mockup from "@/public/mockup3.jpg"
 import { useInView } from "react-intersection-observer"
 import { useAppSelector } from "@/app/lib/hooks"
 import { RootState } from "@/app/lib/store"
-import { useEffect } from "react"
-import { useAppDispatch } from "@/app/lib/hooks"
-import { setDarkTheme } from "@/app/lib/features/theme/themeSlice"
 
 import styles from "@/public/styles/landing.module.css"
 
 export default function Landing() {
 
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
-    const dispatch = useAppDispatch();
 
     const { ref, inView } = useInView({
         triggerOnce: true,

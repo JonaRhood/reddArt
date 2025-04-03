@@ -56,8 +56,6 @@ export default function AuthHandlerTrial() {
             console.log("false");
         }
 
-
-
     }, [])
 
     return null;

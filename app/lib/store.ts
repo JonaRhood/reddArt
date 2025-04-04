@@ -16,9 +16,10 @@ export type RootState = ReturnType<typeof rootReducer>;
 // `makeStore` encapsula la configuración de la tienda para permitir
 // crear instancias únicas de la tienda, lo que es particularmente
 // importante para el renderizado del lado del servidor (SSR).
-export const makeStore = () => {
+export const makeStore = (preloadedState?: any) => {
   return configureStore({
     reducer: rootReducer,
+    preloadedState,
     // Modificamos los middleware predeterminados
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

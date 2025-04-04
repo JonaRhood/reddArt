@@ -1,16 +1,12 @@
 // features/gallery/gallerySlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getCookie } from "../../utils/utils";
-
-const isRedditToken = getCookie("reddit-token");
-console.log(!isRedditToken);
 
 interface GalleryState {
   isAuthorized: boolean,
 }
 
 const initialState: GalleryState = {
-  isAuthorized: !isRedditToken ? false : true
+  isAuthorized: false
 };
 
 export const generalSlice = createSlice({

@@ -12,16 +12,6 @@ import styles from '@/public/styles/DarkTheme.module.css'
 export default function DarkTheme() {
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
     const dispatch = useAppDispatch();
-    
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            if (isDarkTheme) {
-                document.body.className = "bg-dark-background"
-            } else {
-                document.body.className = "bg-light-background"
-            }
-        }
-    }, [isDarkTheme])
 
     return (
         <div

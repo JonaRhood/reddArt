@@ -1,16 +1,12 @@
 // features/gallery/gallerySlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getCookie } from "../../utils/utils";
-
-const isDarkTheme = getCookie("dark-theme");
-console.log(!isDarkTheme);
 
 interface GalleryState {
   isDarkTheme: boolean,
 }
 
 const initialState: GalleryState = {
-  isDarkTheme: !isDarkTheme ? false : true,
+  isDarkTheme: false
 };
 
 export const themeSlice = createSlice({

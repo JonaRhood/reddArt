@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCookie } from "@/app/lib/utils/utils";
 
 type RequestBody = {
     urlCode: string;

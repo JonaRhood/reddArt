@@ -7,9 +7,10 @@ import "/public/styles/globals.css";
 import { SWRegister } from "./components/SWRegister/SWRegister";
 import MobileChecker from "./components/mobileChecker/MobileChecker";
 import DarkTheme from "./components/DarkTheme/DarkTheme";
-
 import AuthHandlerTrial from "./components/authHandler/AuthHandlerTrial";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
+
 
 export default function LayoutContent({
   modal,
@@ -19,19 +20,28 @@ export default function LayoutContent({
   children: React.ReactNode
 }) {
 
+  const cookieStore = cookies();
+  const themeCookie = cookieStore.get('dark-theme');
+  const isDarkTheme = themeCookie?.value === 'true';
+
+  const initialReduxState = {
+    theme: {
+      isDarkTheme,
+    },
+  };
+
   return (
-    <StoreProvider>
+    <StoreProvider initialState={initialReduxState}>
       <html lang="en">
         <Head>
           <link rel="stylesheet" href="/public/styles/global.css" />
-          <link rel="stylesheet" href="/public/styles/artReddits.module.css" />
           <link rel="stylesheet" href="/public/styles/artReddits.module.css" />
           <link rel="stylesheet" href="/public/styles/Gallery.module.css" />
           <link rel="stylesheet" href="/public/styles/sidenav.module.css" />
           <link rel="stylesheet" href="/public/styles/layout.module.css" />
         </Head>
         <body className={`
-            text-light-text bg-light-background
+           ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
         `}>
           <Suspense fallback={null}>
             <SWRegister />

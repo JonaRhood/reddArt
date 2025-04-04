@@ -14,12 +14,14 @@ export default function DarkTheme() {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
-        if (isDarkTheme) {
-            document.body.className = "bg-dark-background"
-        } else {
-            document.body.className = "bg-light-background"
+        if (typeof window !== 'undefined') {
+            if (isDarkTheme) {
+                document.body.className = "bg-dark-background"
+            } else {
+                document.body.className = "bg-light-background"
+            }
         }
-    }, [])
+    }, [isDarkTheme])
 
     return (
         <div

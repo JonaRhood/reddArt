@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect } from "react";
-import type { Metadata } from "next";
+export const runtime = 'edge';
+
 import Landing from "./components/landing/landing";
 import { Suspense } from "react";
 import "/public/styles/globals.css";

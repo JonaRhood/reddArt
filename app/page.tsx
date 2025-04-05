@@ -1,7 +1,5 @@
 "use client"
 
-export const runtime = 'edge';
-
 import { useEffect } from "react";
 import type { Metadata } from "next";
 import Landing from "./components/landing/landing";

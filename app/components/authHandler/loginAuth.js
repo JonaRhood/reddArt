@@ -4,7 +4,7 @@ export const loginAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_REDDIT_CLIENT_ID;
     const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL;
     const state = uuidv4();
-    const scope = 'read';
+    const scope = 'read, history';
     const duration = 'permanent';
 
     localStorage.setItem("STATE", `${state}`);

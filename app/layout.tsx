@@ -1,6 +1,5 @@
 export const runtime = 'edge';
 
-import type { ReactNode } from "react";
 import Head from "next/head";
 import { Metadata } from "next";
 import { StoreProvider } from "./StoreProvider";
@@ -15,10 +14,8 @@ import { cookies } from "next/headers";
 
 
 export default function LayoutContent({
-  modal,
   children,
 }: {
-  modal: React.ReactNode
   children: React.ReactNode
 }) {
 
@@ -73,7 +70,6 @@ export default function LayoutContent({
               <Suspense fallback={null}>
                 <main>
                   {children}
-                  {modal}
                 </main>
               </Suspense>
             </div>

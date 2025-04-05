@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
 
         res.cookies.set("refresh-token", result.refresh_token, {
             path: "/", 
+            maxAge: 60 * 60 * 24 * 365,
         }); 
 
         return res;

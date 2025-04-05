@@ -47,13 +47,7 @@ export default function AuthHandlerTrial() {
             }
             
             fetchToken();
-        }
-
-        if (!isAuthorized && isRefreshToken) {
-            console.log("TIME TO REFRESH");
-        }
-        
-
+        }        
     }, [])
 
     return null;

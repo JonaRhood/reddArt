@@ -21,7 +21,7 @@ export default function DarkTheme() {
                     : `z-50 fixed right-0 bottom-0  m-6 p-1 rounded-full transition-all hover:bg-light-surface hover:cursor-pointer ${styles.border}`}`}
             onClick={((e) => {
                 isDarkTheme ? dispatch(setDarkTheme(false)) : dispatch(setDarkTheme(true));
-                isDarkTheme ? createCookie("dark-theme", "true", 0, "/") : createCookie("dark-theme", "true", null, "/")
+                isDarkTheme ? createCookie("dark-theme", "false", 60 * 60 * 24 * 365, "/") : createCookie("dark-theme", "true", 60 * 60 * 24 * 365, "/")
                 isDarkTheme ? document.body.className = "bg-light-background" : document.body.className = "bg-dark-background";
 
             })}

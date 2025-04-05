@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
-                "grant_type": "authorization_code",
+                "grant_type": "refresh_token",
                 "refresh_token": refresh_token
             })
         });
@@ -42,11 +42,6 @@ export async function POST(request: NextRequest) {
         const result: ResultBody = await response.json();
         
         const res = new NextResponse(JSON.stringify(result), { status: 200 });
-
-        res.cookies.set("reddit-token", result.access_token, {
-            path: "/", 
-            maxAge: 3600, 
-        });
 
         return res;
 

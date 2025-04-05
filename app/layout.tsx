@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import type { ReactNode } from "react";
 import Head from "next/head";
 import { Metadata } from "next";

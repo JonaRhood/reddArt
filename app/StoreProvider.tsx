@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 "use client";
 
 import type { AppStore } from "@/app/lib/store";

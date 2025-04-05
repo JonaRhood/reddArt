@@ -1,59 +1,55 @@
-export const runtime = 'edge';
+import { NextRequest, NextResponse } from "next/server";
 
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-
-interface RedditTokenResponse {
-    access_token: string;
+type RequestBody = {
     refresh_token: string;
+};
+
+type ResultBody = {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    scope: string;
 }
 
-interface RedditErrorResponse {
-    error: string;
-}
-
-export async function GET(request: NextRequest) {
-    const refreshToken = request.headers.get("Authorization")?.split(" ")[1];
-
-    if (!refreshToken) {
-        return NextResponse.json({ error: 'Refresh token is missing' }, { status: 400 });
-    }
-
-    const { REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT } = process.env;
-
-    if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET || !REDDIT_USER_AGENT) {
-        return NextResponse.json({ error: 'Missing environment variables' }, { status: 500 });
-    }
-
-    const auth = btoa(`${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`);
+export async function POST(request: NextRequest) {
 
     try {
+        const { refresh_token }: RequestBody = await request.json(); 
+        
+        const credentials = Buffer.from(
+            `${process.env.REDDIT_CLIENT_ID}:${process.env.REDDIT_CLIENT_SECRET}`
+        ).toString("base64"); 
+
         const response = await fetch('https://www.reddit.com/api/v1/access_token', {
             method: 'POST',
+            credentials: "include",
             headers: {
-                Authorization: `Basic ${auth}`,
-                'User-Agent': REDDIT_USER_AGENT,
-                'Content-Type': 'application/x-www-form-urlencoded',
+                "Authorization": `Basic ${credentials}`,
+                "Content-Type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
-                grant_type: 'refresh_token',
-                refresh_token: refreshToken,
-            }),
+                "grant_type": "authorization_code",
+                "refresh_token": refresh_token
+            })
         });
 
         if (!response.ok) {
-            const errorData: RedditErrorResponse = await response.json(); // Cast to RedditErrorResponse
-            throw new Error(errorData.error || 'Failed to fetch token');
+            throw new Error("Error al obtener el token nuevo");
         }
 
-        const data: RedditTokenResponse = await response.json();
+        const result: ResultBody = await response.json();
+        
+        const res = new NextResponse(JSON.stringify(result), { status: 200 });
 
-        return NextResponse.json({ 
-            token: data.access_token, 
-            refresh_token: data.refresh_token 
+        res.cookies.set("reddit-token", result.access_token, {
+            path: "/", 
+            maxAge: 3600, 
         });
-    } catch (error) {
-        console.error('Error fetching Reddit token:', (error as Error).message);
-        return NextResponse.json({ error: 'Failed to fetch token' }, { status: 500 });
+
+        return res;
+
+    } catch (error: any) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
+
 }

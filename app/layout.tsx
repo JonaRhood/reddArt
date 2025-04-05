@@ -23,11 +23,19 @@ export default function LayoutContent({
   const cookieStore = cookies();
   const themeCookie = cookieStore.get('dark-theme');
   const isDarkTheme = themeCookie?.value === 'true';
+  const tokenCookie = cookieStore.get("reddit-token");
+  const isAuthorized = !!tokenCookie;
+  const refreshTokenCookie = cookieStore.get("refresh-token");
+  const isRefreshToken = !!refreshTokenCookie;
 
   const initialReduxState = {
     theme: {
       isDarkTheme,
     },
+    general: {
+      isAuthorized,
+      isRefreshToken
+    }
   };
 
   return (

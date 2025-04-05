@@ -23,7 +23,6 @@ export default function DarkTheme() {
                 isDarkTheme ? dispatch(setDarkTheme(false)) : dispatch(setDarkTheme(true));
                 isDarkTheme ? createCookie("dark-theme", "true", 0, "/") : createCookie("dark-theme", "true", null, "/")
                 isDarkTheme ? document.body.className = "bg-light-background" : document.body.className = "bg-dark-background";
-                isDarkTheme ? localStorage.setItem("DARK_THEME", "false") : localStorage.setItem("DARK_THEME", "true");
 
             })}
         >

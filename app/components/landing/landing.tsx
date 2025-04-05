@@ -10,6 +10,9 @@ import styles from "@/public/styles/landing.module.css"
 
 export default function Landing() {
 
+    const isAuthorized = useAppSelector((state) => state.general.isAuthorized);
+    console.log("Redux SSR isAuthorized:", isAuthorized);
+
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
 
     const { ref, inView } = useInView({

@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface GalleryState {
   isAuthorized: boolean,
+  isRefreshToken: boolean
 }
 
 const initialState: GalleryState = {
-  isAuthorized: false
+  isAuthorized: false,
+  isRefreshToken: false
 };
 
 export const generalSlice = createSlice({
@@ -16,6 +18,9 @@ export const generalSlice = createSlice({
     setAuthorized(state, action: PayloadAction<boolean>) {
       state.isAuthorized = action.payload;
     },
+    setRefreshToken(state, action: PayloadAction<boolean>) {
+      state.isRefreshToken = action.payload;
+    }
   }
 });
 

@@ -11,6 +11,7 @@ import { RootState } from "@/app/lib/store";
 export default function AuthHandlerTrial() {
 
     const isAuthorized = useAppSelector((state: RootState) => state.general.isAuthorized);
+    const isRefreshToken = useAppSelector((state: RootState) => state.general.isRefreshToken);
     const dispatch = useAppDispatch();
 
     const searchParams = useSearchParams();
@@ -23,13 +24,11 @@ export default function AuthHandlerTrial() {
     useEffect(() => {
         const redirectUri = process.env.NEXT_PUBLIC_REDDIT_REDIRECT_URL;
         const localState = localStorage.getItem("STATE")
-        const localAuthorized = localStorage.getItem("AUTHORIZED");
     
-        if (urlCode && urlState == localState && !localAuthorized) {
-            console.log("Hola")
+        if (urlCode && urlState == localState && !isAuthorized) {
             const fetchToken = async () => {
                 try {
-                    const response = await fetch('/api/reddit-api', {
+                    const response = await fetch('/api/reddit-token', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -39,7 +38,7 @@ export default function AuthHandlerTrial() {
                     
                     if (response.ok) {
                         dispatch(setAuthorized(true));
-                        localStorage.setItem("AUTHORIZED", "true");
+                        localStorage.removeItem("STATE")
                     }
 
                 } catch (err: any) {
@@ -50,11 +49,10 @@ export default function AuthHandlerTrial() {
             fetchToken();
         }
 
-        if (localAuthorized == "true") {
-            dispatch(setAuthorized(true));
-        } else {
-            console.log("false");
+        if (!isAuthorized && isRefreshToken) {
+            console.log("TIME TO REFRESH");
         }
+        
 
     }, [])
 

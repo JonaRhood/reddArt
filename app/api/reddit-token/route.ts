@@ -1,55 +1,62 @@
-export const runtime = 'edge';
+import { NextRequest, NextResponse } from "next/server";
 
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+type RequestBody = {
+    urlCode: string;
+    redirectUri: string;
+};
 
-// Define el tipo para la respuesta del token de acceso
-interface RedditTokenResponse {
-  access_token: string;
-  refresh_token: string;
-  error?: string;
-  // Agrega otros campos según sea necesario
+type ResultBody = {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
 }
 
-export async function GET(request: NextRequest) {
-  const code = request.headers.get("Authorization")?.split(" ")[1];
+export async function POST(request: NextRequest) {
 
-  if (!code) {
-    return NextResponse.json({ error: 'Refresh token is missing' }, { status: 400 });
-  }
+    try {
+        const { urlCode, redirectUri }: RequestBody = await request.json(); 
+        
+        const credentials = Buffer.from(
+            `${process.env.REDDIT_CLIENT_ID}:${process.env.REDDIT_CLIENT_SECRET}`
+        ).toString("base64"); 
 
-  const { REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT, REDDIT_REDIRECT_URL } = process.env;
+        const response = await fetch('https://www.reddit.com/api/v1/access_token', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+                "Authorization": `Basic ${credentials}`,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                "grant_type": "authorization_code",
+                "code": urlCode,
+                "redirect_uri": redirectUri
+            })
+        });
 
-  if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET || !REDDIT_USER_AGENT || !REDDIT_REDIRECT_URL) {
-    return NextResponse.json({ error: 'Missing environment variables' }, { status: 500 });
-  }
+        if (!response.ok) {
+            throw new Error("Error al obtener el token de acceso");
+        }
 
-  const auth = btoa(`${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`);
+        const result: ResultBody = await response.json();
+        
+        const res = new NextResponse(JSON.stringify(result), { status: 200 });
 
-  try {
-    const response = await fetch('https://www.reddit.com/api/v1/access_token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${auth}`,
-        'User-Agent': REDDIT_USER_AGENT,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: REDDIT_REDIRECT_URL, // Ensure this matches your redirect URI
-      }),
-    });
+        res.cookies.set("reddit-token", result.access_token, {
+            path: "/", 
+            maxAge: 3600, 
+        });
 
-    const data: RedditTokenResponse = await response.json(); // Asegura que 'data' tenga el tipo correcto
+        res.cookies.set("refresh-token", result.refresh_token, {
+            path: "/", 
+        }); 
 
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch token');
+        return res;
+
+    } catch (error: any) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
 
-    return NextResponse.json({ token: data.access_token, refresh_token: data.refresh_token });
-  } catch (error) {
-    console.error('Error fetching Reddit token:', (error as Error).message);
-    return NextResponse.json({ error: 'Failed to fetch token' }, { status: 500 });
-  }
 }

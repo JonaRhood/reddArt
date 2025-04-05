@@ -3,12 +3,12 @@ export const runtime = 'edge';
 import Head from "next/head";
 import { Metadata } from "next";
 import { StoreProvider } from "./StoreProvider";
-import Sidenav from "./components/sidenav/sidenav";
+import Sidenav from "./assets/components/Sidenav/Sidenav";
 import "/public/styles/globals.css";
-import { SWRegister } from "./components/SWRegister/SWRegister";
-import MobileChecker from "./components/mobileChecker/MobileChecker";
-import DarkTheme from "./components/DarkTheme/DarkTheme";
-import AuthHandlerTrial from "./components/authHandler/AuthHandlerTrial";
+import { SWRegister } from "./assets/components/SWRegister/SWRegister";
+import MobileChecker from "./assets/components/MobileChecker/MobileChecker";
+import DarkTheme from "./assets/components/DarkTheme/DarkTheme";
+import AuthHandlerTrial from "./assets/components/AuthHandler/AuthHandler";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 

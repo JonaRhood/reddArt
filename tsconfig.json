@@ -24,6 +24,6 @@
     ],
     "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/authHandler/loginAuth.js", "app/components/authHandler/AuthHandlerTrial.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/assets/lib/utils/loginAuth.js", "app/assets/components/AuthHandler/AuthHandler.tsx"],
   "exclude": ["node_modules"]
 }

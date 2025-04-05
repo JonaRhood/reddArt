@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
             console.log("Refreshing token...");
 
 
-            const refreshTokenResponse = await fetch(`${process.env.BASE_URL}api/reddit-refresh-token`, {
+            const refreshTokenResponse = await fetch(`${process.env.BASE_URL}assets/routes/reddit-refresh-token`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refresh_token: tokenRefresh }),

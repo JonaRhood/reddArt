@@ -2,7 +2,7 @@
 
 export const runtime = 'edge';
 
-import Landing from "./components/landing/landing";
+import Landing from "./assets/components/Landing/Landing";
 import { Suspense } from "react";
 import "/public/styles/globals.css";
 

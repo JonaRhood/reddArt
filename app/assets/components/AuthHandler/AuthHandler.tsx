@@ -2,7 +2,7 @@
 
 // TODO Logic for errors in Reddit login
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/app/assets/store/hooks";
 import { setAuthorized } from "@/app/assets/store/slices/generalSlice/generalSlice";
@@ -15,6 +15,7 @@ export default function AuthHandlerTrial() {
     const dispatch = useAppDispatch();
 
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const urlState = searchParams.get("state");
     const urlCode = searchParams.get("code");
@@ -39,6 +40,7 @@ export default function AuthHandlerTrial() {
                     if (response.ok) {
                         dispatch(setAuthorized(true));
                         localStorage.removeItem("STATE")
+                        router.replace("/");
                     }
 
                 } catch (err: any) {

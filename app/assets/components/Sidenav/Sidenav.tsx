@@ -13,7 +13,9 @@ import { Suspense } from 'react';
 import { useAppSelector } from '@/app/assets/store/hooks';
 import { RootState } from '@/app/assets/store/store';
 import { setClickedNav } from '@/app/assets/store/slices/mobileSlice/mobileSlice';
-import { useState, useEffect } from 'react';
+import { login, logout } from '../../lib/utils/loginAuth';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 
 export default function Sidenav() {
@@ -24,17 +26,28 @@ export default function Sidenav() {
     const isAuthorized = useAppSelector((state: RootState) => state.general.isAuthorized);
     const dispatch = useAppDispatch();
 
+    const pathname = usePathname();
+
+    
     const handleLinkClick = (e: any) => {
         e.stopPropagation();
         dispatch(resetGallery());
     }
 
+    useEffect(() => {
+        if (isAuthorized && pathname.length <= 1) {
+            dispatch(setClickedNav(true));
+        }
+    }, [isAuthorized])
+
     return (
         <div className={userClicked ? "hidden" : ""}>
+
+            {/* MOBILE HEADER */}
             <div>
                 <div className={`
                     ${styles.title}
-                    flex sm:hidden w-full sm:w-80 items-center p-2 h-14 fixed top-0 left-0 right-0 z-50 shadow-sm
+                    flex sm:hidden w-full justify-between sm:w-80 items-center p-2 h-14 fixed top-0 left-0 right-0 z-50 shadow-sm
                     ${isDarkTheme ? "bg-dark-surface" : "bg-light-surface"}
                     `}>
                     <Link
@@ -51,8 +64,29 @@ export default function Sidenav() {
                             </h1>
                         </div>
                     </Link>
+                    {isAuthorized
+                        ?
+                        <div className="flex justify-center">
+                            <button
+                                className="flex justify-center self-center bg-[#d93900] text-white text-[1.2rem]
+                                px-4 p-1 rounded-full hover:bg-[#ae2c00] transition-colors"
+                                onClick={() => logout()}>
+                                Log out
+                            </button>
+                        </div>
+                        :
+                        <div className="flex justify-center">
+                            <button
+                                className="flex justify-center self-center bg-[#d93900] text-white text-[1.2rem]
+                                    px-4 p-1 rounded-full hover:bg-[#ae2c00] transition-colors"
+                                onClick={() => login()}>
+                                Log in to Reddit
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
+
             <div
                 className={`
                     flex flex-col t-8 w-full z-0 mt-14 sm:mt-0 fixed sm:w-80 ${clickedNav ? styles.navUnClicked : styles.navClicked}
@@ -63,6 +97,7 @@ export default function Sidenav() {
                     height: "100dvh",
                 }}
             >
+                {/* DESKTOP HEADER */}
                 <div className={`
                     ${styles.title}
                     hidden sm:flex w-full sm:w-80 items-center justify-center p-6 top-0 left-0 right-0 z-50
@@ -78,18 +113,22 @@ export default function Sidenav() {
                         </div>
                     </Link>
                 </div>
-                <div className={`pt-0 pb-10 sm:pb-0 overflow-hidden overflow-scroll overflow-x-hidden ${isDarkTheme ? styles.darkScroll : styles.scroll}`}>
+
+                {/* NAV */}
+                <div className={`pt-0 pb-10 sm:pb-0 overflow-scroll overflow-x-hidden ${isDarkTheme ? styles.darkScroll : styles.scroll}`}>
                     {isAuthorized
-                        ? (
-                            <Suspense fallback={null}>
-                                <ArtReddits />
-                            </Suspense>
-                        ) :
-                            <Suspense fallback={null}>
-                                <RedditLogin />
-                            </Suspense>
+                        ?
+                        <Suspense fallback={null}>
+                            <ArtReddits />
+                        </Suspense>
+                        :
+                        <Suspense fallback={null}>
+                            <RedditLogin />
+                        </Suspense>
                     }
                 </div>
+
+                {/* MOBILE ARROW DOWN */}
                 <div
                     className={`
                         flex sm:hidden h-4 w-full justify-center hover:cursor-pointer hover:bg-light-primary/20 items-center

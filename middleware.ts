@@ -13,7 +13,10 @@ export async function middleware(request: NextRequest) {
     const redditToken = cookiesHeader.get('reddit-token');
     const tokenRefresh = cookiesHeader.get('refresh-token')?.value;
 
-    // Verifica que el token de Reddit no esté presente y que haya un refresh token
+    const baseUrl = `http://${request.nextUrl.host}/`;
+    const { pathname } = request.nextUrl;
+
+    // Checks that a refresh token exists and the Reddit token is not present
     if (tokenRefresh && !redditToken) {
         try {
             console.log("Refreshing token...");
@@ -34,7 +37,7 @@ export async function middleware(request: NextRequest) {
             console.log('Setting cookie with token:', result.access_token);
 
 
-            const response = NextResponse.next(); 
+            const response = NextResponse.next();
             response.cookies.set("reddit-token", result.access_token, {
                 path: "/",
                 maxAge: 3600,
@@ -44,7 +47,12 @@ export async function middleware(request: NextRequest) {
 
         } catch (err) {
             console.error('Error refreshing token: ', err);
-            return NextResponse.redirect('/'); 
+            return NextResponse.redirect('/');
+        }
+    // If the Reddit token is missing and the user accesses a protected route, redirect to the landing page
+    } else {
+        if (!redditToken && request.headers.get("accept")?.includes("text/html") && pathname.length > 1) {
+            return NextResponse.redirect(baseUrl);
         }
     }
 

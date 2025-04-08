@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@/app/assets/store/hooks"
 import { RootState } from "@/app/assets/store/store"
-import { loginAuth } from "../../../lib/utils/loginAuth";
+import { login } from "../../../lib/utils/loginAuth";
 
 export default function RedditLogin() {
     const isDarkTheme = useAppSelector((state: RootState) => state.theme.isDarkTheme);
@@ -21,7 +21,7 @@ export default function RedditLogin() {
                     <button 
                     className="flex justify-center self-center bg-[#d93900] text-white text-[1.2rem]
                     px-4 py-2 rounded-full hover:bg-[#ae2c00] transition-colors"
-                    onClick={() => loginAuth()}>
+                    onClick={() => login()}>
                         Log in to Reddit
                     </button>
                 </div>

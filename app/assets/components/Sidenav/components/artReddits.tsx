@@ -124,7 +124,7 @@ export default function ArtReddits() {
                                 ${isDarkTheme ? "bg-purple-500" : "bg-blue-500"}
                                 ${selectedSubreddit === subReddit ? "translate-x-0" : ""}
                                 `}></div>
-
+                                
                                 <div className='relative flex-column items-center p-3'>
                                     <div className="flex items-center relative">
                                         <Image src={iconImg} alt="Community Icon" width={50} height={50}

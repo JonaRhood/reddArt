@@ -2,7 +2,7 @@
 
 import styles from '@/public/styles/sidenav.module.css'
 
-import ArtReddits from "./components/artReddits";
+import ArtReddits from "./components/ArtReddits";
 import RedditLogin from './components/RedditLogin';
 import CustomIcon from '@/app/assets/lib/resources/CustomIcon'
 import { ChevronDownIcon } from '@heroicons/react/24/solid';

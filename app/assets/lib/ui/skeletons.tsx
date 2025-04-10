@@ -20,7 +20,7 @@ export function NavDivSkeleton({ redditAmount }: NavDivSkeletonProps) {
             {Array(redditAmount).fill(0).map((_, i) => (
                 <div key={i} 
                 className={`
-                    relative flex-column items-center p-2 h-24 border-b-2 overflow-hidden
+                    relative flex-column items-center p-2 h-24 border-b-[1px] overflow-hidden
                     ${isDarkTheme ? "bg-dark-surface border-gray-900/60" : "bg-light-surface"}
                 `}
                 >
@@ -31,7 +31,7 @@ export function NavDivSkeleton({ redditAmount }: NavDivSkeletonProps) {
                     <div className="flex flex-col justify-center ml-2">
                         <Skeleton width={35} height={15} className="" baseColor={`${isDarkTheme ? "#252525" : "#ebebeb" }`} highlightColor={`${isDarkTheme ? "#2f2f2f" : "#f5f5f5"}`} />
                     </div>
-                    <ChevronRightIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 size-3" />
+                    <ChevronRightIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 size-3" />
                 </div>
             ))}
         </>

@@ -1,8 +1,12 @@
 .border {
-    border-radius: 9999px; 
+    border-radius: 9999px;
     background: linear-gradient(70deg, #0f31b8, #00ffe1);
     background-clip: border-box;
-    transition: all ease .5s
+    transition: all ease .5s;
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    -ms-transition: all ease .5s;
+    -o-transition: all ease .5s;
 }
 
 .darkBorder {
